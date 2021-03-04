@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+        <title>Login-ORS</title>
+        <style>
+            body {
+               background-color: lightblue;
+            }
+            em {
+                color: #06396F;
+            }
+        </style>
+    </head>
+<body>
+<h1>Welcome to ORS Prototype</h1>
+<em>The Current Time is: {{ current_time }}<br></em>
+	
+<!--	<form method="post" > -->
+	<form action="" method="post">{% csrf_token %} {{form.as_p }} 
+	User Name:<input type="text" id="username" name="username"><br><br>
+	Password: <input type="password" id="password" name="password">
+		<br>
+		<button class="btn btn-common" id="submit" type="submit" vlaue="ok">Login</button>
+        <input type="button" onclick="location.href='PasswordRecover';" value="Forget Password" />
+	</form>
+    Your username is:{{ username }}<br>
+    Password is : {{ password }}<br>
+    SQl : {{sql}}<br>
+    </body>
+</html>

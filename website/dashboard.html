@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+    <title> ORS-Dashboard </title>
+    <style>
+        body {
+           background-color: rgb(189, 189, 189);
+        }
+        em {
+            color: #06396F;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Welcome Back, {{username}}</h1>
+    {{userid}}
+<div>
+    {{meeting_counter}} meeting(s) in the furture
+        <br>
+    <input type="button" onclick="location.href='/message';" value="Details">
+    <input type="button" onclick="location.href='/message/create_new';" value="New Message">
+</div>
+    <br>
+<div>
+    {{message_counter}} unread message(s)
+        <br>
+    <input type="button" onclick="location.href='/meeting';" value="Details">
+    <input type="button"onclick="location.href='/meeting/create_new';" value="Creat New Meeting">
+</div>
+<div>
+    <br>
+    My Calendar
+    <br>
+    <input type="button"onclick="location.href='/calendar/';" value="My Calendar">
+</div>
+    <br>
+    <input type="button" onclick="location.href='/login/logout';" value="Logout">
+</body>
+</html>
