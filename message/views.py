@@ -3,7 +3,11 @@ from django.http import HttpResponse
 
 # Create your views here.
 def home(request):
-    return HttpResponse("ORS-Message <br> Work in Progress")
+    return render(request, 'message.html', {
+            'username':request.session['username'],
+
+            })
+
 
 
 def create_new(request):
