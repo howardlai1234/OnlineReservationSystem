@@ -1,12 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.db import connections
+from django.db.utils import OperationalError
 
 # Create your views here.
 def home(request):
     if 'userid' in request.session:
+        userid = request.session['userid']
         db_conn = connections['default']
         cursor = db_conn.cursor()
-        sql ='SELECT messageID, sendTime, title, bodyw FROM message WHERE receiverID="' + str(userid) + '" ORDER BY messageID'
+        sql ='SELECT messageID, sendTime, title, body FROM message WHERE receiverID="' + str(userid) + '" ORDER BY messageID'
         cursor.execute(sql)
         row = cursor.fetchall()
 
