@@ -20,7 +20,15 @@ def home(request):
     else:
         return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>')
 
-
-
+def view(request):
+    if 'userid' in request.session:
+        if request.GET != '':
+            print("get:", request.GET)
+            return HttpResponse('ok')
+        else:
+            return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Incorrect or messing messageID <br> <br><a href="/message">Back</a>')
+    else: 
+        return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>')
+    
 def create_new(request):
     return HttpResponse("ORS-New_Message <br> Work in Progress")
