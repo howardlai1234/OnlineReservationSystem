@@ -37,12 +37,13 @@ CREATE TABLE UserAvailability (
     slotID int NOT NULL
 );
 
-CREATE TABLE Slots (
-	slotsID int NOT NULL AUTO_INCREMENT,
+CREATE TABLE Slot (
+	slotID int NOT NULL AUTO_INCREMENT,
 	ownerID int NOT NULL,
 	date Date NOT NULL,
 	startTime Time NOT NULL,
-	endTime Time Not Null
+	endTime Time Not Null,
+	PRIMARY KEY (slotsID)
 );
 
 CREATE TABLE SlotsOpenTo (
@@ -54,7 +55,8 @@ CREATE TABLE SlotsOpenTo (
 CREATE TABLE Group(
 	groupID int NOT NULL AUTO_INCREMENT,
 	groupName varchar(255),
-	groupOwnerID int NOT NULL
+	groupOwnerID int NOT NULL,
+	PRIMARY KEY (groupID)
 );
 
 CREATE TABLE GroupMember(
