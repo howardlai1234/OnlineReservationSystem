@@ -53,6 +53,11 @@ def home(request):
             context['form'] = forms
             if form.is_valid():
                 print("Form valid")
+                print(form.cleaned_data['startHour'])
+                print(form.cleaned_data['startMinute'])
+                print(form.cleaned_data['meetingLength'])
+                print(form.cleaned_data['numberOfMeeting'])
+                """
                 print ("date:",form.cleaned_data['date'])
                 print ("StartTime:",form.cleaned_data['startHour'], form.cleaned_data['startMinute'])
                 print ("EndTime:",form.cleaned_data['endHour'], form.cleaned_data['endMinute'])
@@ -100,7 +105,9 @@ def home(request):
                         return HttpResponseRedirect('/calendar/')
                 else:
                     print("invalid Date")
-
+                    """
+            else:
+                print("invalid form")
 
         return render(request, 'calendar.html', {
             'username':request.session['username'],
