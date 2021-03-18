@@ -9,9 +9,11 @@ from ORS.settings import DEBUG
 from calendarManager import forms
 
 # Create your views here.
+
+
 def home(request):
     if 'userid' in request.session:
-        print (slotsLookup.table[0][1])
+        print(slotsLookup.table[0][1])
         userid = request.session['userid']
 
         timetable = []
@@ -19,17 +21,18 @@ def home(request):
         currentAvailableSlots = []
         currentAvailableSlotsReturn = ''
         previousSlotID = -1
-        previousSlottDateStr= '1970-1-1'
+        previousSlottDateStr = '1970-1-1'
 
         period_start = period_end = datetime.datetime(1970, 1, 1, 0, 0, 0)
         meetingLen = numberOfMeet = 0
 
         db_conn = connections['default']
         cursor = db_conn.cursor()
-        sql ='SELECT date, slotID FROM UserAvailability WHERE userID="' + str(userid) + '" ORDER BY date, slotID'
+        sql = 'SELECT date, slotID FROM UserAvailability WHERE userID="' + \
+            str(userid) + '" ORDER BY date, slotID'
         cursor.execute(sql)
         row = cursor.fetchall()
-        #print(len(row))
+        # print(len(row))
         timetable = row
         if len(timetable) != 0:
             for u in timetable:
@@ -39,23 +42,26 @@ def home(request):
                         currentAvailableSlots[-1]['endslot'] = u[1]
                     else:
                         #print("newPeriod ", previousSlotID,"  ",u[1])
-                        currentAvailableSlots.append({'date': u[0], 'startslot': u[1], 'endslot': u[1]})
+                        currentAvailableSlots.append(
+                            {'date': u[0], 'startslot': u[1], 'endslot': u[1]})
                 else:
                     previousSlottDateStr = u[0]
                    # print("newDate")
-                    currentAvailableSlots.append({'date': u[0], 'startslot': u[1], 'endslot': u[1]})
+                    currentAvailableSlots.append(
+                        {'date': u[0], 'startslot': u[1], 'endslot': u[1]})
                 previousSlotID = u[1]
                 #print('Date:', u[0], ' Start Time:', slotsLookup.getStartTime(int(u[1])), ' End Time:', slotsLookup.getEndTime(int(u[1])))
-            #print(currentAvailableSlots)
+            # print(currentAvailableSlots)
             for i in currentAvailableSlots:
-                currentAvailableSlotsReturn = currentAvailableSlotsReturn + '<p> Date: ' + i['date'].strftime("%Y/%m/%d") + '&nbsp;&nbsp; ' + str(slotsLookup.getStartTime(i['startslot'])) + ' - ' + str(slotsLookup.getEndTime(i['endslot'])) + ' </p> '
+                currentAvailableSlotsReturn = currentAvailableSlotsReturn + '<p> Date: ' + i['date'].strftime("%Y/%m/%d") + '&nbsp;&nbsp; ' + str(
+                    slotsLookup.getStartTime(i['startslot'])) + ' - ' + str(slotsLookup.getEndTime(i['endslot'])) + ' </p> '
 
-        context ={} 
+        context = {}
         if request.method == 'POST':
             form = forms.NameForm(request.POST)
             context['form'] = forms
             if form.is_valid():
-                ##debug information
+                # debug information
                 if DEBUG == True:
                     print("Form valid")
                     print(int(form.cleaned_data['startHour']))
@@ -69,20 +75,23 @@ def home(request):
                 startMin = int(form.cleaned_data['startMinute'])
                 meetingLen = int(form.cleaned_data['meetingLength'])
                 numberOfMeet = int(form.cleaned_data["numberOfMeeting"])
-                period_start = datetime.datetime(date.year, date.month, date.day, startHr, startMin, 0)
+                period_start = datetime.datetime(
+                    date.year, date.month, date.day, startHr, startMin, 0)
                 meetingSession = []
 
                 period_end = period_start
-                for i in range (0, numberOfMeet):
-                    session_start =  period_end
-                    period_end = period_end +  datetime.timedelta(minutes = meetingLen)
-                    meetingSession.append( {'startTime': session_start, 'endTime': period_end})
-                 #   sql = 
-                print (period_start)
-                print (period_end)
+                for i in range(0, numberOfMeet):
+                    session_start = period_end
+                    period_end = period_end + \
+                        datetime.timedelta(minutes=meetingLen)
+                    meetingSession.append(
+                        {'startTime': session_start, 'endTime': period_end})
+                 #   sql =
+                print(period_start)
+                print(period_end)
                 for x in meetingSession:
-                    print ( " start:", x['startTime'], "end:", x['endTime'])
-                ###code for the old version
+                    print(" start:", x['startTime'], "end:", x['endTime'])
+                # code for the old version
                 """
                 print ("date:",form.cleaned_data['date'])
                 print ("StartTime:",form.cleaned_data['startHour'], form.cleaned_data['startMinute'])
@@ -132,17 +141,17 @@ def home(request):
                 else:
                     print("invalid Date")
                     """
-                ### end of code of the old version
+                # end of code of the old version
             else:
                 print("invalid form")
 
         return render(request, 'calendar.html', {
-            'username':request.session['username'],
-            'availableTimes':currentAvailableSlotsReturn,
-            'startTime':period_start,
-            'endTime':period_end,
+            'username': request.session['username'],
+            'availableTimes': currentAvailableSlotsReturn,
+            'startTime': period_start,
+            'endTime': period_end,
             'duration': meetingLen,
             'no_of_meeting': numberOfMeet
-            })
+        })
     else:
         return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>')

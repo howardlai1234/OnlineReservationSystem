@@ -16,9 +16,9 @@ Including another URLconf
 #from django.contrib import admin
 #from django.urls import path
 
-#urlpatterns = [
+# urlpatterns = [
 #    path('admin/', admin.site.urls),
-#]
+# ]
 
 
 from django.contrib import admin
@@ -29,7 +29,7 @@ urlpatterns = [
     path("", views.home, name="home"),
     path("login/", include("login.urls")),
     path("dashboard/", include("dashboard.urls")),
-    path("message/",include("message.urls")),
-    path("meeting/",include("meeting.urls")),
-    path("calendar/",include("calendarManager.urls"))
+    path("message/", include("message.urls")),
+    path("meeting/", include("meeting.urls")),
+    path("calendar/", include("calendarManager.urls"))
 ]

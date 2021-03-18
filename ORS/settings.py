@@ -26,7 +26,8 @@ SECRET_KEY = '3l72%_!e^lgc(95l5k#mna&juoywjk0n86vf^2u+!a(o#_1taj'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '192.168.2.112', '192.168.2.70', '192.168.2.158']
+ALLOWED_HOSTS = ['.localhost', '127.0.0.1',
+                 '192.168.2.112', '192.168.2.70', '192.168.2.158']
 
 
 # Application definition
@@ -52,7 +53,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'ORS.urls'
 #
-#TEMPLATES = [
+# TEMPLATES = [
 #    {
 #        'BACKEND': 'django.template.backends.django.DjangoTemplates',
 #        'DIRS': [],
@@ -66,7 +67,7 @@ ROOT_URLCONF = 'ORS.urls'
 #            ],
 #        },
 #    },
-#]
+# ]
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -96,9 +97,9 @@ DATABASES = {
         'PASSWORD': 'ORS',
         'HOST': '192.168.2.217',
         'PORT': '3306',
-    #   'OPTIONS': {
-    #        'init_command': "SET sql_mode='STRICT_TRANrS_TABLES'"
-    #    }
+        #   'OPTIONS': {
+        #        'init_command': "SET sql_mode='STRICT_TRANrS_TABLES'"
+        #    }
     }
 }
 

@@ -80,7 +80,8 @@ class DjangoAdminLog(models.Model):
     object_repr = models.CharField(max_length=200)
     action_flag = models.PositiveSmallIntegerField()
     change_message = models.TextField()
-    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING, blank=True, null=True)
+    content_type = models.ForeignKey(
+        'DjangoContentType', models.DO_NOTHING, blank=True, null=True)
     user = models.ForeignKey(AuthUser, models.DO_NOTHING)
 
     class Meta:
@@ -119,13 +120,17 @@ class DjangoSession(models.Model):
 
 
 class Meeting(models.Model):
-    meetingid = models.AutoField(db_column='meetingID', primary_key=True)  # Field name made lowercase.
-    hostid = models.IntegerField(db_column='hostID')  # Field name made lowercase.
-    participantid = models.IntegerField(db_column='participantID')  # Field name made lowercase.
+    # Field name made lowercase.
+    meetingid = models.AutoField(db_column='meetingID', primary_key=True)
+    # Field name made lowercase.
+    hostid = models.IntegerField(db_column='hostID')
+    # Field name made lowercase.
+    participantid = models.IntegerField(db_column='participantID')
     date = models.DateField(blank=True, null=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     remark = models.CharField(max_length=255, blank=True, null=True)
-    statusid = models.IntegerField(db_column='statusID', blank=True, null=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    statusid = models.IntegerField(db_column='statusID', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -133,15 +138,24 @@ class Meeting(models.Model):
 
 
 class User(models.Model):
-    userid = models.AutoField(db_column='userID', primary_key=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    userid = models.AutoField(db_column='userID', primary_key=True)
     username = models.CharField(max_length=255, blank=True, null=True)
-    firstname = models.CharField(db_column='firstName', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    lastname = models.CharField(db_column='lastName', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    firstname = models.CharField(
+        db_column='firstName', max_length=255, blank=True, null=True)
+    # Field name made lowercase.
+    lastname = models.CharField(
+        db_column='lastName', max_length=255, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
     tel = models.CharField(max_length=255, blank=True, null=True)
-    typeid = models.CharField(db_column='typeID', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    typeid = models.CharField(
+        db_column='typeID', max_length=255, blank=True, null=True)
     active = models.IntegerField(blank=True, null=True)
-    hashpw = models.CharField(db_column='hashPW', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    hashpw = models.CharField(
+        db_column='hashPW', max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -149,9 +163,11 @@ class User(models.Model):
 
 
 class Useravailability(models.Model):
-    userid = models.IntegerField(db_column='userID')  # Field name made lowercase.
+    # Field name made lowercase.
+    userid = models.IntegerField(db_column='userID')
     date = models.DateField()
-    slotid = models.IntegerField(db_column='slotID')  # Field name made lowercase.
+    # Field name made lowercase.
+    slotid = models.IntegerField(db_column='slotID')
 
     class Meta:
         managed = False
