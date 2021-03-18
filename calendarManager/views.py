@@ -1,4 +1,4 @@
-from datetime import date
+import datetime
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -53,10 +53,24 @@ def home(request):
             context['form'] = forms
             if form.is_valid():
                 print("Form valid")
-                print(form.cleaned_data['startHour'])
+                print(int(form.cleaned_data['startHour']))
                 print(form.cleaned_data['startMinute'])
                 print(form.cleaned_data['meetingLength'])
                 print(form.cleaned_data['numberOfMeeting'])
+
+                date = form.cleaned_data['date']
+                startHr = int(form.cleaned_data['startHour'])
+                startMin = int(form.cleaned_data['startMinute'])
+                meetingLen = int(form.cleaned_data['meetingLength'])
+                numberOfMeet = int(form.cleaned_data["numberOfMeeting"])
+                period_start = datetime.datetime(date.year, date.month, date.day , startHr, startMin, 0)
+
+                period_end = period_start
+                for i in range (0, numberOfMeet):
+                    period_end = period_end + datetime.timedelta(minutes = meetingLen)
+                print (period_start)
+                print (period_end)
+                ###code for the old version
                 """
                 print ("date:",form.cleaned_data['date'])
                 print ("StartTime:",form.cleaned_data['startHour'], form.cleaned_data['startMinute'])
@@ -106,6 +120,7 @@ def home(request):
                 else:
                     print("invalid Date")
                     """
+                ### end of code of the old version
             else:
                 print("invalid form")
 
