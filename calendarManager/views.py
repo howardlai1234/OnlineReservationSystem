@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from django.db import connections
 from django.db.utils import OperationalError
 from ORS import slotsLookup
+from ORS.settings import DEBUG
 from calendarManager import forms
 
 # Create your views here.
@@ -20,6 +21,8 @@ def home(request):
         previousSlotID = -1
         previousSlottDateStr= '1970-1-1'
 
+        period_start = period_end = datetime.datetime(1970, 1, 1, 0, 0, 0)
+        meetingLen = numberOfMeet = 0
 
         db_conn = connections['default']
         cursor = db_conn.cursor()
@@ -53,11 +56,12 @@ def home(request):
             context['form'] = forms
             if form.is_valid():
                 ##debug information
-                print("Form valid")
-                print(int(form.cleaned_data['startHour']))
-                print(form.cleaned_data['startMinute'])
-                print(form.cleaned_data['meetingLength'])
-                print(form.cleaned_data['numberOfMeeting'])
+                if DEBUG == True:
+                    print("Form valid")
+                    print(int(form.cleaned_data['startHour']))
+                    print(form.cleaned_data['startMinute'])
+                    print(form.cleaned_data['meetingLength'])
+                    print(form.cleaned_data['numberOfMeeting'])
 
                 # convert data from form into correct and esaily to understand variables
                 date = form.cleaned_data['date']
@@ -73,6 +77,7 @@ def home(request):
                     session_start =  period_end
                     period_end = period_end +  datetime.timedelta(minutes = meetingLen)
                     meetingSession.append( {'startTime': session_start, 'endTime': period_end})
+                 #   sql = 
                 print (period_start)
                 print (period_end)
                 for x in meetingSession:

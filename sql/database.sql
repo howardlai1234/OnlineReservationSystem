@@ -40,7 +40,6 @@ CREATE TABLE UserAvailability (
 CREATE TABLE Slot (
 	slotID int NOT NULL AUTO_INCREMENT,
 	ownerID int NOT NULL,
-	date Date NOT NULL,
 	startTime DateTime NOT NULL,
 	endTime DateTime Not Null,
 	PRIMARY KEY (slotsID)
