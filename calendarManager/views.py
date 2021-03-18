@@ -52,24 +52,31 @@ def home(request):
             form = forms.NameForm(request.POST)
             context['form'] = forms
             if form.is_valid():
+                ##debug information
                 print("Form valid")
                 print(int(form.cleaned_data['startHour']))
                 print(form.cleaned_data['startMinute'])
                 print(form.cleaned_data['meetingLength'])
                 print(form.cleaned_data['numberOfMeeting'])
 
+                # convert data from form into correct and esaily to understand variables
                 date = form.cleaned_data['date']
                 startHr = int(form.cleaned_data['startHour'])
                 startMin = int(form.cleaned_data['startMinute'])
                 meetingLen = int(form.cleaned_data['meetingLength'])
                 numberOfMeet = int(form.cleaned_data["numberOfMeeting"])
-                period_start = datetime.datetime(date.year, date.month, date.day , startHr, startMin, 0)
+                period_start = datetime.datetime(date.year, date.month, date.day, startHr, startMin, 0)
+                meetingSession = []
 
                 period_end = period_start
                 for i in range (0, numberOfMeet):
-                    period_end = period_end + datetime.timedelta(minutes = meetingLen)
+                    session_start =  period_end
+                    period_end = period_end +  datetime.timedelta(minutes = meetingLen)
+                    meetingSession.append( {'startTime': session_start, 'endTime': period_end})
                 print (period_start)
                 print (period_end)
+                for x in meetingSession:
+                    print ( " start:", x['startTime'], "end:", x['endTime'])
                 ###code for the old version
                 """
                 print ("date:",form.cleaned_data['date'])
@@ -127,6 +134,10 @@ def home(request):
         return render(request, 'calendar.html', {
             'username':request.session['username'],
             'availableTimes':currentAvailableSlotsReturn,
+            'startTime':period_start,
+            'endTime':period_end,
+            'duration': meetingLen,
+            'no_of_meeting': numberOfMeet
             })
     else:
         return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>')

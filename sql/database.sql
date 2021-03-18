@@ -41,8 +41,8 @@ CREATE TABLE Slot (
 	slotID int NOT NULL AUTO_INCREMENT,
 	ownerID int NOT NULL,
 	date Date NOT NULL,
-	startTime Time NOT NULL,
-	endTime Time Not Null,
+	startTime DateTime NOT NULL,
+	endTime DateTime Not Null,
 	PRIMARY KEY (slotsID)
 );
 
