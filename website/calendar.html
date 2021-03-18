@@ -20,7 +20,7 @@
     {{availableTimes}}
     {% endautoescape %}
 <div>
-    <form action="" method="post">{% csrf_token %} {{form.as_p }} 
+  <form action="" method="post">{% csrf_token %} {{form.as_p }} 
         <h3>Add new availavle times</h3>
         Date<input type="date" id="date" name="date"><br>
         Start Time:
@@ -42,42 +42,20 @@
         
         </select>
         :
-        <select id="startMinute" name="startMinute">
-            <option value="00">00</option>
-            <option value="15">15</option>
-            <option value="30">30</option>
-            <option value="45">45</option>
-          </select>
-        ;
-        End Time:
-        <select id="endHour" name="endHour">
-          <option value="08">08</option>
-          <option value="09">09</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
-          <option value="13">13</option>
-          <option value="14">14</option>
-          <option value="15">15</option> 
-          <option value="16">16</option>
-          <option value="17">17</option>
-          <option value="18">18</option>
-          <option value="19">19</option>
-          <option value="20">20</option>
-          <option value="21">21</option>
-        
-        </select>
-        :
-        <select id="endtMinute" name="endMinute">
-            <option value="14">14</option>
-            <option value="29">29</option>
-            <option value="44">44</option>
-            <option value="59">59</option>
-          </select>
-            <br>
-            <button class="btn btn-common" id="submit" type="submit" vlaue="ok">Add</button>
-        </form>
-    
+      <input type="number" id="startMinute" name="startMinute" min="0", max="59" required data-error="Start Minute cannot be empty">
+      <br>
+      <lable for="meetingLength">Please enter the duration of each meeting (in minutes):</lable>
+      <!-- The following line are expected to have the min and max field (meeting length) to be set by config on database) -->
+      <input type="number" id="meetingLength" name="meetingLength" min="1", max="180" required data-error="incorrect meeting length">
+      <br>
+      <lable for="numberOfMeeting">Please enter number of meeting of this session</lable>
+      <input type="number" id="numberOfMeeting" name="numberOfMeeting" min="1", required data-error="incorrect number"> 
+      <br>
+      <button class="btn btn-common" id="submit" type="submit" vlaue="ok">Add</button>
+  </form>
+</div>
+<div>
+    meeting detail: Start:{{startTime}}, End: {{endTime}}, {{no_of_meeting}} Meeting(s), each {{duration}}minutes long
 </div>
     <br>
     <input type="button" onclick="location.href='/dashboard';" value="back">

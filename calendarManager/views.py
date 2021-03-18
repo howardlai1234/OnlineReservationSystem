@@ -1,10 +1,11 @@
-from datetime import date
+import datetime
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.db import connections
 from django.db.utils import OperationalError
 from ORS import slotsLookup
+from ORS.settings import DEBUG
 from calendarManager import forms
 
 # Create your views here.
@@ -20,6 +21,8 @@ def home(request):
         previousSlotID = -1
         previousSlottDateStr= '1970-1-1'
 
+        period_start = period_end = datetime.datetime(1970, 1, 1, 0, 0, 0)
+        meetingLen = numberOfMeet = 0
 
         db_conn = connections['default']
         cursor = db_conn.cursor()
@@ -52,7 +55,35 @@ def home(request):
             form = forms.NameForm(request.POST)
             context['form'] = forms
             if form.is_valid():
-                print("Form valid")
+                ##debug information
+                if DEBUG == True:
+                    print("Form valid")
+                    print(int(form.cleaned_data['startHour']))
+                    print(form.cleaned_data['startMinute'])
+                    print(form.cleaned_data['meetingLength'])
+                    print(form.cleaned_data['numberOfMeeting'])
+
+                # convert data from form into correct and esaily to understand variables
+                date = form.cleaned_data['date']
+                startHr = int(form.cleaned_data['startHour'])
+                startMin = int(form.cleaned_data['startMinute'])
+                meetingLen = int(form.cleaned_data['meetingLength'])
+                numberOfMeet = int(form.cleaned_data["numberOfMeeting"])
+                period_start = datetime.datetime(date.year, date.month, date.day, startHr, startMin, 0)
+                meetingSession = []
+
+                period_end = period_start
+                for i in range (0, numberOfMeet):
+                    session_start =  period_end
+                    period_end = period_end +  datetime.timedelta(minutes = meetingLen)
+                    meetingSession.append( {'startTime': session_start, 'endTime': period_end})
+                 #   sql = 
+                print (period_start)
+                print (period_end)
+                for x in meetingSession:
+                    print ( " start:", x['startTime'], "end:", x['endTime'])
+                ###code for the old version
+                """
                 print ("date:",form.cleaned_data['date'])
                 print ("StartTime:",form.cleaned_data['startHour'], form.cleaned_data['startMinute'])
                 print ("EndTime:",form.cleaned_data['endHour'], form.cleaned_data['endMinute'])
@@ -100,11 +131,18 @@ def home(request):
                         return HttpResponseRedirect('/calendar/')
                 else:
                     print("invalid Date")
-
+                    """
+                ### end of code of the old version
+            else:
+                print("invalid form")
 
         return render(request, 'calendar.html', {
             'username':request.session['username'],
             'availableTimes':currentAvailableSlotsReturn,
+            'startTime':period_start,
+            'endTime':period_end,
+            'duration': meetingLen,
+            'no_of_meeting': numberOfMeet
             })
     else:
         return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>')

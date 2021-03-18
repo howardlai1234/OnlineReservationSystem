@@ -1,7 +1,11 @@
 DROP TABLE User;
 DROP Table Meeting;
 DROP TABLE UserAvailability;
-DROP Table message;
+DROP TABLE Slots;
+DROP TABLE SlotsOpenTo;
+DROP TABLE Group;
+DROP TABLE GroupMember;
+DROP Table Message;
 
 CREATE TABLE User (
 	userID int NOT NULL AUTO_INCREMENT,
@@ -31,6 +35,33 @@ CREATE TABLE UserAvailability (
 	userID int NOT NULL,
     date Date NOT NULL,
     slotID int NOT NULL
+);
+
+CREATE TABLE Slot (
+	slotID int NOT NULL AUTO_INCREMENT,
+	ownerID int NOT NULL,
+	startTime DateTime NOT NULL,
+	endTime DateTime Not Null,
+	PRIMARY KEY (slotsID)
+);
+
+CREATE TABLE SlotsOpenTo (
+	slotsID int NOT NULL,
+	isGroup bool,
+	OpenToID int NOT NULL
+);
+
+CREATE TABLE Group(
+	groupID int NOT NULL AUTO_INCREMENT,
+	groupName varchar(255),
+	groupOwnerID int NOT NULL,
+	PRIMARY KEY (groupID)
+);
+
+CREATE TABLE GroupMember(
+	groupID int NOT NULL,
+	memberID int NOT NULL,
+	joinDate datetime
 );
 
 CREATE TABLE Message (
