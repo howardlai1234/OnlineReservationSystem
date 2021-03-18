@@ -1,0 +1,21 @@
+image: python:3.8
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG} 
+  paths:
+    - venv
+
+stages:
+  - build
+
+django check:
+  stage: build
+  script:
+    - pip3 install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip3 install -r requirements.txt
+    - pip3 install flake8
+    - python3 manage.py check
+    - flake8 --exit-zero --exclude .git,venv,__pycache__,build,dist --select F,W
+    
