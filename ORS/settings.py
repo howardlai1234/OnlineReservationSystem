@@ -93,7 +93,7 @@ WSGI_APPLICATION = 'ORS.wsgi.application'
 
 # Do Not activate both together
 
-#for remote develop only 
+#for sqlite 
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -101,6 +101,7 @@ WSGI_APPLICATION = 'ORS.wsgi.application'
 #     }
 # }
 
+# for docker
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.mysql',
