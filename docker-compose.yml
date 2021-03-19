@@ -3,20 +3,20 @@ services:
   ors:
     build: .
     ports: 
-      - "8000:80"
-    # env_file:
-    #  - {envfile location}
+      - "80:8000"
+    env_file:
+      - ./.env
     volumes:
       - .:/opt/ors
     depends_on:
       - mysql
-    command: ["python3 manage.py runserver"]
+    command: ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
   mysql:
     image: "mysql:5.7"
     ports:
       - "3306:3306"
-    # env_file:
-    #  - {envfile location}
+    env_file:
+     - ./.env
     volumes:
       - "ors-data:/var/lib/mysql"
 volumes:

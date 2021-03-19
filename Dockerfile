@@ -1,7 +1,7 @@
 FROM python:3.8
 
 RUN pip install --upgrade pip && \
-    pip install --upgrade etuptools
+    pip install --upgrade setuptools
 
 WORKDIR /opt/ors
 
@@ -10,4 +10,4 @@ RUN pip install -r requirements.txt
 
 EXPOSE 8000
 COPY ./ ./
-CMD ["python3 manage.py runserver"]
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
