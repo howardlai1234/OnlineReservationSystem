@@ -6,3 +6,7 @@ Developer List:
 
 This project starts as the capstone project for Ho Wang Howard LAI in 2020 Fall semester,
 where Qixin Wang is the supervisor. 
+
+
+
+reminder: pls define `.env`, thx
