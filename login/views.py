@@ -8,6 +8,7 @@ from datetime import datetime
 from django.views import generic
 from django.db import connections
 from django.db.utils import OperationalError
+from django.contrib.auth import logout
 
 from django.contrib.auth.models import User
 
@@ -89,9 +90,9 @@ def connction_test(request):
         return HttpResponse(x + "Connection Successful")
 
 
-def logout(request):
-    request.session.flush()
-    return HttpResponseRedirect('/login/')
+def logout_service(request):
+    logout(request)
+    return HttpResponseRedirect('/')
 
 class UserListView(generic.ListView):
     model = User
