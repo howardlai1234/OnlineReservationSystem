@@ -228,3 +228,5 @@ class Useravailability(models.Model):
     class Meta:
         managed = False
         db_table = 'useravailability'
+
+

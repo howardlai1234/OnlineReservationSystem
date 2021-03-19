@@ -1,8 +1,8 @@
 from django.contrib import admin
-from ORS.model import Meeting, Message, Slot, Slotsopento
+from .models import Meeting, Message, Slot, Slotsopento
 
-admin.site.Register(Meeting)
-admin.site.Register(Slot)
-admin.site.Register(Slotsopento)
-admin.site.Register(Message)
+admin.site.register(Meeting)
+admin.site.register(Slot)
+admin.site.register(Slotsopento)
+admin.site.register(Message)
 # Register your models here.
