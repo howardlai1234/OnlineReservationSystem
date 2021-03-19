@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'dashboard',
+    'login',
 ]
 
 MIDDLEWARE = [
@@ -89,19 +91,29 @@ WSGI_APPLICATION = 'ORS.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# Do Not activate both together
+
+#for remote develop only 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ors',
-        'USER': 'ORS',
-        'PASSWORD': 'ORS',
-        'HOST': '192.168.2.217',
-        'PORT': '3306',
-        #   'OPTIONS': {
-        #        'init_command': "SET sql_mode='STRICT_TRANrS_TABLES'"
-        #    }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase',
     }
 }
+
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': 'ors',
+#        'USER': 'ORS',
+#        'PASSWORD': 'ORS',
+#        'HOST': '192.168.2.217',
+#        'PORT': '3306',
+#        #   'OPTIONS': {
+#        #        'init_command': "SET sql_mode='STRICT_TRANrS_TABLES'"
+#        #    }
+#    }
+#}
 
 
 # Password validation
@@ -122,6 +134,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Redirect to home URL after login (Default redirects to /accounts/profile/)
+LOGIN_REDIRECT_URL = '/dashboard'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/

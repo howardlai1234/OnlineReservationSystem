@@ -5,4 +5,4 @@ from django.http import HttpResponseRedirect
 
 
 def home(request):
-    return HttpResponseRedirect('/login/')
+    return HttpResponseRedirect('/accounts/login/')

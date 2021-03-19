@@ -3,7 +3,7 @@ DROP Table Meeting;
 DROP TABLE UserAvailability;
 DROP TABLE Slots;
 DROP TABLE SlotsOpenTo;
-DROP TABLE Group;
+DROP TABLE Gp;
 DROP TABLE GroupMember;
 DROP Table Message;
 
@@ -51,7 +51,7 @@ CREATE TABLE SlotsOpenTo (
 	OpenToID int NOT NULL
 );
 
-CREATE TABLE Group(
+CREATE TABLE Gp(
 	groupID int NOT NULL AUTO_INCREMENT,
 	groupName varchar(255),
 	groupOwnerID int NOT NULL,
