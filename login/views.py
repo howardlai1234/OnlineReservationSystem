@@ -5,11 +5,15 @@ from login import forms
 # def home(request):
 #    return HttpResponse("Hello, Django!")
 from datetime import datetime
+from django.views import generic
 from django.db import connections
 from django.db.utils import OperationalError
 
+from django.contrib.auth.models import User
 
 def home(request):
+    print("Hello World")
+    print(User.objects.all())
     formcheck = 'null'
     sql, username, password, message = '', '', '', ''
     context = {}
@@ -88,3 +92,6 @@ def connction_test(request):
 def logout(request):
     request.session.flush()
     return HttpResponseRedirect('/login/')
+
+class UserListView(generic.ListView):
+    model = User

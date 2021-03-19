@@ -28,6 +28,7 @@ from ORS import views
 urlpatterns = [
     path("", views.home, name="home"),
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
     path("login/", include("login.urls")),
     path("dashboard/", include("dashboard.urls")),
     path("message/", include("message.urls")),
