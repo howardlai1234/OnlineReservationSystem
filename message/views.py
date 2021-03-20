@@ -12,6 +12,8 @@ from ORS.settings import DEBUG
 def home(request):
 
     if request.user.is_authenticated:
+        received_message_return = []
+        
 
         userid = User.objects.get(username=request.user).pk
         received_message = Message.objects.filter(receiverid=userid).all()
@@ -22,10 +24,14 @@ def home(request):
             print("message title:", message.title)
             print("sender:",User.objects.get(pk=int(message.senderid)))
             print(message.body)
+            received_message_return.append({'title': message.title, "sender": User.objects.get(pk=int(message.senderid)), "body": message.body})
             if message.viewed==0:
                 Message.objects.filter(messageid=message.messageid).update(viewed=1)
 
-        return HttpResponse( "Nothing to see here, move along")
+        return render(request, "message.html", {
+            'received_message': received_message_return
+
+        })
     ##the following code is for older version which uses RAW SQL
 
     # if 'userid' in request.session:
