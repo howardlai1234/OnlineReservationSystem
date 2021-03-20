@@ -14,8 +14,12 @@
 </head>
 
 <body>
-  {% if received_message_counter == 0 %}
-    No Message<br>
+  <div>
+    <h1>inbox</h1>
+  {% if received_message_count == 0 %}
+    <div class="row">   
+    No message received<br>
+    </div> 
   {% else %}
     {% for i in received_message %} 
     <div class="row"> 
@@ -26,6 +30,22 @@
     {% endfor %}
   {% endif %}    
   </div>
+  <br><br>
+  <h1>sent</h1>
+  {% if sent_message_count == 0 %}
+    <div class="row">   
+    No message sent<br>
+    </div> 
+  {% else %}
+    {% for i in sent_message %} 
+    <div class="row"> 
+        Title: {{ i.title }} <br>
+        Recipient: {{ i.sender }} <br>
+        Recipient viewed: {{ i.viewed }} <br>
+        {{ i.body }} 
+    </div> 
+    {% endfor %}
+  {% endif %}  
     <br>
     <input type="button" onclick="location.href='/dashboard';" value="back">
 </body>
