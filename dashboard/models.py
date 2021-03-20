@@ -23,7 +23,7 @@ class Gp(models.Model):
     groupownerid = models.IntegerField(db_column='groupOwnerID')  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        #managed = False
         db_table = 'gp'
 
 
@@ -33,7 +33,7 @@ class Groupmember(models.Model):
     joindate = models.DateTimeField(db_column='joinDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        #managed = False
         db_table = 'groupmember'
 
 
@@ -51,7 +51,7 @@ class Meeting(models.Model):
     statusid = models.IntegerField(db_column='statusID', blank=True, null=True)
 
     class Meta:
-        managed = False
+        #managed = False
         db_table = 'meeting'
 
 
@@ -66,7 +66,7 @@ class Message(models.Model):
     body = models.CharField(max_length=4096, blank=True, null=True)
 
     class Meta:
-        managed = False
+        #managed = False
         db_table = 'message'
 
 
@@ -77,7 +77,7 @@ class Slot(models.Model):
     endtime = models.DateTimeField(db_column='endTime')  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        #managed = False
         db_table = 'slot'
 
 
@@ -87,7 +87,7 @@ class Slotsopento(models.Model):
     opentoid = models.IntegerField(db_column='OpenToID')  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        #managed = False
         db_table = 'slotsopento'
 
 
@@ -112,7 +112,7 @@ class User(models.Model):
         db_column='hashPW', max_length=255, blank=True, null=True)
 
     class Meta:
-        managed = False
+        #managed = False
         db_table = 'user'
 
 
@@ -124,5 +124,5 @@ class Useravailability(models.Model):
     slotid = models.IntegerField(db_column='slotID')
 
     class Meta:
-        managed = False
+        #managed = False
         db_table = 'useravailability'

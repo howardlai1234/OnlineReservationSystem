@@ -91,9 +91,10 @@ WSGI_APPLICATION = 'ORS.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# Do Not activate both together
+## Do Not activate both together
 
-#for sqlite 
+#or sqlite 
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -101,7 +102,8 @@ WSGI_APPLICATION = 'ORS.wsgi.application'
 #     }
 # }
 
-# for docker
+## for docker
+
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.mysql',
