@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-    <title> ORS-Message </title>
+    <title>ORS-Message</title>
     <style>
         body {
            background-color: rgb(189, 189, 189);
@@ -14,13 +14,17 @@
 </head>
 
 <body>
-  {% for i in received_message %} 
-  <div class="row"> 
-      Title: {{ i.title }} <br>
-      Sent By: {{ i.sender }} <br>
-      {{ i.body }} 
-  </div> 
-  {% endfor %}    
+  {% if received_message_counter == 0 %}
+    No Message<br>
+  {% else %}
+    {% for i in received_message %} 
+    <div class="row"> 
+        Title: {{ i.title }} <br>
+        Sent By: {{ i.sender }} <br>
+        {{ i.body }} 
+    </div> 
+    {% endfor %}
+  {% endif %}    
   </div>
     <br>
     <input type="button" onclick="location.href='/dashboard';" value="back">

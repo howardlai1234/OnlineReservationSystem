@@ -12,24 +12,43 @@ from ORS.settings import DEBUG
 def home(request):
 
     if request.user.is_authenticated:
-        received_message_return = []
-        
-
         userid = User.objects.get(username=request.user).pk
-        received_message = Message.objects.filter(receiverid=userid).all()
-        # for message in received_message:
-        #     print()
-        print("Title:", received_message[0].title)
-        for message in received_message:
-            print("message title:", message.title)
-            print("sender:",User.objects.get(pk=int(message.senderid)))
-            print(message.body)
-            received_message_return.append({'title': message.title, "sender": User.objects.get(pk=int(message.senderid)), "body": message.body})
-            if message.viewed==0:
-                Message.objects.filter(messageid=message.messageid).update(viewed=1)
+        
+        received_message_return = []
+        received_message_count = Message.objects.filter(receiverid=userid).count()
+
+        sent_message_return = []
+        sent_message_count = Message.objects.filter(senderid=userid).count()        
+
+        if received_message_count > 0:
+            received_message = Message.objects.filter(receiverid=userid).all()
+            # for message in received_message:
+            #     print()
+            print("Title:", received_message[0].title)
+            for message in received_message:
+                print("message title:", message.title)
+                print("sender:",User.objects.get(pk=int(message.senderid)))
+                print(message.body)
+                received_message_return.append({'title': message.title, "sender": User.objects.get(pk=int(message.senderid)), "body": message.body})
+                if message.viewed==0:
+                    Message.objects.filter(messageid=message.messageid).update(viewed=1)
+
+        if sent_message_count > 0:
+            sent_message = Message.objects.filter(senderid=userid).all()
+            for message in sent_message:
+                print("message title:", message.title)
+                print("sender:",User.objects.get(pk=int(message.senderid)))
+                print(message.body)
+                if message.viewed==0:
+                    sent_message_return.append({'title': message.title, "sender": User.objects.get(pk=int(message.receiverid)), "body": message.body, "viewed": "No"})
+                else:
+                    sent_message_return.append({'title': message.title, "sender": User.objects.get(pk=int(message.receiverid)), "body": message.body, "viewed": "Yes"})
 
         return render(request, "message.html", {
-            'received_message': received_message_return
+            'received_message_count': received_message_count,
+            'received_message': received_message_return,
+            'sent_message_count': sent_message_count,
+            'sent_message': sent_message_return
 
         })
     ##the following code is for older version which uses RAW SQL
