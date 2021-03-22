@@ -4,6 +4,7 @@ from django.db import connections
 from django.db.utils import OperationalError
 from django.contrib.auth.models import User
 from ORS.settings import DEBUG
+from dashboard.models import Message
 # Create your views here.
 
 
@@ -17,6 +18,7 @@ def home(request):
         username = ""
         userid = User.objects.get(username=request.user).pk
 
+        message_counter = received_message_count = Message.objects.filter(receiverid=userid, viewed=1).count()
         ##the following code is for older version which uses RAW SQL
 
         #username = request.session['username']

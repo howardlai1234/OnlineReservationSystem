@@ -18,6 +18,8 @@
 -->
 {% extends "base_generic.html" %}
 
+{% block title %}<title>ORS-Message</title>{% endblock %}
+
 {% block content %}
   <div>
     <h1>inbox</h1>
@@ -30,7 +32,9 @@
     <div class="row"> 
         Title: {{ i.title }} <br>
         Sent By: {{ i.sender }} <br>
-        {{ i.body }} 
+        {{ i.body }}
+        <br>
+        <input type="button" onclick="location.href='/message/view?id={{i.messageid}}';" value="Detail">   
     </div> 
     {% endfor %}
   {% endif %}    
@@ -47,7 +51,8 @@
         Title: {{ i.title }} <br>
         Recipient: {{ i.sender }} <br>
         Recipient viewed: {{ i.viewed }} <br>
-        {{ i.body }} 
+        {{ i.body }}<br>
+        <input type="button" onclick="location.href='/message/view?id={{i.messageid}}';" value="Detail">  
     </div> 
     {% endfor %}
   {% endif %}  
