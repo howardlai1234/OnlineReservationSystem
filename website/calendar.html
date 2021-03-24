@@ -22,6 +22,12 @@
 <div>
   <form action="" method="post">{% csrf_token %} {{form.as_p }} 
         <h3>Add new availavle times</h3>
+        For Group: <select id="group" name="group">
+            {% for gp in group_list %} 
+            <option value="{{ gp }}">{{ gp }}</option>
+            {% endfor %}
+        </select>
+        <br>
         Date<input type="date" id="date" name="date"><br>
         Start Time:
         <select id="startHour" name="startHour">

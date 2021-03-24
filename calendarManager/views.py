@@ -18,6 +18,7 @@ def home(request):
     phase = Currentphase.objects.get().phase
     allowed_group = Timetable.objects.get().phase1_group_name
     user_allowed_to_access = 0
+    grouplist = []
 
     timetable = []
     slotsInDB = []
@@ -38,13 +39,15 @@ def home(request):
             phase = 1
             print("userid: ", userid)
         for gp in request.user.groups.all():
+            grouplist.append(gp.name)
             if gp.name == allowed_group:
                 user_allowed_to_access = 1
-            print("Group of user: ", request.user, ":", gp.name)
+                print("Group of user: ", request.user, ":", gp.name)
         if phase == 1 and user_allowed_to_access == 1:
             context = {}
             if DEBUG == True:
                 print("user allowed to access")
+                print("user Group in return list:", grouplist )
   
             # form handling
             if request.method == 'POST':
@@ -135,15 +138,16 @@ def home(request):
             # else:
             #     print("invalid form")
 
-        return render(request, 'calendar.html', {
-            'username': request.user,
-            'availableTimes': currentAvailableSlotsReturn,
-            'startTime': period_start,
-            'endTime': period_end,
-            'duration': meetingLen,
-            'no_of_meeting': numberOfMeet
-        })
-        #return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/dashboard">return</a>')
+            return render(request, 'calendar.html', {
+                'group_list': grouplist,
+                'username': request.user,
+                'availableTimes': currentAvailableSlotsReturn,
+                'startTime': period_start,
+                'endTime': period_end,
+                'duration': meetingLen,
+                'no_of_meeting': numberOfMeet
+            })
+        return HttpResponse('<h1>ACCEESS DENIED</h1> <br> You are not allowed to be here, please contact an administrator if you think you should <br> <br><a href="/dashboard">return</a>', status=403)
     else:
         return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
 
