@@ -33,7 +33,7 @@ open another terminal and run maintaince command there.
 make migrate-db
 ```
 
-### upgrade database schema
+### Upgrade database schema
 
 ```sh
 make create-migration
