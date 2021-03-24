@@ -15,11 +15,17 @@ A 3-tiered web application for mass meeting reservation
 2. Run command 
    ```sh
    docker-compose build
-   make migrate-db
-   make add-super-user
    docker-compose up
    ```
+3. While docker-compose is running, ```docker-compose up```, open another terminal and run the following command to finish the setup
+   ```sh
+   make migrate-db
+   make add-super-user   
+   ```
 
+## Maintaince
+The following actions required docker-compose to be running, ```docker-compose up```,
+open another terminal and run maintaince command there.
 
 ### Create database migration
 
@@ -27,7 +33,7 @@ A 3-tiered web application for mass meeting reservation
 make migrate-db
 ```
 
-### upgrade database schema
+### Upgrade database schema
 
 ```sh
 make create-migration
