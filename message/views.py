@@ -1,10 +1,12 @@
+from datetime import datetime
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseNotAllowed
 from django.db import connections
 from django.db.utils import OperationalError
 from django.contrib.auth.models import User
 from dashboard.models import Message
 from ORS.settings import DEBUG
+from message import forms
 
 # Create your views here.
 
@@ -83,7 +85,7 @@ def home(request):
 
     #     })
     else:
-        return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>')
+        return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
 
 
 def view(request):
@@ -96,7 +98,7 @@ def view(request):
             sender = User.objects.get(pk=message.senderid).username
             receiver = User.objects.get(pk=message.receiverid).username
             message_return = {}
-            return render(request, "message/message_view.html", {
+            return render(request, "message/view.html", {
                 'message': message,
                 'sender': sender,
                 'receiver': receiver
@@ -109,10 +111,58 @@ def view(request):
     #         return HttpResponse('ok')
     #     else:
     #         return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Incorrect or messing messageID <br> <br><a href="/message">Back</a>')
-        return HttpResponse( messageID , "Nothing to see here, move along")
+        return HttpResponseNotFound('<h1>404 ERROR: message not found</h1>')
     else:
-        return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>')
+        return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
 
 
 def create_new(request):
-    return HttpResponse("ORS-New_Message <br> Work in Progress")
+
+    formError = ""
+    formSuccess = ""
+    message_is_valid = -1
+    receiverID = 0
+
+    if request.user.is_authenticated:
+        userid = User.objects.get(username=request.user).pk
+        if request.method == 'POST':
+            form = forms.NameForm(request.POST)
+            if form.is_valid():
+                if DEBUG == True:
+                    print("Form Valid")
+                    print("receiver: ", form.cleaned_data['receiver'])
+                    print("title: ", form.cleaned_data['title'])
+                    print("Message body: ", form.cleaned_data['body'])
+                    print("current time: ", datetime.now())
+                if User.objects.filter(username=form.cleaned_data['receiver']).count() == 1:
+                    receiverID = User.objects.get(username=form.cleaned_data['receiver']).pk
+                    if receiverID == userid:
+                        message_is_valid = 0
+                        formError = formError + "ERROR: You cannot sent message to yourself"
+                    else:
+                        Message.objects.create(
+                            senderid=userid,
+                            receiverid = receiverID,
+                            sendtime = datetime.now(),
+                            viewed = 0,
+                            title = form.cleaned_data['title'],
+                            body = form.cleaned_data['body']
+                        )
+                        message_is_valid = 1
+                        formSuccess = "Message sent Successfully"
+                else:
+                    message_is_valid = 1
+                    formError = "ERROR: Receiver Not found"
+
+            else:
+                if DEBUG == True:
+                    print("Form Invalid")
+                formError = "ERROR: Invalid Mesage, please check if the either title or main body exceed character limit and retry later."
+                formError =  formError + "<br> if the problem contitue, pls contact an administrator"
+        return render(request, "message/create.html",{
+            'formSuccess': formSuccess,
+            'formError': formError,
+
+        })
+    else:
+        return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)

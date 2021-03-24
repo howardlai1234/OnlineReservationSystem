@@ -58,7 +58,8 @@
       Recipient viewed: {{ i.viewed }} <br>
       {{ i.body }}<br>
     </div>
-    <input type="button" onclick="location.href='/message/view?id={{i.messageid}}';" value="Detail">  
+    <input type="button" onclick="location.href='/message/view?id={{i.messageid}}';" value="Detail"> 
+
     {% endfor %}
   {% endif %}  
     <br>
