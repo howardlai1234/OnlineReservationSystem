@@ -13,6 +13,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.models import User
 
 def home(request):
+    return HttpResponseRedirect('/')
     print("Hello World")
     print(User.objects.all())
     formcheck = 'null'

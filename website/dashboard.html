@@ -1,3 +1,4 @@
+<!--
 <!doctype html>
 <html>
 <head>
@@ -12,7 +13,12 @@
         }
     </style>
 </head>
+-->
+{% extends "base_generic.html" %}
 
+{% block title %}<title>ORS-Dashboard</title>{% endblock %}
+
+{% block content %}
 <body>
     <h1>Welcome Back, {{username}}</h1>
     {{userid}}
@@ -20,7 +26,7 @@
     {{message_counter}} unread message(s)
         <br>
     <input type="button" onclick="location.href='/message';" value="Details">
-    <input type="button" onclick="location.href='/message/create_new';" value="Creat New Meeting">
+    <input type="button" onclick="location.href='/message/create';" value="Creat New Message">
 </div>
     <br>
 <div>
@@ -30,12 +36,14 @@
     <input type="button"onclick="location.href='/meeting/create_new';" value="New Message">
 </div>
 <div>
-    <br>
     My Calendar
     <br>
     <input type="button"onclick="location.href='/calendar/';" value="My Calendar">
 </div>
     <br>
     <input type="button" onclick="location.href='/login/logout';" value="Logout">
+{% endblock %}
+<!--
 </body>
 </html>
+-->

@@ -26,8 +26,7 @@ SECRET_KEY = '3l72%_!e^lgc(95l5k#mna&juoywjk0n86vf^2u+!a(o#_1taj'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.localhost', '127.0.0.1',
-                 '192.168.2.112', '192.168.2.70', '192.168.2.158']
+ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '192.168.2.112', '192.168.2.70', '192.168.2.158']
 
 
 # Application definition
@@ -91,9 +90,10 @@ WSGI_APPLICATION = 'ORS.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# Do Not activate both together
+## Do Not activate both together
 
-#for sqlite 
+#or sqlite 
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -101,7 +101,8 @@ WSGI_APPLICATION = 'ORS.wsgi.application'
 #     }
 # }
 
-# for docker
+## for docker
+
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.mysql',

@@ -3,19 +3,27 @@ from django.http import HttpResponse
 from django.db import connections
 from django.db.utils import OperationalError
 from django.contrib.auth.models import User
+from ORS.settings import DEBUG
+from dashboard.models import Message
 # Create your views here.
 
 
 def home(request):
 
     if request.user.is_authenticated:
-        print(request)
+        if DEBUG == True:
+            print("html request", request)
 
-        #username = request.session['username']
-        #userid = request.session['userid']
         meeting_counter = message_counter = 0
         username = ""
         userid = User.objects.get(username=request.user).pk
+
+        message_counter = received_message_count = Message.objects.filter(receiverid=userid, viewed=1).count()
+        ##the following code is for older version which uses RAW SQL
+
+        #username = request.session['username']
+        #userid = request.session['userid']
+
         # setup DB connection
         #db_conn = connections['default']
         #cursor = db_conn.cursor()
