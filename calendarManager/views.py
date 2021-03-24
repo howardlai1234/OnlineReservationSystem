@@ -7,6 +7,7 @@ from django.db.utils import OperationalError
 from ORS.settings import DEBUG
 from django.contrib.auth.models import User, Group
 from config.models import Currentphase, Timetable
+from calendarManager import forms
 #from django.contrib.auth.models import Group
 
 # Create your views here.
@@ -17,6 +18,18 @@ def home(request):
     phase = Currentphase.objects.get().phase
     allowed_group = Timetable.objects.get().phase1_group_name
     user_allowed_to_access = 0
+
+    timetable = []
+    slotsInDB = []
+    currentAvailableSlots = []
+    currentAvailableSlotsReturn = ''
+    previousSlotID = -1
+    previousSlottDateStr = '1970-1-1'
+    period_start = {}
+    period_end = {}
+    meetingLen = 0
+    numberOfMeet = 0
+
     if request.user.is_authenticated:
         userid = User.objects.get(username=request.user).pk
         group = User.objects.get(username=request.user).groups
@@ -27,7 +40,7 @@ def home(request):
         for gp in request.user.groups.all():
             if gp.name == allowed_group:
                 user_allowed_to_access = 1
-                print("Group of user: ", request.user, ":", gp.name)
+            print("Group of user: ", request.user, ":", gp.name)
         if phase == 1 and user_allowed_to_access == 1:
             context = {}
             if DEBUG == True:
@@ -121,15 +134,15 @@ def home(request):
             # else:
             #     print("invalid form")
 
-        # return render(request, 'calendar.html', {
-        #     'username': request.session['username'],
-        #     'availableTimes': currentAvailableSlotsReturn,
-        #     'startTime': period_start,
-        #     'endTime': period_end,
-        #     'duration': meetingLen,
-        #     'no_of_meeting': numberOfMeet
-        # })
-        return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/dashboard">return</a>')
+        return render(request, 'calendar.html', {
+            'username': request.user,
+            'availableTimes': currentAvailableSlotsReturn,
+            'startTime': period_start,
+            'endTime': period_end,
+            'duration': meetingLen,
+            'no_of_meeting': numberOfMeet
+        })
+        #return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/dashboard">return</a>')
     else:
         return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
 
