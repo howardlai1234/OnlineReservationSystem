@@ -93,8 +93,14 @@ def view(request):
         userid = User.objects.get(username=request.user).pk
         if Message.objects.filter(receiverid=userid, messageid=messageID).count() == 1 or Message.objects.filter(senderid=userid, messageid=messageID).count() == 1:
             message = Message.objects.filter(messageid=messageID).get()
-            #message_return = {}
-            return render(request, "message/message_view.html", {'message': message})
+            sender = User.objects.get(pk=message.senderid).username
+            receiver = User.objects.get(pk=message.receiverid).username
+            message_return = {}
+            return render(request, "message/message_view.html", {
+                'message': message,
+                'sender': sender,
+                'receiver': receiver
+                })
 
     ##the following code is for older version which uses RAW SQL
     # if 'userid' in request.session:

@@ -22,7 +22,10 @@
 
 {% block content %}
   <div>
-    <h1>inbox</h1>
+    <input type="button" onclick="location.href='/message/create';" value="Sent New Message">
+  </div>
+  <div>
+    <h1>Inbox</h1>
   {% if received_message_count == 0 %}
     <div class="row">   
     No message received<br>
@@ -30,17 +33,19 @@
   {% else %}
     {% for i in received_message %} 
     <div class="row"> 
-        Title: {{ i.title }} <br>
-        Sent By: {{ i.sender }} <br>
-        {{ i.body }}
-        <br>
-        <input type="button" onclick="location.href='/message/view?id={{i.messageid}}';" value="Detail">   
-    </div> 
+      Title: {{ i.title }} <br>
+      Sent By: {{ i.sender }} <br>
+      {{ i.body }}
+    </div>
+    <input type="button" onclick="location.href='/message/view?id={{i.messageid}}';" value="Detail">
+    <br>
     {% endfor %}
   {% endif %}    
   </div>
+
   <br><br>
-  <h1>sent</h1>
+  
+  <h1>Sent</h1>
   {% if sent_message_count == 0 %}
     <div class="row">   
     No message sent<br>
@@ -48,12 +53,12 @@
   {% else %}
     {% for i in sent_message %} 
     <div class="row"> 
-        Title: {{ i.title }} <br>
-        Recipient: {{ i.sender }} <br>
-        Recipient viewed: {{ i.viewed }} <br>
-        {{ i.body }}<br>
-        <input type="button" onclick="location.href='/message/view?id={{i.messageid}}';" value="Detail">  
-    </div> 
+      Title: {{ i.title }} <br>
+      Recipient: {{ i.sender }} <br>
+      Recipient viewed: {{ i.viewed }} <br>
+      {{ i.body }}<br>
+    </div>
+    <input type="button" onclick="location.href='/message/view?id={{i.messageid}}';" value="Detail">  
     {% endfor %}
   {% endif %}  
     <br>

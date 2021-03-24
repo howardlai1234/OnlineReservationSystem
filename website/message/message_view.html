@@ -1,12 +1,20 @@
 {% extends "base_generic.html" %}
 
-{% block title %}<title>ORS-Message</title>{% endblock %}
+{% block title %}<title>{{message.title}}</title>{% endblock %}
 
 {% block content %}
 
-{{message.id}}<br>
-{{message.title}}<br>
+MessageID: {{message.messageid}}<br>
+Title: {{message.title}}<br>
+By: {{sender}}<br>
+To: {{receiver}}<br>
+Sent Time: {{message.sendtime}}<br>
+------------------------------------<br>
+{{message.body}}
 
+<div>
+    <input type="button" onclick="location.href='/message/';" value="Return">
+</div>
 
 
 {% endblock %}
