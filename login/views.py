@@ -12,6 +12,7 @@ from django.contrib.auth import logout
 
 from django.contrib.auth.models import User
 
+
 def home(request):
     return HttpResponseRedirect('/')
     print("Hello World")
@@ -94,6 +95,7 @@ def connction_test(request):
 def logout_service(request):
     logout(request)
     return HttpResponseRedirect('/')
+
 
 class UserListView(generic.ListView):
     model = User

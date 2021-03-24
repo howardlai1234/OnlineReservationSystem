@@ -26,7 +26,12 @@ SECRET_KEY = '3l72%_!e^lgc(95l5k#mna&juoywjk0n86vf^2u+!a(o#_1taj'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '192.168.2.112', '192.168.2.70', '192.168.2.158']
+ALLOWED_HOSTS = [
+    '.localhost',
+    '127.0.0.1',
+    '192.168.2.112',
+    '192.168.2.70',
+    '192.168.2.158']
 
 
 # Application definition
@@ -93,9 +98,9 @@ WSGI_APPLICATION = 'ORS.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-## Do Not activate both together
+# Do Not activate both together
 
-#or sqlite 
+# or sqlite
 
 # DATABASES = {
 #     'default': {
@@ -104,20 +109,20 @@ WSGI_APPLICATION = 'ORS.wsgi.application'
 #     }
 # }
 
-## for docker
+# for docker
 
 DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.mysql',
-       'NAME': os.getenv("MYSQL_DATABASE"),
-       'USER': os.getenv("MYSQL_USER"),
-       'PASSWORD': os.getenv("MYSQL_PASSWORD"),
-       'HOST': os.getenv("MYSQL_HOST"),
-       'PORT': os.getenv("MYSQL_PORT"),
-       #   'OPTIONS': {
-       #        'init_command': "SET sql_mode='STRICT_TRANrS_TABLES'"
-       #    }
-   }
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv("MYSQL_DATABASE"),
+        'USER': os.getenv("MYSQL_USER"),
+        'PASSWORD': os.getenv("MYSQL_PASSWORD"),
+        'HOST': os.getenv("MYSQL_HOST"),
+        'PORT': os.getenv("MYSQL_PORT"),
+        #   'OPTIONS': {
+        #        'init_command': "SET sql_mode='STRICT_TRANrS_TABLES'"
+        #    }
+    }
 }
 
 

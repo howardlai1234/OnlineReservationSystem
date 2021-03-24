@@ -45,6 +45,7 @@ def home(request):
             context = {}
             if DEBUG == True:
                 print("user allowed to access")
+  
             # form handling
             if request.method == 'POST':
                 form = forms.NameForm(request.POST)

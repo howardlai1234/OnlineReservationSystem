@@ -14,8 +14,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Gp',
             fields=[
-                ('groupid', models.AutoField(db_column='groupID', primary_key=True, serialize=False)),
-                ('groupname', models.CharField(blank=True, db_column='groupName', max_length=255, null=True)),
+                ('groupid', models.AutoField(
+                    db_column='groupID', primary_key=True, serialize=False)),
+                ('groupname', models.CharField(blank=True,
+                 db_column='groupName', max_length=255, null=True)),
                 ('groupownerid', models.IntegerField(db_column='groupOwnerID')),
             ],
             options={
@@ -25,10 +27,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Groupmember',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('groupid', models.IntegerField(db_column='groupID')),
                 ('memberid', models.IntegerField(db_column='memberID')),
-                ('joindate', models.DateTimeField(blank=True, db_column='joinDate', null=True)),
+                ('joindate', models.DateTimeField(
+                    blank=True, db_column='joinDate', null=True)),
             ],
             options={
                 'db_table': 'groupmember',
@@ -37,13 +41,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Meeting',
             fields=[
-                ('meetingid', models.AutoField(db_column='meetingID', primary_key=True, serialize=False)),
+                ('meetingid', models.AutoField(
+                    db_column='meetingID', primary_key=True, serialize=False)),
                 ('hostid', models.IntegerField(db_column='hostID')),
                 ('participantid', models.IntegerField(db_column='participantID')),
                 ('date', models.DateField(blank=True, null=True)),
                 ('name', models.CharField(blank=True, max_length=255, null=True)),
                 ('remark', models.CharField(blank=True, max_length=255, null=True)),
-                ('statusid', models.IntegerField(blank=True, db_column='statusID', null=True)),
+                ('statusid', models.IntegerField(
+                    blank=True, db_column='statusID', null=True)),
             ],
             options={
                 'db_table': 'meeting',
@@ -52,11 +58,14 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Message',
             fields=[
-                ('messageid', models.AutoField(db_column='messageID', primary_key=True, serialize=False)),
+                ('messageid', models.AutoField(
+                    db_column='messageID', primary_key=True, serialize=False)),
                 ('senderid', models.IntegerField(db_column='senderID')),
                 ('receiverid', models.IntegerField(db_column='receiverID')),
-                ('referenceid', models.IntegerField(blank=True, db_column='referenceID', null=True)),
-                ('sendtime', models.DateTimeField(blank=True, db_column='sendTime', null=True)),
+                ('referenceid', models.IntegerField(
+                    blank=True, db_column='referenceID', null=True)),
+                ('sendtime', models.DateTimeField(
+                    blank=True, db_column='sendTime', null=True)),
                 ('viewed', models.IntegerField(blank=True, null=True)),
                 ('title', models.CharField(blank=True, max_length=255, null=True)),
                 ('body', models.CharField(blank=True, max_length=4096, null=True)),
@@ -68,7 +77,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Slot',
             fields=[
-                ('slotid', models.AutoField(db_column='slotID', primary_key=True, serialize=False)),
+                ('slotid', models.AutoField(db_column='slotID',
+                 primary_key=True, serialize=False)),
                 ('ownerid', models.IntegerField(db_column='ownerID')),
                 ('starttime', models.DateTimeField(db_column='startTime')),
                 ('endtime', models.DateTimeField(db_column='endTime')),
@@ -80,9 +90,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Slotsopento',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('slotsid', models.IntegerField(db_column='slotsID')),
-                ('isgroup', models.IntegerField(blank=True, db_column='isGroup', null=True)),
+                ('isgroup', models.IntegerField(
+                    blank=True, db_column='isGroup', null=True)),
                 ('opentoid', models.IntegerField(db_column='OpenToID')),
             ],
             options={
@@ -92,15 +104,20 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='User',
             fields=[
-                ('userid', models.AutoField(db_column='userID', primary_key=True, serialize=False)),
+                ('userid', models.AutoField(db_column='userID',
+                 primary_key=True, serialize=False)),
                 ('username', models.CharField(blank=True, max_length=255, null=True)),
-                ('firstname', models.CharField(blank=True, db_column='firstName', max_length=255, null=True)),
-                ('lastname', models.CharField(blank=True, db_column='lastName', max_length=255, null=True)),
+                ('firstname', models.CharField(blank=True,
+                 db_column='firstName', max_length=255, null=True)),
+                ('lastname', models.CharField(blank=True,
+                 db_column='lastName', max_length=255, null=True)),
                 ('email', models.CharField(blank=True, max_length=255, null=True)),
                 ('tel', models.CharField(blank=True, max_length=255, null=True)),
-                ('typeid', models.CharField(blank=True, db_column='typeID', max_length=255, null=True)),
+                ('typeid', models.CharField(blank=True,
+                 db_column='typeID', max_length=255, null=True)),
                 ('active', models.IntegerField(blank=True, null=True)),
-                ('hashpw', models.CharField(blank=True, db_column='hashPW', max_length=255, null=True)),
+                ('hashpw', models.CharField(blank=True,
+                 db_column='hashPW', max_length=255, null=True)),
             ],
             options={
                 'db_table': 'user',
@@ -109,7 +126,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Useravailability',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('userid', models.IntegerField(db_column='userID')),
                 ('date', models.DateField()),
                 ('slotid', models.IntegerField(db_column='slotID')),

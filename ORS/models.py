@@ -4,7 +4,8 @@
 #   * Make sure each model has one field with primary_key=True
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
+# Feel free to rename the models, but don't rename db_table values or
+# field names.
 from django.db import models
 
 
@@ -120,9 +121,16 @@ class DjangoSession(models.Model):
 
 
 class Gp(models.Model):
-    groupid = models.AutoField(db_column='groupID', primary_key=True)  # Field name made lowercase.
-    groupname = models.CharField(db_column='groupName', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    groupownerid = models.IntegerField(db_column='groupOwnerID')  # Field name made lowercase.
+    # Field name made lowercase.
+    groupid = models.AutoField(db_column='groupID', primary_key=True)
+    # Field name made lowercase.
+    groupname = models.CharField(
+        db_column='groupName',
+        max_length=255,
+        blank=True,
+        null=True)
+    # Field name made lowercase.
+    groupownerid = models.IntegerField(db_column='groupOwnerID')
 
     class Meta:
         managed = False
@@ -130,9 +138,13 @@ class Gp(models.Model):
 
 
 class Groupmember(models.Model):
-    groupid = models.IntegerField(db_column='groupID')  # Field name made lowercase.
-    memberid = models.IntegerField(db_column='memberID')  # Field name made lowercase.
-    joindate = models.DateTimeField(db_column='joinDate', blank=True, null=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    groupid = models.IntegerField(db_column='groupID')
+    # Field name made lowercase.
+    memberid = models.IntegerField(db_column='memberID')
+    # Field name made lowercase.
+    joindate = models.DateTimeField(
+        db_column='joinDate', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -158,11 +170,18 @@ class Meeting(models.Model):
 
 
 class Message(models.Model):
-    messageid = models.AutoField(db_column='messageID', primary_key=True)  # Field name made lowercase.
-    senderid = models.IntegerField(db_column='senderID')  # Field name made lowercase.
-    receiverid = models.IntegerField(db_column='receiverID')  # Field name made lowercase.
-    referenceid = models.IntegerField(db_column='referenceID', blank=True, null=True)  # Field name made lowercase.
-    sendtime = models.DateTimeField(db_column='sendTime', blank=True, null=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    messageid = models.AutoField(db_column='messageID', primary_key=True)
+    # Field name made lowercase.
+    senderid = models.IntegerField(db_column='senderID')
+    # Field name made lowercase.
+    receiverid = models.IntegerField(db_column='receiverID')
+    # Field name made lowercase.
+    referenceid = models.IntegerField(
+        db_column='referenceID', blank=True, null=True)
+    # Field name made lowercase.
+    sendtime = models.DateTimeField(
+        db_column='sendTime', blank=True, null=True)
     viewed = models.IntegerField(blank=True, null=True)
     title = models.CharField(max_length=255, blank=True, null=True)
     body = models.CharField(max_length=4096, blank=True, null=True)
@@ -173,10 +192,14 @@ class Message(models.Model):
 
 
 class Slot(models.Model):
-    slotid = models.AutoField(db_column='slotID', primary_key=True)  # Field name made lowercase.
-    ownerid = models.IntegerField(db_column='ownerID')  # Field name made lowercase.
-    starttime = models.DateTimeField(db_column='startTime')  # Field name made lowercase.
-    endtime = models.DateTimeField(db_column='endTime')  # Field name made lowercase.
+    # Field name made lowercase.
+    slotid = models.AutoField(db_column='slotID', primary_key=True)
+    # Field name made lowercase.
+    ownerid = models.IntegerField(db_column='ownerID')
+    # Field name made lowercase.
+    starttime = models.DateTimeField(db_column='startTime')
+    # Field name made lowercase.
+    endtime = models.DateTimeField(db_column='endTime')
 
     class Meta:
         managed = False
@@ -184,9 +207,12 @@ class Slot(models.Model):
 
 
 class Slotsopento(models.Model):
-    slotsid = models.IntegerField(db_column='slotsID')  # Field name made lowercase.
-    isgroup = models.IntegerField(db_column='isGroup', blank=True, null=True)  # Field name made lowercase.
-    opentoid = models.IntegerField(db_column='OpenToID')  # Field name made lowercase.
+    # Field name made lowercase.
+    slotsid = models.IntegerField(db_column='slotsID')
+    # Field name made lowercase.
+    isgroup = models.IntegerField(db_column='isGroup', blank=True, null=True)
+    # Field name made lowercase.
+    opentoid = models.IntegerField(db_column='OpenToID')
 
     class Meta:
         managed = False
@@ -228,5 +254,3 @@ class Useravailability(models.Model):
     class Meta:
         managed = False
         db_table = 'useravailability'
-
-
