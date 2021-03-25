@@ -94,6 +94,7 @@ class Slot(models.Model):
     starttime = models.DateTimeField(db_column='startTime')
     # Field name made lowercase.
     endtime = models.DateTimeField(db_column='endTime')
+    group = models.IntegerField(db_column='groupID')
 
     class Meta:
         #managed = False
