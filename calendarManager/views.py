@@ -163,8 +163,8 @@ def confirm(request):
                             endtime = period_end,
                             groupid = Group.objects.get(name=group).pk
                         )
-
-                    return HttpResponse('All Check Passed')
+ 
+                    return HttpResponseRedirect('/calendar/')
                 else:
                     return HttpResponse('<h1>Unauthorised Access</h1>', status=403)
             else:
