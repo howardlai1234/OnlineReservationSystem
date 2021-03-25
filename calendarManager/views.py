@@ -22,12 +22,7 @@ def home(request):
     grouplist = []
     computed_detail = {'not_empty': False}
 
-    timetable = []
-    slotsInDB = []
-    currentAvailableSlots = []
-    currentAvailableSlotsReturn = ''
-    previousSlotID = -1
-    previousSlottDateStr = '1970-1-1'
+    RegisteredSlotsReturn = []
     period_start = {}
     period_end = {}
     meetingLen = 0
@@ -113,7 +108,7 @@ def home(request):
                 'confirmForm': forms.ConfirmForm,
                 'group_list': grouplist,
                 'username': request.user,
-                'availableTimes': currentAvailableSlotsReturn,
+                'availableTimes': RegisteredSlotsReturn,
                 'computed_details': computed_detail
             })
         return HttpResponse(
