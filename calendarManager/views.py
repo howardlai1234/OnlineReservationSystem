@@ -22,11 +22,13 @@ def home(request):
     grouplist = []
     computed_detail = {'not_empty': False}
 
+    
     RegisteredSlotsReturn = []
     period_start = {}
     period_end = {}
     meetingLen = 0
     numberOfMeet = 0
+    period_start_str = ''
 
     if request.user.is_authenticated:
         userid = User.objects.get(username=request.user).pk
@@ -40,11 +42,24 @@ def home(request):
             if gp.name == allowed_group:
                 user_allowed_to_access = 1
                 print("Group of user: ", request.user, ":", gp.name)
+
+
         if phase == 1 and user_allowed_to_access == 1:
             context = {}
             if DEBUG == True:
                 print("user allowed to access")
                 print("user Group in return list:", grouplist)
+
+            #read registered slot
+
+            for gp in request.user.groups.all():
+
+                #groupid = Group.objects.get(name=gp.name).pk
+                if Slot.objects.filter(groupid=Group.objects.get(name=gp.name).pk).count() > 0:
+                    Registered_slot_of_group = []
+                    for s in Slot.objects.filter(groupid=Group.objects.get(name=gp.name).pk).all():
+                        Registered_slot_of_group.append({'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
+                    RegisteredSlotsReturn.append({'group': gp.name, 'slots': Registered_slot_of_group})
 
             # form handling
             if request.method == 'POST':
@@ -77,7 +92,7 @@ def home(request):
                     period_start = datetime.datetime(
                         date.year, date.month, date.day, startHr, startMin, 0)
                     meetingSession = []
-
+                    period_start_str = period_start.strftime("%Y/%m/%d %H:%M:%S")
                     period_end = period_start
                     for i in range(0, numberOfMeet):
                         session_start = period_end
@@ -98,7 +113,7 @@ def home(request):
                 computed_detail = {
                     'not_empty': True,
                     'group': form.cleaned_data['group'],
-                    'startTime_str': period_start.strftime("%Y/%m/%d %H:%M:%S"),
+                    'startTime_str': period_start_str,
                     'startTime': period_start,
                     'endTime': period_end,
                     'duration': meetingLen,
@@ -111,8 +126,9 @@ def home(request):
                 'availableTimes': RegisteredSlotsReturn,
                 'computed_details': computed_detail
             })
-        return HttpResponse(
-            '<h1>ACCEESS DENIED</h1> <br> You are not allowed to be here, please contact an administrator if you think you should <br> <br><a href="/dashboard">return</a>', status=403)
+        else:
+            return HttpResponse(
+                '<h1>ACCEESS DENIED</h1> <br> You are not allowed to be here, please contact an administrator if you think you should <br> <br><a href="/dashboard">return</a>', status=403)
     else:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)

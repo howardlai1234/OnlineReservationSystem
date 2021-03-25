@@ -19,9 +19,27 @@
 {% block content %}
     <h1>The calender of: {{username}}</h1>
     The available hours: <br>
+    
     {% autoescape off %}
-    {{availableTimes}}
+    {% for gp in availableTimes %}
+    Group: {{gp.group}} <br>
+    <table style="width:100%">
+        <tr>
+            <th>ID</th>
+            <th>Start</th>
+            <th>End</th>
+        </tr>
+        {% for s in gp.slots %}
+        <tr>
+            <th>{{s.id}}</th>
+            <th>{{s.start}}</th>
+            <th>{{s.end}}</th>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endfor %}
     {% endautoescape %}
+    
 <div>
   <form action="" method="post">{% csrf_token %} {{form.as_p }} 
         <h3>Add new availavle times</h3>
