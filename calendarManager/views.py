@@ -8,6 +8,7 @@ from ORS.settings import DEBUG
 from django.contrib.auth.models import User, Group
 from config.models import Currentphase, Timetable
 from calendarManager import forms
+from dashboard.models import Slot
 #from django.contrib.auth.models import Group
 
 # Create your views here.
@@ -146,6 +147,23 @@ def confirm(request):
 
                 if user_allowed_to_access == True and user_in_target_group == True:
                     startTime = datetime.datetime.strptime(form.cleaned_data['confirm_startTime'], '%Y/%m/%d %H:%M:%S')
+                    group = form.cleaned_data['confirm_group']
+                    meetingLen = form.cleaned_data['confirm_duration']
+                    numberOfMeet = form.cleaned_data["confirm_no_of_meeting"]
+
+                    period_end = startTime
+
+                    for i in range(0, numberOfMeet):
+                        session_start = period_end
+                        period_end = period_end + \
+                            datetime.timedelta(minutes=meetingLen)
+                        Slot.objects.create(
+                            ownerid = userid,
+                            starttime = session_start,
+                            endtime = period_end,
+                            groupid = Group.objects.get(name=group).pk
+                        )
+
                     return HttpResponse('All Check Passed')
                 else:
                     return HttpResponse('<h1>Unauthorised Access</h1>', status=403)
