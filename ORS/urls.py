@@ -33,5 +33,6 @@ urlpatterns = [
     path("dashboard/", include("dashboard.urls")),
     path("message/", include("message.urls")),
     path("meeting/", include("meeting.urls")),
-    path("calendar/", include("calendarManager.urls"))
+    path("calendar/", include("calendarManager.urls")),
+    path("selection/", include("slotSelect.urls"))
 ]
