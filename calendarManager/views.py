@@ -48,7 +48,7 @@ def home(request):
             context = {}
             if DEBUG == True:
                 print("user allowed to access")
-            print("user Group in return list:", grouplist)
+                print("user Group in return list:", grouplist)
 
             # form handling
             if request.method == 'POST':
@@ -102,12 +102,14 @@ def home(request):
                 computed_detail = {
                     'not_empty': True,
                     'group': form.cleaned_data['group'],
+                    'startTime_str': period_start.strftime("%Y/%m/%d %H:%M:%S"),
                     'startTime': period_start,
                     'endTime': period_end,
                     'duration': meetingLen,
                     'no_of_meeting': numberOfMeet}
 
             return render(request, 'calendar.html', {
+                'confirmForm': forms.ConfirmForm,
                 'group_list': grouplist,
                 'username': request.user,
                 'availableTimes': currentAvailableSlotsReturn,
@@ -121,12 +123,36 @@ def home(request):
 
 
 def confirm(request):
-    if request.method == 'POST':
-        form = forms.ConfirmForm(request.POST)
-        print("confirm form:", form)
-        if form.is_valid():
-            return HttpResponse('Valid Form')
-        else:
-            return HttpResponse('POST')
-    else: 
-        return HttpResponse('Hello')
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+
+            allowed_group = Timetable.objects.get().phase1_group_name 
+            form = forms.ConfirmForm(request.POST)
+            user_allowed_to_access = False
+            user_in_target_group = False
+
+            if DEBUG == True:
+                print (form)
+
+            if form.is_valid():
+                userid = User.objects.get(username=request.user).pk
+                group = User.objects.get(username=request.user).groups
+
+                for gp in request.user.groups.all():
+                    if gp.name == allowed_group:
+                        user_allowed_to_access = True
+                    if gp.name == form.cleaned_data['confirm_group']:
+                        user_in_target_group = True
+
+                if user_allowed_to_access == True and user_in_target_group == True:
+                    startTime = datetime.datetime.strptime(form.cleaned_data['confirm_startTime'], '%Y/%m/%d %H:%M:%S')
+                    return HttpResponse('All Check Passed')
+                else:
+                    return HttpResponse('<h1>Unauthorised Access</h1>', status=403)
+            else:
+                return HttpResponse('<h1>Invalid Form</h1>', status=404)
+        else: 
+            return HttpResponse('<h1>ACCEESS DENIED</h1>', status=404)
+    else:
+        return HttpResponse(
+            '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)

@@ -67,14 +67,15 @@
       {% endif %}
   </form>
 </div>
+
 <div>
     {% if computed_details.not_empty %}
         slots detail: For: {{computed_details.group}} Start:{{computed_details.startTime}}, End: {{computed_details.endTime}}, 
         {{computed_details.no_of_meeting}} Meeting(s), each {{computed_details.duration}} minutes long
         <br>
         <form action="confirm" method="post">{% csrf_token %} {{form.as_p }} 
-            <input type="hidden" id="confirm_group" name="confirm_group" value="Hello">
-            <input type="hidden" id="confirm_startTime" name="confirm_startTime" value="{{ computed_details.startTime }}">
+            <input type="hidden" id="confirm_group" name="confirm_group" value="{{computed_details.group}}">
+            <input type="hidden" id="confirm_startTime" name="confirm_startTime" value="{{ computed_details.startTime_str }}">
             <input type="hidden" id="confirm_no_of_meeting" name="confirm_no_of_meeting" value="{{ computed_details.no_of_meeting }}">
             <input type="hidden" id="confirm_duration" name="confirm_duration" value="{{ computed_details.duration }}">
             <button class="btn btn-common" id="submit" type="submit" value="ok">Confirm</button>

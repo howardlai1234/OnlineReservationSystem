@@ -10,7 +10,7 @@ class NameForm(forms.Form):
     numberOfMeeting = forms.DecimalField(label='numberOfMeeting')
 
 class ConfirmForm(forms.Form):
-    group = forms.CharField(label='confirm_group')
-    startTime = forms.CharField(label='confirm_startTime')
-    meetingLength = forms.CharField(label='confirm_duration')
-    numberOfMeeting = forms.CharField(label='confirm_no_of_meeting')
+    confirm_group = forms.CharField(label='confirm_group')
+    confirm_startTime = forms.CharField(label='confirm_startTime')
+    confirm_duration = forms.IntegerField(label='confirm_duration')
+    confirm_no_of_meeting = forms.IntegerField(label='confirm_no_of_meeting')
