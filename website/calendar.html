@@ -1,4 +1,4 @@
-<!doctype html>
+<!-- <!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
@@ -13,7 +13,10 @@
     </style>
 </head>
 
-<body>
+<body> -->
+{% extends "base_generic.html" %}
+
+{% block content %}
     <h1>The calender of: {{username}}</h1>
     The available hours: <br>
     {% autoescape off %}
@@ -57,13 +60,21 @@
       <lable for="numberOfMeeting">Please enter number of meeting of this session</lable>
       <input type="number" id="numberOfMeeting" name="numberOfMeeting" min="1", required data-error="incorrect number"> 
       <br>
+      {% if computed_details.not_empty %}
+      <button class="btn btn-common" id="submit" type="submit" vlaue="ok">Change</button>
+      {% else %}
       <button class="btn btn-common" id="submit" type="submit" vlaue="ok">Add</button>
+      {% endif %}
   </form>
 </div>
 <div>
-    meeting detail: Start:{{startTime}}, End: {{endTime}}, {{no_of_meeting}} Meeting(s), each {{duration}}minutes long
+    {% if computed_details.not_empty %}
+        meeting detail: Start:{{computed_details.startTime}}, End: {{computed_details.endTime}}, {{computed_details.no_of_meeting}} Meeting(s), each {{computed_details.duration}}minutes long
+        <br>
+    {% endif %}
 </div>
     <br>
     <input type="button" onclick="location.href='/dashboard';" value="back">
-</body>
-</html>
+{% endblock %}
+<!-- </body>
+</html> -->

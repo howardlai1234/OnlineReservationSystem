@@ -19,6 +19,7 @@ def home(request):
     allowed_group = Timetable.objects.get().phase1_group_name
     user_allowed_to_access = 0
     grouplist = []
+    computed_detail = {'not_empty': False}
 
     timetable = []
     slotsInDB = []
@@ -79,11 +80,16 @@ def home(request):
                             datetime.timedelta(minutes=meetingLen)
                         meetingSession.append(
                             {'startTime': session_start, 'endTime': period_end})
-                    #   sql =
-                    print(period_start)
-                    print(period_end)
-                    for x in meetingSession:
-                        print(" start:", x['startTime'], "end:", x['endTime'])
+
+                    if DEBUG==True:
+                        print(period_start)
+                        print(period_end)
+                        for x in meetingSession:
+                            print(" start:", x['startTime'], "end:", x['endTime'])
+
+                #prepare the checking 
+                computed_detail = {'not_empty': True, 'startTime': period_start, 'endTime': period_end, 'duration': meetingLen, 'no_of_meeting': numberOfMeet}
+
                 # code for the old version
                 # """
                 # print ("date:",form.cleaned_data['date'])
@@ -142,10 +148,7 @@ def home(request):
                 'group_list': grouplist,
                 'username': request.user,
                 'availableTimes': currentAvailableSlotsReturn,
-                'startTime': period_start,
-                'endTime': period_end,
-                'duration': meetingLen,
-                'no_of_meeting': numberOfMeet
+                'computed_details': computed_detail
             })
         return HttpResponse('<h1>ACCEESS DENIED</h1> <br> You are not allowed to be here, please contact an administrator if you think you should <br> <br><a href="/dashboard">return</a>', status=403)
     else:
