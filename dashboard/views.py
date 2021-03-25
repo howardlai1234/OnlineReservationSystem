@@ -18,8 +18,9 @@ def home(request):
         username = ""
         userid = User.objects.get(username=request.user).pk
 
-        message_counter = received_message_count = Message.objects.filter(receiverid=userid, viewed=1).count()
-        ##the following code is for older version which uses RAW SQL
+        message_counter = received_message_count = Message.objects.filter(
+            receiverid=userid, viewed=1).count()
+        # the following code is for older version which uses RAW SQL
 
         #username = request.session['username']
         #userid = request.session['userid']
@@ -29,16 +30,16 @@ def home(request):
         #cursor = db_conn.cursor()
 
         # retrive message count from DB
-        #sql = 'SELECT count(messageID) FROM Message WHERE receiverID="' + \
+        # sql = 'SELECT count(messageID) FROM Message WHERE receiverID="' + \
         #    str(userid) + '"'
-        #cursor.execute(sql)
+        # cursor.execute(sql)
         #row = cursor.fetchone()
         #message_counter = row[0]
 
         # retrive meeting count from DB
-        #sql = 'SELECT count(meetingID) FROM Meeting WHERE hostID="' + \
+        # sql = 'SELECT count(meetingID) FROM Meeting WHERE hostID="' + \
         #    str(userid) + '" OR participantID="' + str(userid) + '"'
-        #cursor.execute(sql)
+        # cursor.execute(sql)
         #row = cursor.fetchone()
         #meeting_counter = row[0]
 
@@ -49,4 +50,5 @@ def home(request):
             'message_counter': message_counter
         })
     else:
-        return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>')
+        return HttpResponse(
+            '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>')

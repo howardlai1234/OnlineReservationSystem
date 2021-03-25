@@ -1,4 +1,4 @@
-<!doctype html>
+<!-- <!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
@@ -13,15 +13,42 @@
     </style>
 </head>
 
-<body>
+<body> -->
+{% extends "base_generic.html" %}
+
+{% block content %}
     <h1>The calender of: {{username}}</h1>
     The available hours: <br>
+    
     {% autoescape off %}
-    {{availableTimes}}
+    {% for gp in availableTimes %}
+    Group: {{gp.group}} <br>
+    <table style="width:100%">
+        <tr>
+            <th>ID</th>
+            <th>Start</th>
+            <th>End</th>
+        </tr>
+        {% for s in gp.slots %}
+        <tr>
+            <th>{{s.id}}</th>
+            <th>{{s.start}}</th>
+            <th>{{s.end}}</th>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endfor %}
     {% endautoescape %}
+    
 <div>
   <form action="" method="post">{% csrf_token %} {{form.as_p }} 
         <h3>Add new availavle times</h3>
+        For Group: <select id="group" name="group">
+            {% for gp in group_list %} 
+            <option value="{{ gp }}">{{ gp }}</option>
+            {% endfor %}
+        </select>
+        <br>
         Date<input type="date" id="date" name="date"><br>
         Start Time:
         <select id="startHour" name="startHour">
@@ -51,13 +78,30 @@
       <lable for="numberOfMeeting">Please enter number of meeting of this session</lable>
       <input type="number" id="numberOfMeeting" name="numberOfMeeting" min="1", required data-error="incorrect number"> 
       <br>
-      <button class="btn btn-common" id="submit" type="submit" vlaue="ok">Add</button>
+      {% if computed_details.not_empty %}
+        <button class="btn btn-common" id="submit" type="submit" value="ok">Change</button>
+      {% else %}
+        <button class="btn btn-common" id="submit" type="submit" value="ok">Add</button>
+      {% endif %}
   </form>
 </div>
+
 <div>
-    meeting detail: Start:{{startTime}}, End: {{endTime}}, {{no_of_meeting}} Meeting(s), each {{duration}}minutes long
+    {% if computed_details.not_empty %}
+        slots detail: For: {{computed_details.group}} Start:{{computed_details.startTime}}, End: {{computed_details.endTime}}, 
+        {{computed_details.no_of_meeting}} Meeting(s), each {{computed_details.duration}} minutes long
+        <br>
+        <form action="confirm" method="post">{% csrf_token %} {{form.as_p }} 
+            <input type="hidden" id="confirm_group" name="confirm_group" value="{{computed_details.group}}">
+            <input type="hidden" id="confirm_startTime" name="confirm_startTime" value="{{ computed_details.startTime_str }}">
+            <input type="hidden" id="confirm_no_of_meeting" name="confirm_no_of_meeting" value="{{ computed_details.no_of_meeting }}">
+            <input type="hidden" id="confirm_duration" name="confirm_duration" value="{{ computed_details.duration }}">
+            <button class="btn btn-common" id="submit" type="submit" value="ok">Confirm</button>
+        </form>
+    {% endif %}
 </div>
     <br>
     <input type="button" onclick="location.href='/dashboard';" value="back">
-</body>
-</html>
+{% endblock %}
+<!-- </body>
+</html> -->
