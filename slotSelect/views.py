@@ -17,7 +17,10 @@ def home(request):
         user_allowed_to_access = False
         RegisteredSlotsReturn = []
         grouplist = []
-        tieredlist = [{}] 
+        tieredlist = [{}]
+        cur_group = ''
+        if  'cur_group' in request.session:
+            cur_group = request.session['cur_group']
 
         if DEBUG == True:
             phase = 2
@@ -28,6 +31,9 @@ def home(request):
                 if gp.name == allowed_group:
                     user_allowed_to_access = True
             if user_allowed_to_access == True:
+
+
+
                 # request all available slots
 
                 # Reserve for viewiing all group slots
@@ -45,13 +51,15 @@ def home(request):
                         form = GroupSelectForm(request.POST)
                         if form.is_valid():
                             print(form.cleaned_data['groupselect'])
-                            Registered_slot_of_group = []
-                            for s in Slot.objects.filter(groupid=Group.objects.get(
-                                name=form.cleaned_data['groupselect']).pk).all():
-                                Registered_slot_of_group.append(
-                                    {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
-                            RegisteredSlotsReturn.append(
-                                {'group': form.cleaned_data['groupselect'], 'slots': Registered_slot_of_group})
+                            cur_group = form.cleaned_data['groupselect']
+                            request.session['cur_group'] = form.cleaned_data['groupselect']
+                    Registered_slot_of_group = []
+                    for s in Slot.objects.filter(groupid=Group.objects.get(
+                        name=cur_group).pk).all():
+                        Registered_slot_of_group.append(
+                            {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
+                    RegisteredSlotsReturn.append(
+                        {'group': cur_group, 'slots': Registered_slot_of_group})
 
                 return render(request, 'selection.html', {
                     'grouplist': grouplist,
