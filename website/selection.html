@@ -4,8 +4,18 @@
 
 {% block content %}
 
-{% for gp in availableTimes %}
+<form action="" method="post">{% csrf_token %} {{form.as_p }} 
+    <label for="groupselect">Select Group</label>
+    <select id="groupselect" name="groupselect">
+        {% for gp in grouplist %} 
+        <option value="{{ gp }}">{{ gp }}</option>
+        {% endfor %}
+    </select>
+    <button class="btn btn-common" name="group_select" id="group_select" type="submit" value="ok">Choose</button>
+</form>
 
+
+{% for gp in availableTimes %}
 Group: {{gp.group}} <br>
 <table style="width:100%">
     <tr>
@@ -21,6 +31,10 @@ Group: {{gp.group}} <br>
     </tr>
     {% endfor %}
 </table>
+<form action="" method="post">{% csrf_token %} {{form.as_p }}
+
+    <button class="btn btn-common" name="slot_select" id="slot_select" type="submit" value="ok">save</button>
+</form>
 {% endfor %}
 
 

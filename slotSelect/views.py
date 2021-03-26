@@ -4,7 +4,9 @@ from django.contrib.auth.models import User, Group
 from ORS.settings import DEBUG
 from config.models import Currentphase, Timetable
 from dashboard.models import Slot
+from slotSelect.forms import GroupSelectForm
 # Create your views here.
+
 
 def home(request):
     if request.user.is_authenticated:
@@ -25,16 +27,33 @@ def home(request):
                 if gp.name == allowed_group:
                     user_allowed_to_access = True
             if user_allowed_to_access == True:
-                #request all available slots
-                for gp in request.user.groups.all():
-                    if Slot.objects.filter(groupid=Group.objects.get(name=gp.name).pk).count() > 0:
-                        Registered_slot_of_group = []
-                        for s in Slot.objects.filter(groupid=Group.objects.get(name=gp.name).pk).all():
-                            Registered_slot_of_group.append({'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
-                        RegisteredSlotsReturn.append({'group': gp.name, 'slots': Registered_slot_of_group})
+                # request all available slots
 
+                # Reserve for viewiing all group slots
+
+                # for gp in request.user.groups.all():
+                #     if Slot.objects.filter(groupid=Group.objects.get(name=gp.name).pk).count() > 0:
+                #         Registered_slot_of_group = []
+                #         for s in Slot.objects.filter(groupid=Group.objects.get(name=gp.name).pk).all():
+                #             Registered_slot_of_group.append({'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
+                #         RegisteredSlotsReturn.append({'group': gp.name, 'slots': Registered_slot_of_group})
+                if request.method=="POST":
+
+                    print(request.POST)
+                    if 'group_select' in request.POST: 
+                        form = GroupSelectForm(request.POST)
+                        if form.is_valid():
+                            print(form.cleaned_data['groupselect'])
+                            Registered_slot_of_group = []
+                            for s in Slot.objects.filter(groupid=Group.objects.get(
+                                name=form.cleaned_data['groupselect']).pk).all():
+                                Registered_slot_of_group.append(
+                                    {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
+                            RegisteredSlotsReturn.append(
+                                {'group': form.cleaned_data['groupselect'], 'slots': Registered_slot_of_group})
 
                 return render(request, 'selection.html', {
+                    'grouplist': grouplist,
                     'availableTimes': RegisteredSlotsReturn,
                 })
             else:

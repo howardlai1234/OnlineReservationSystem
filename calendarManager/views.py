@@ -22,7 +22,6 @@ def home(request):
     grouplist = []
     computed_detail = {'not_empty': False}
 
-    
     RegisteredSlotsReturn = []
     period_start = {}
     period_end = {}
@@ -43,23 +42,26 @@ def home(request):
                 user_allowed_to_access = 1
                 print("Group of user: ", request.user, ":", gp.name)
 
-
         if phase == 1 and user_allowed_to_access == 1:
             context = {}
             if DEBUG == True:
                 print("user allowed to access")
                 print("user Group in return list:", grouplist)
 
-            #read registered slot
+            # read registered slot
 
             for gp in request.user.groups.all():
 
                 #groupid = Group.objects.get(name=gp.name).pk
-                if Slot.objects.filter(groupid=Group.objects.get(name=gp.name).pk).count() > 0:
+                if Slot.objects.filter(groupid=Group.objects.get(
+                        name=gp.name).pk).count() > 0:
                     Registered_slot_of_group = []
-                    for s in Slot.objects.filter(groupid=Group.objects.get(name=gp.name).pk).all():
-                        Registered_slot_of_group.append({'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
-                    RegisteredSlotsReturn.append({'group': gp.name, 'slots': Registered_slot_of_group})
+                    for s in Slot.objects.filter(
+                            groupid=Group.objects.get(name=gp.name).pk).all():
+                        Registered_slot_of_group.append(
+                            {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
+                    RegisteredSlotsReturn.append(
+                        {'group': gp.name, 'slots': Registered_slot_of_group})
 
             # form handling
             if request.method == 'POST':
@@ -92,7 +94,8 @@ def home(request):
                     period_start = datetime.datetime(
                         date.year, date.month, date.day, startHr, startMin, 0)
                     meetingSession = []
-                    period_start_str = period_start.strftime("%Y/%m/%d %H:%M:%S")
+                    period_start_str = period_start.strftime(
+                        "%Y/%m/%d %H:%M:%S")
                     period_end = period_start
                     for i in range(0, numberOfMeet):
                         session_start = period_end
@@ -138,13 +141,13 @@ def confirm(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
 
-            allowed_group = Timetable.objects.get().phase1_group_name 
+            allowed_group = Timetable.objects.get().phase1_group_name
             form = forms.ConfirmForm(request.POST)
             user_allowed_to_access = False
             user_in_target_group = False
 
             if DEBUG == True:
-                print (form)
+                print(form)
 
             if form.is_valid():
                 userid = User.objects.get(username=request.user).pk
@@ -157,7 +160,8 @@ def confirm(request):
                         user_in_target_group = True
 
                 if user_allowed_to_access == True and user_in_target_group == True:
-                    startTime = datetime.datetime.strptime(form.cleaned_data['confirm_startTime'], '%Y/%m/%d %H:%M:%S')
+                    startTime = datetime.datetime.strptime(
+                        form.cleaned_data['confirm_startTime'], '%Y/%m/%d %H:%M:%S')
                     group = form.cleaned_data['confirm_group']
                     meetingLen = form.cleaned_data['confirm_duration']
                     numberOfMeet = form.cleaned_data["confirm_no_of_meeting"]
@@ -169,18 +173,19 @@ def confirm(request):
                         period_end = period_end + \
                             datetime.timedelta(minutes=meetingLen)
                         Slot.objects.create(
-                            ownerid = userid,
-                            starttime = session_start,
-                            endtime = period_end,
-                            groupid = Group.objects.get(name=group).pk
+                            ownerid=userid,
+                            starttime=session_start,
+                            endtime=period_end,
+                            groupid=Group.objects.get(name=group).pk
                         )
- 
+
                     return HttpResponseRedirect('/calendar/')
                 else:
-                    return HttpResponse('<h1>Unauthorised Access</h1>', status=403)
+                    return HttpResponse(
+                        '<h1>Unauthorised Access</h1>', status=403)
             else:
                 return HttpResponse('<h1>Invalid Form</h1>', status=404)
-        else: 
+        else:
             return HttpResponse('<h1>ACCEESS DENIED</h1>', status=404)
     else:
         return HttpResponse(
