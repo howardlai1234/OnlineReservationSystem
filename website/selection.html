@@ -31,8 +31,119 @@ Group: {{gp.group}} <br>
     </tr>
     {% endfor %}
 </table>
+<br><br>
 <form action="" method="post">{% csrf_token %} {{form.as_p }}
+    {% for gp in availableTimes %}
+        <h2>Select Slots</h2> <a href="detail"> learn more</a><br><br>
+        Class A:<br>
+        <label for="A1">A1</label>
+        <select id="A1" name="A1">
+            {% for s in gp.slots %}
+            <option value="{{ s.id }}">{{ s.id }}</option>
+            {% endfor %}
+        </select>
 
+        <label for="A2">A2</label>
+        <select id="A2" name="A1">
+            {% for s in gp.slots %}
+            <option value="{{ s.id }}">{{ s.id }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="A3">A3</label>
+        <select id="A3" name="A3">
+            {% for s in gp.slots %}
+            <option value="{{ s.id }}">{{ s.id }}</option>
+            {% endfor %}
+        </select>
+
+        <br>Class B:<br>
+        <label for="B1">B1</label>
+        <select id="B1" name="B1">
+            {% for s in gp.slots %}
+            <option value="{{ s.id }}">{{ s.id }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="B2">B2</label>
+        <select id="B2" name="B2">
+            {% for s in gp.slots %}
+            <option value="{{ s.id }}">{{ s.id }}</option>
+            {% endfor %}
+        </select>
+        
+        <label for="B3">B3</label>
+        <select id="B3" name="B3">
+            {% for s in gp.slots %}
+            <option value="{{ s.id }}">{{ s.id }}</option>
+            {% endfor %}
+        </select>
+        
+        <label for="B4">B4</label>
+        <select id="B4" name="B4">
+            {% for s in gp.slots %}
+            <option value="{{ s.id }}">{{ s.id }}</option>
+            {% endfor %}
+        </select>  
+
+        <label for="B5">B5</label>
+        <select id="B5" name="B5">
+            {% for s in gp.slots %}
+            <option value="{{ s.id }}">{{ s.id }}</option>
+            {% endfor %}
+        </select>
+        
+        <br>Class C:<br>
+        <label for="C1">C1</label>
+        <select id="C1" name="C1">
+            {% for s in gp.slots %}
+            <option value="{{ s.id }}">{{ s.id }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="C2">C2</label>
+        <select id="C2" name="C2">
+            {% for s in gp.slots %}
+            <option value="{{ s.id }}">{{ s.id }}</option>
+            {% endfor %}
+        </select>
+        
+        <label for="C3">C3</label>
+        <select id="C3" name="C3">
+            {% for s in gp.slots %}
+            <option value="{{ s.id }}">{{ s.id }}</option>
+            {% endfor %}
+        </select>
+        
+        <label for="C4">C4</label>
+        <select id="C4" name="C4">
+            {% for s in gp.slots %}
+            <option value="{{ s.id }}">{{ s.id }}</option>
+            {% endfor %}
+        </select>  
+
+        <label for="C5">C5</label>
+        <select id="C5" name="C5">
+            {% for s in gp.slots %}
+            <option value="{{ s.id }}">{{ s.id }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="C6">C6</label>
+        <select id="C6" name="C6">
+            {% for s in gp.slots %}
+            <option value="{{ s.id }}">{{ s.id }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="C7">C7</label>
+        <select id="C7" name="C7">
+            {% for s in gp.slots %}
+            <option value="{{ s.id }}">{{ s.id }}</option>
+            {% endfor %}
+        </select>
+    {% endfor %}
+    <br>
     <button class="btn btn-common" name="slot_select" id="slot_select" type="submit" value="ok">save</button>
 </form>
 {% endfor %}

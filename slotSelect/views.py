@@ -17,6 +17,7 @@ def home(request):
         user_allowed_to_access = False
         RegisteredSlotsReturn = []
         grouplist = []
+        tieredlist = [{}] 
 
         if DEBUG == True:
             phase = 2
