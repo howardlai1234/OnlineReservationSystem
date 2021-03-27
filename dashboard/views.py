@@ -19,7 +19,7 @@ def home(request):
         userid = User.objects.get(username=request.user).pk
 
         message_counter = received_message_count = Message.objects.filter(
-            receiverid=userid, viewed=1).count()
+            receiverid=userid, viewed=0).count()
         # the following code is for older version which uses RAW SQL
 
         #username = request.session['username']
@@ -45,7 +45,6 @@ def home(request):
 
         return render(request, 'dashboard.html', {
             'username': request.user,
-            'userid': userid,
             'meeting_counter': meeting_counter,
             'message_counter': message_counter
         })
