@@ -19,8 +19,8 @@ def home(request):
         grouplist = []
         tieredlist = [{}]
         cur_group = ''
-        if 'cur_group' in request.session:
-            cur_group = request.session['cur_group']
+        # if 'cur_group' in request.session:
+        #     cur_group = request.session['cur_group']
 
         if DEBUG == True:
             phase = 2
@@ -50,18 +50,24 @@ def home(request):
                             print(form.cleaned_data['groupselect'])
                             cur_group = form.cleaned_data['groupselect']
                             request.session['cur_group'] = form.cleaned_data['groupselect']
+
+                            #temp. move here to prevent bug
+                            Registered_slot_of_group = []
+                            for s in Slot.objects.filter(groupid=Group.objects.get(
+                                name=cur_group).pk).all():
+                                Registered_slot_of_group.append(
+                                    {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
+                            RegisteredSlotsReturn.append(
+                                {'group': cur_group, 'slots': Registered_slot_of_group})
+
+
                     if 'slot_select' in request.POST:
                         form = SlotSelectForm(request.POST)
                         if form.is_valid():
                             print("Selection Form Valid")
 
-                Registered_slot_of_group = []
-                for s in Slot.objects.filter(groupid=Group.objects.get(
-                        name=cur_group).pk).all():
-                    Registered_slot_of_group.append(
-                        {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
-                RegisteredSlotsReturn.append(
-                    {'group': cur_group, 'slots': Registered_slot_of_group})
+                
+
 
                 return render(request, 'selection.html', {
                     'grouplist': grouplist,
