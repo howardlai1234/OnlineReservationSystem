@@ -104,7 +104,17 @@ def home(request):
 
                         #store it in DB if all check passed
                         if valid:
-                            print("something")
+                            groupid = Group.objects.get(name=gp.name).pk
+                            Selection.objects.filter(groupid=groupid, userid=userid).delete()
+                            for i in range(0, len(slotSelectList)):
+                                Selection.objects.create(
+                                    groupid = groupid,
+                                    userid = userid,
+                                    slotid = slotSelectList[i],
+                                    userorder = i + 1,
+                                    weightedscore = -1
+                                )
+                            formSuccess = "SUCCESS: your list is Saved"
                         else:
                             failedSubmission['flag'] = True
                             failedSubmission['list'] = SelectList_reurn
@@ -112,10 +122,8 @@ def home(request):
                         if DEBUG == True:
                             print("Selection Form Valid")
                             print('slotSelectList: ', slotSelectList)
-                            if valid:
-                                formSuccess = "ALL TEST PASSED"
             
-            #generate the list timetable
+            #generate the timetable list
             Registered_slot_of_group = []
             if cur_group == 'All':
                 for gp in request.user.groups.all():
@@ -124,16 +132,16 @@ def home(request):
                             Registered_slot_of_group.append({'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
                         RegisteredSlotsReturn.append({'group': gp.name, 'slots': Registered_slot_of_group})
             else:
-                for s in Slot.objects.filter(groupid=Group.objects.get(
-                    name=cur_group).pk).all():
+                groupid = Group.objects.get(name=cur_group).pk
+                for s in Slot.objects.filter(groupid=groupid).all():
                     Registered_slot_of_group.append(
                         {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
                 RegisteredSlotsReturn.append(
                     {'group': cur_group, 'slots': Registered_slot_of_group})
-                if 0 < Selection.objects.filter(groupid=Group.objects.get(name=gp.name).pk, userid=userid).count():
+                if 0 < Selection.objects.filter(groupid=groupid, userid=userid).count():
                     user_already_selected['flag'] = True
                     user_already_selected['list'] = []
-                    user_already_selected_list = Selection.objects.filter(groupid=Group.objects.get(name=gp.name).pk, userid=userid).order_by('userorder').all()
+                    user_already_selected_list = Selection.objects.filter(groupid=groupid, userid=userid).order_by('userorder').all()
                     for i in user_already_selected_list:
                         user_already_selected['list'].append(i.slotid)
 

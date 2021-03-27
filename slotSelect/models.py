@@ -7,3 +7,4 @@ class Selection(models.Model):
     userid = models.IntegerField()
     slotid = models.IntegerField()
     userorder = models.IntegerField()
+    weightedscore = models.IntegerField()

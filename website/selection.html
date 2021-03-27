@@ -41,13 +41,14 @@
 {% if currentGroup != 'All' %}
 <form action="" method="post">{% csrf_token %} {{form.as_p }}
     {% if previousSelection.flag %}
-        <h2>Your Previous Selection</h2>
+        <h3>Your Previous Selection</h3>
         {% for s in previousSelection.list %}
-            {{s}} - 
+            {{s}} &#8592 
         {% endfor %}
+        END
         <br>
-        WARNING: entering a new list will override the saved group_list
-        <br>
+        WARNING: entering a new list will override the saved group list
+        <br><br>
     {% endif %}
     <h2>Select Slots</h2> 
     <a href="detail"> learn more</a><br><br>
