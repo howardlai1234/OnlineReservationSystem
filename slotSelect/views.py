@@ -19,6 +19,8 @@ def home(request):
         grouplist = []
         tieredlist = [{}]
         cur_group = ''
+        formError = ''
+        formSuccess = ''
         # if 'cur_group' in request.session:
         #     cur_group = request.session['cur_group']
 
@@ -60,16 +62,23 @@ def home(request):
                             RegisteredSlotsReturn.append(
                                 {'group': cur_group, 'slots': Registered_slot_of_group})
 
-
                     if 'slot_select' in request.POST:
                         form = SlotSelectForm(request.POST)
                         if form.is_valid():
+                            valid = 1
+                            slotSelectList = list(form.cleaned_data['selectionlist'].split(","))
+                            for t in slotSelectList:
+                                if valid == 1:
+                                    try:
+                                        int(t)
+                                    except:
+                                        formError = "Error: One of the selected item is not an integer"
                             print("Selection Form Valid")
-
-                
-
+                            print('slotSelectList: ', slotSelectList)
 
                 return render(request, 'selection.html', {
+                    'formError': formError,
+                    'formSuccess':  formSuccess,
                     'grouplist': grouplist,
                     'availableTimes': RegisteredSlotsReturn,
                 })

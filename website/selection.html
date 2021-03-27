@@ -14,6 +14,8 @@
     <button class="btn btn-common" name="group_select" id="group_select" type="submit" value="ok">Choose</button>
 </form>
 
+<p style="background-color:Tomato;">{{ formError }}</p>
+<p style="background-color:MediumSeaGreen;">{{ formSuccess }}</p>
 
 {% for gp in availableTimes %}
 Group: {{gp.group}} <br>
@@ -31,9 +33,11 @@ Group: {{gp.group}} <br>
     </tr>
     {% endfor %}
 </table>
+
 <br><br>
 <form action="" method="post">{% csrf_token %} {{form.as_p }}
-    {% for gp in availableTimes %}
+    <textarea name="selectionlist" style="width:100%" rows="10" maxlength="4000"></textarea><br>
+    <!-- {% for gp in availableTimes %}
         <h2>Select Slots</h2> <a href="detail"> learn more</a><br><br>
         Class A:<br>
         <label for="A1">A1</label>
@@ -142,7 +146,7 @@ Group: {{gp.group}} <br>
             <option value="{{ s.id }}">{{ s.id }}</option>
             {% endfor %}
         </select>
-    {% endfor %}
+    {% endfor %} -->
     <br>
     <button class="btn btn-common" name="slot_select" id="slot_select" type="submit" value="ok">save</button>
 </form>
