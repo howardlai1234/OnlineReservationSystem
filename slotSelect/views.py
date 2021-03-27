@@ -43,20 +43,14 @@ def home(request):
                 if gp.name == allowed_group:
                     user_allowed_to_access = True
         if user_allowed_to_access == True:
-
             # request all available slots
-
-            # Reserve for viewiing all group slots
 
             if request.method == "POST":
                 if 'group_select' in request.POST:
                     form = GroupSelectForm(request.POST)
                     if form.is_valid():
-                        print(form.cleaned_data['groupselect'])
                         cur_group = form.cleaned_data['groupselect']
                         request.session['cur_group'] = form.cleaned_data['groupselect']
-
-                        # temp. move here to prevent bug
 
                 if 'slot_select' in request.POST:
                     form = SlotSelectForm(request.POST)
@@ -105,11 +99,6 @@ def home(request):
                         if valid:
                             groupid = Group.objects.get(
                                 name=form.cleaned_data['group']).pk
-                            print(
-                                "before insert:",
-                                groupid,
-                                "name: ",
-                                form.cleaned_data['group'])
                             Selection.objects.filter(
                                 groupid=groupid, userid=userid).delete()
                             for i in range(0, len(slotSelectList)):
@@ -130,10 +119,8 @@ def home(request):
                             print('slotSelectList: ', slotSelectList)
 
             # generate the timetable list
-
             if cur_group == 'All':
                 for gp in request.user.groups.all():
-                    print("GP: ", gp, "ID", Group.objects.get(name=gp.name).pk)
                     if Slot.objects.filter(groupid=Group.objects.get(
                             name=gp.name).pk).count() > 0:
                         Registered_slot_of_group = []
@@ -151,6 +138,7 @@ def home(request):
                 for s in Slot.objects.filter(groupid=groupid).all():
                     Registered_slot_of_group.append(
                         {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
+                # Read previous record of user submitted choice of that group
                 RegisteredSlotsReturn.append(
                     {'group': cur_group, 'slots': Registered_slot_of_group})
                 if 0 < Selection.objects.filter(
