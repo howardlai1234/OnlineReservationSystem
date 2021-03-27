@@ -169,7 +169,11 @@
         </select>
     {% endfor %} -->
     <br>
-    <button class="btn btn-common" name="slot_select" id="slot_select" type="submit" value="ok">save</button>
+    {% if previousSelection.flag %}
+        <button class="btn btn-common" name="slot_select" id="slot_select" type="submit" value="ok">update</button>
+    {% else %}
+        <button class="btn btn-common" name="slot_select" id="slot_select" type="submit" value="ok">save</button>
+    {% endif %}
 </form>
 {% else %}
     You have not select any group<br>

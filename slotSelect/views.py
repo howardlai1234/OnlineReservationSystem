@@ -104,7 +104,8 @@ def home(request):
 
                         #store it in DB if all check passed
                         if valid:
-                            groupid = Group.objects.get(name=gp.name).pk
+                            groupid = Group.objects.get(name=form.cleaned_data['group']).pk
+                            print("before insert:",groupid, "name: ", form.cleaned_data['group'])
                             Selection.objects.filter(groupid=groupid, userid=userid).delete()
                             for i in range(0, len(slotSelectList)):
                                 Selection.objects.create(
@@ -124,14 +125,19 @@ def home(request):
                             print('slotSelectList: ', slotSelectList)
             
             #generate the timetable list
-            Registered_slot_of_group = []
+            
             if cur_group == 'All':
                 for gp in request.user.groups.all():
+                    print("GP: ", gp, "ID",Group.objects.get(name=gp.name).pk)
                     if Slot.objects.filter(groupid=Group.objects.get(name=gp.name).pk).count() > 0:
+                        Registered_slot_of_group = []
                         for s in Slot.objects.filter(groupid=Group.objects.get(name=gp.name).pk).all():
                             Registered_slot_of_group.append({'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
                         RegisteredSlotsReturn.append({'group': gp.name, 'slots': Registered_slot_of_group})
+                if DEBUG == True:
+                    print("RegisteredSlotsReturn: ",RegisteredSlotsReturn)
             else:
+                Registered_slot_of_group = []
                 groupid = Group.objects.get(name=cur_group).pk
                 for s in Slot.objects.filter(groupid=groupid).all():
                     Registered_slot_of_group.append(
@@ -145,7 +151,6 @@ def home(request):
                     for i in user_already_selected_list:
                         user_already_selected['list'].append(i.slotid)
 
-            
             return render(request, 'selection.html', {
                 'formError': formError,
                 'formSuccess':  formSuccess,
