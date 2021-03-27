@@ -5,4 +5,5 @@ from django.db import models
 class Selection(models.Model):
     groupid = models.IntegerField()
     userid = models.IntegerField()
+    slotid = models.IntegerField()
     userorder = models.IntegerField()

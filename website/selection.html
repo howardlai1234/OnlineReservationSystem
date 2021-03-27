@@ -14,8 +14,7 @@
     <button class="btn btn-common" name="group_select" id="group_select" type="submit" value="ok">Choose</button>
 </form>
 
-<p style="background-color:Tomato;">{{ formError }}</p>
-<p style="background-color:MediumSeaGreen;">{{ formSuccess }}</p>
+
 
 {% for gp in availableTimes %}
     Group: {{gp.group}} <br>
@@ -35,11 +34,26 @@
     </table>
 {% endfor %}
 
-<br><br>
+<br>
+<p style="background-color:Tomato;">{{ formError }}</p>
+<p style="background-color:MediumSeaGreen;">{{ formSuccess }}</p>
+<br>
 {% if currentGroup != 'All' %}
 <form action="" method="post">{% csrf_token %} {{form.as_p }}
+    {% if previousSelection.flag %}
+        <h2>Your Previous Selection</h2>
+        {% for s in previousSelection.list %}
+            {{s}} - 
+        {% endfor %}
+        <br>
+        WARNING: entering a new list will override the saved group_list
+        <br>
+    {% endif %}
     <h2>Select Slots</h2> 
     <a href="detail"> learn more</a><br><br>
+    {% if failedSubmission.flag %}
+    <p style="background-color:Tomato;">Your Rejected list:<br>{{ failedSubmission.list }}</p>
+    {% endif %}
     For group: {{currentGroup}}
     <textarea name="selectionlist" style="width:100%" rows="10" maxlength="4000"></textarea><br>
     <input type="hidden" id="group" name="group" value="{{ currentGroup }}">
