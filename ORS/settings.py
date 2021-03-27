@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'config',
     'message',
     'meeting',
+    'slotSelect',
 ]
 
 MIDDLEWARE = [
