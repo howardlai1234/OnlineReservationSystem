@@ -7,6 +7,7 @@ class GroupSelectForm(forms.Form):
 
 class SlotSelectForm(forms.Form):
     selectionlist = forms.CharField(label='selectionlist')
+    group = forms.CharField(label='group')
     # A1 = forms.IntegerField(label='A1')
     # A2 = forms.IntegerField(label='A2')
     # A3 = forms.IntegerField(label='A3')

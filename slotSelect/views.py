@@ -16,13 +16,17 @@ def home(request):
         group = User.objects.get(username=request.user).groups
         user_allowed_to_access = False
         RegisteredSlotsReturn = []
-        grouplist = []
-        tieredlist = [{}]
-        cur_group = ''
+        grouplist = ['All']
+
+        cur_group = 'All'
+
+
         formError = ''
         formSuccess = ''
-        # if 'cur_group' in request.session:
-        #     cur_group = request.session['cur_group']
+
+        if 'cur_group' in request.session:
+            cur_group = request.session['cur_group']
+
 
         if DEBUG == True:
             phase = 2
@@ -38,12 +42,7 @@ def home(request):
 
                 # Reserve for viewiing all group slots
 
-                # for gp in request.user.groups.all():
-                #     if Slot.objects.filter(groupid=Group.objects.get(name=gp.name).pk).count() > 0:
-                #         Registered_slot_of_group = []
-                #         for s in Slot.objects.filter(groupid=Group.objects.get(name=gp.name).pk).all():
-                #             Registered_slot_of_group.append({'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
-                #         RegisteredSlotsReturn.append({'group': gp.name, 'slots': Registered_slot_of_group})
+
                 if request.method == "POST":
                     print(request.POST)
                     if 'group_select' in request.POST:
@@ -54,13 +53,20 @@ def home(request):
                             request.session['cur_group'] = form.cleaned_data['groupselect']
 
                             #temp. move here to prevent bug
-                            Registered_slot_of_group = []
-                            for s in Slot.objects.filter(groupid=Group.objects.get(
-                                name=cur_group).pk).all():
-                                Registered_slot_of_group.append(
-                                    {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
-                            RegisteredSlotsReturn.append(
-                                {'group': cur_group, 'slots': Registered_slot_of_group})
+                Registered_slot_of_group = []
+                if cur_group == 'All':
+                    for gp in request.user.groups.all():
+                        if Slot.objects.filter(groupid=Group.objects.get(name=gp.name).pk).count() > 0:
+                            for s in Slot.objects.filter(groupid=Group.objects.get(name=gp.name).pk).all():
+                                Registered_slot_of_group.append({'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
+                            RegisteredSlotsReturn.append({'group': gp.name, 'slots': Registered_slot_of_group})
+                else:
+                    for s in Slot.objects.filter(groupid=Group.objects.get(
+                        name=cur_group).pk).all():
+                        Registered_slot_of_group.append(
+                            {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
+                    RegisteredSlotsReturn.append(
+                        {'group': cur_group, 'slots': Registered_slot_of_group})
 
                     if 'slot_select' in request.POST:
                         form = SlotSelectForm(request.POST)
@@ -76,9 +82,11 @@ def home(request):
                             print("Selection Form Valid")
                             print('slotSelectList: ', slotSelectList)
 
+
                 return render(request, 'selection.html', {
                     'formError': formError,
                     'formSuccess':  formSuccess,
+                    'currentGroup': cur_group,
                     'grouplist': grouplist,
                     'availableTimes': RegisteredSlotsReturn,
                 })

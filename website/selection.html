@@ -18,27 +18,33 @@
 <p style="background-color:MediumSeaGreen;">{{ formSuccess }}</p>
 
 {% for gp in availableTimes %}
-Group: {{gp.group}} <br>
-<table style="width:100%">
-    <tr>
-        <th>ID</th>
-        <th>Start</th>
-        <th>End</th>
-    </tr>
-    {% for s in gp.slots %}
-    <tr>
-        <th>{{s.id}}</th>
-        <th>{{s.start}}</th>
-        <th>{{s.end}}</th>
-    </tr>
-    {% endfor %}
-</table>
+    Group: {{gp.group}} <br>
+    <table style="width:100%">
+        <tr>
+            <th>ID</th>
+            <th>Start</th>
+            <th>End</th>
+        </tr>
+        {% for s in gp.slots %}
+        <tr>
+            <th>{{s.id}}</th>
+            <th>{{s.start}}</th>
+            <th>{{s.end}}</th>
+        </tr>
+        {% endfor %}
+    </table>
+{% endfor %}
 
 <br><br>
+{% if currentGroup != 'All' %}
 <form action="" method="post">{% csrf_token %} {{form.as_p }}
+    <h2>Select Slots</h2> 
+    <a href="detail"> learn more</a><br><br>
+    For group: {{currentGroup}}
     <textarea name="selectionlist" style="width:100%" rows="10" maxlength="4000"></textarea><br>
+    <input type="hidden" id="group" name="group" value="{{ currentGroup }}">
     <!-- {% for gp in availableTimes %}
-        <h2>Select Slots</h2> <a href="detail"> learn more</a><br><br>
+        
         Class A:<br>
         <label for="A1">A1</label>
         <select id="A1" name="A1">
@@ -150,7 +156,11 @@ Group: {{gp.group}} <br>
     <br>
     <button class="btn btn-common" name="slot_select" id="slot_select" type="submit" value="ok">save</button>
 </form>
-{% endfor %}
+{% else %}
+    You have not select any group<br>
+    Please choose one group on the top.
+{% endif %}
+
 
 
 {% endblock %}
