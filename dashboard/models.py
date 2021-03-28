@@ -44,6 +44,9 @@ class Groupmember(models.Model):
         #managed = False
         db_table = 'groupmember'
 
+class Groupdetail(models.Model):
+    groupid = models.IntegerField()
+    min_required_slot = models.IntegerField
 
 class Meeting(models.Model):
     # Field name made lowercase.
