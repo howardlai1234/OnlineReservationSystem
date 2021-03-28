@@ -190,3 +190,17 @@ def confirm(request):
     else:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
+
+def remove(request):
+    if request.user.is_authenticated:
+        print('placeholder')
+    else:
+        return HttpResponse(
+            '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
+
+def setMinSlot(resquest):
+    if request.user.is_authenticated:
+        print('placeholder')
+    else:
+        return HttpResponse(
+            '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
