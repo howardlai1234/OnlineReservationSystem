@@ -8,7 +8,7 @@ from ORS.settings import DEBUG
 from django.contrib.auth.models import User, Group
 from config.models import Currentphase, Timetable
 from calendarManager import forms
-from dashboard.models import Slot
+from dashboard.models import Slot, Groupdetail
 #from django.contrib.auth.models import Group
 
 # Create your views here.
@@ -32,17 +32,10 @@ def home(request):
     if request.user.is_authenticated:
         userid = User.objects.get(username=request.user).pk
         group = User.objects.get(username=request.user).groups
-        # For Debug Function
-        if DEBUG == True:
-            phase = 1
-            print("userid: ", userid)
-        for gp in request.user.groups.all():
-            grouplist.append(gp.name)
-            if gp.name == allowed_group:
-                user_allowed_to_access = 1
-                print("Group of user: ", request.user, ":", gp.name)
 
-        if phase == 1 and user_allowed_to_access == 1:
+        access_check = check_user_allowed_to_access_phase1(request.user)
+        if access_check['flag'] == True:
+            grouplist = access_check['grouplist']
             context = {}
             if DEBUG == True:
                 print("user allowed to access")
@@ -193,14 +186,68 @@ def confirm(request):
 
 def remove(request):
     if request.user.is_authenticated:
-        print('placeholder')
+        userid = User.objects.get(username=request.user).pk
+        group = User.objects.get(username=request.user).groups
+        grouplist = []
+        user_allowed_to_access = False
+        # For Debug Function
+        if DEBUG == True:
+            phase = 1
+        access_check = check_user_allowed_to_access_phase1(request.user)
+        if access_check['flag'] == True:
+            grouplist = access_check['grouplist']
+        
     else:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
 
-def setMinSlot(resquest):
+def setMinSlot(request):
     if request.user.is_authenticated:
-        print('placeholder')
+        userid = User.objects.get(username=request.user).pk
+        group = User.objects.get(username=request.user).groups
+        grouplist = []
+        miniumSlotReturn = []
+
+        
+        access_check = check_user_allowed_to_access_phase1(request.user)
+        if access_check['flag'] == True:
+            grouplist = access_check['grouplist']
+            for gp in grouplist:
+                groupID = Group.objects.get(name=gp).pk
+                if Groupdetail.objects.filter(groupid=groupID).count() == 0:
+                    Groupdetail.objects.create(
+                        groupid=groupID, 
+                        min_required_slot=5 
+                    )
+                    miniumSlotReturn.append({'groupname': gp, 'minslot': 5})
+                else:
+                    gpDetail = Groupdetail.objects.filter(groupid=groupID).get()
+                    miniumSlotReturn.append({'groupname': gp, 'minslot': gpDetail.min_required_slot})
+            return render(request, 'calendar/setmin.html', {
+                'miniumSlotReturn': miniumSlotReturn
+            })
+                
     else:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
+
+
+def check_user_allowed_to_access_phase1(user):
+    user_allowed_to_access = False
+    allowed_group = Timetable.objects.get().phase1_group_name
+    phase = -1
+    grouplist = []
+    if DEBUG == True:
+        phase = 1
+
+    for gp in user.groups.all():
+        grouplist.append(gp.name) 
+        if gp.name == allowed_group:
+            user_allowed_to_access = True
+
+    if phase == 1 and user_allowed_to_access == True:
+        return {'flag': True, 'grouplist': grouplist}
+    else:
+        return {'flag': False, 'grouplist': grouplist}
+
+    
