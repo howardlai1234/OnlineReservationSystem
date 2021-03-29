@@ -8,6 +8,9 @@
         {{gp.groupname}}: {{gp.minslot}}<br>
     {% endfor %}
 
+    <br>
+    <p style="background-color:Tomato;">{{ formError }}</p>
+    <p style="background-color:MediumSeaGreen;">{{ formSuccess }}</p>
     <form action="" method="post">{% csrf_token %} {{form.as_p }} 
         <h3>Change</h3>
         For Group: <select id="groupname" name="groupname">

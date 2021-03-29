@@ -207,11 +207,21 @@ def setMinSlot(request):
         group = User.objects.get(username=request.user).groups
         grouplist = []
         miniumSlotReturn = []
+        formError = ''
+        formSuccess = ''
 
-        
         access_check = check_user_allowed_to_access_phase1(request.user)
         if access_check['flag'] == True:
             grouplist = access_check['grouplist']
+            if request.method == 'POST':
+                form = forms.ChangeMinRequired(request.POST)
+                if form.is_valid():
+                    if form.cleaned_data['minrequiredslot'] <= Slot.objects.filter(groupid=Group.objects.get(name=form.cleaned_data['groupname']).pk).count():
+                        Groupdetail.objects.filter(groupid=Group.objects.get(name=form.cleaned_data['groupname']).pk).update(min_required_slot=form.cleaned_data['minrequiredslot'])
+                        formSuccess = 'SUCCESS: Minunum required slot has been updated'
+
+                    else:
+                        formError = 'ERROR: The Mininum required slot exceed the provided number of slots, please reduce the number.'
             for gp in grouplist:
                 groupID = Group.objects.get(name=gp).pk
                 if Groupdetail.objects.filter(groupid=groupID).count() == 0:
@@ -223,9 +233,10 @@ def setMinSlot(request):
                 else:
                     gpDetail = Groupdetail.objects.filter(groupid=groupID).get()
                     miniumSlotReturn.append({'groupname': gp, 'minslot': gpDetail.min_required_slot})
-            if request.method == 'POST':
-                print("placeholsder")
+
             return render(request, 'calendar/setmin.html', {
+                'formError': formError,
+                'formSuccess': formSuccess,
                 'miniumSlotReturn': miniumSlotReturn
             })
                 
