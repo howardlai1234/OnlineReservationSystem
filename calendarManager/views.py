@@ -223,6 +223,8 @@ def setMinSlot(request):
                 else:
                     gpDetail = Groupdetail.objects.filter(groupid=groupID).get()
                     miniumSlotReturn.append({'groupname': gp, 'minslot': gpDetail.min_required_slot})
+            if request.method == 'POST':
+                print("placeholsder")
             return render(request, 'calendar/setmin.html', {
                 'miniumSlotReturn': miniumSlotReturn
             })
