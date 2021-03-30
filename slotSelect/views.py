@@ -82,7 +82,7 @@ def home(request):
                                         valid = False
                                         formError = "Error: One item is repeated"
 
-                        # check if all slot are balid for this group
+                        # check if all slot are allowed for this group
                         if valid:
                             allowed_slotID_for_this_group = Slot.objects.filter(
                                 groupid=Group.objects.get(name=form.cleaned_data['group']).pk).all()

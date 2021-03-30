@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'message',
     'meeting',
     'slotSelect',
+    'calendarManager',
 ]
 
 MIDDLEWARE = [

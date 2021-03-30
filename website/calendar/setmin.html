@@ -1,0 +1,28 @@
+{% extends "base_generic.html" %}
+
+{% block title %}<title>Set Minumum</title>{% endblock %}
+
+{% block content %}
+    <h3>Current Minumum of each group:</h3><br>
+    {% for gp in miniumSlotReturn %}
+        {{gp.groupname}}: {{gp.minslot}}<br>
+    {% endfor %}
+
+    <br>
+    <p style="background-color:Tomato;">{{ formError }}</p>
+    <p style="background-color:MediumSeaGreen;">{{ formSuccess }}</p>
+    <form action="" method="post">{% csrf_token %} {{form.as_p }} 
+        <h3>Change</h3>
+        For Group: <select id="groupname" name="groupname">
+            {% for gp in miniumSlotReturn %} 
+            <option value="{{ gp.groupname }}">{{ gp.groupname }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="minrequiredslot">Minumum required slot (at lease 3)</label>
+        <input type="number" id="minrequiredslot" name="minrequiredslot" min="3" required data-error="This cannot be empty">
+        <br>
+        <button class="btn btn-common" id="submit" type="submit" value="ok">Change</button>
+
+  </form>
+{% endblock %}

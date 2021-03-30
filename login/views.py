@@ -93,6 +93,7 @@ def connction_test(request):
 
 
 def logout_service(request):
+    request.session.flush()
     logout(request)
     return HttpResponseRedirect('/')
 
