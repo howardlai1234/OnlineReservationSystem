@@ -1,4 +1,5 @@
 import datetime
+import pytz
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -28,6 +29,10 @@ def home(request):
     meetingLen = 0
     numberOfMeet = 0
     period_start_str = ''
+
+    #for time collosion checking
+    timecollision = False
+    formError = ''
 
     if request.user.is_authenticated:
         userid = User.objects.get(username=request.user).pk
@@ -89,13 +94,19 @@ def home(request):
                     meetingSession = []
                     period_start_str = period_start.strftime(
                         "%Y/%m/%d %H:%M:%S")
+
+                    already_registered_slots = Slot.objects.filter(groupid=Group.objects.get(name=form.cleaned_data['group']).pk)
                     period_end = period_start
                     for i in range(0, numberOfMeet):
                         session_start = period_end
                         period_end = period_end + \
                             datetime.timedelta(minutes=meetingLen)
+                        for s in already_registered_slots:
+                            if (pytz.UTC.localize(session_start) >= s.starttime and pytz.UTC.localize(session_start) <= s.endtime) or (pytz.UTC.localize(period_end) >= s.starttime and pytz.UTC.localize(period_end) <= s.endtime) or (pytz.UTC.localize(session_start) >= s.starttime and pytz.UTC.localize(period_end) <= s.endtime) or (pytz.UTC.localize(session_start) <= s.starttime and pytz.UTC.localize(period_end) >= s.endtime):
+                                timecollision = True
+                                formError = "ERROR: At least one of the timeslot collided, please double check or remove existing slot(s)"
                         meetingSession.append(
-                            {'startTime': session_start, 'endTime': period_end})
+                            {'startTime': session_start, 'endTime': (period_end + datetime.timedelta(minutes=-1))})
 
                     if DEBUG == True:
                         print(period_start)
@@ -103,19 +114,22 @@ def home(request):
                         for x in meetingSession:
                             print(
                                 " start:", x['startTime'], "end:", x['endTime'])
+
+                    # prepare the checking
+                    if timecollision == False:
+                        computed_detail = {
+                            'not_empty': True,
+                            'group': form.cleaned_data['group'],
+                            'startTime_str': period_start_str,
+                            'startTime': period_start,
+                            'endTime': period_end,
+                            'duration': meetingLen,
+                            'no_of_meeting': numberOfMeet}
                 else:
                     computed_detail = {'not_empty': False}
-                # prepare the checking
-                computed_detail = {
-                    'not_empty': True,
-                    'group': form.cleaned_data['group'],
-                    'startTime_str': period_start_str,
-                    'startTime': period_start,
-                    'endTime': period_end,
-                    'duration': meetingLen,
-                    'no_of_meeting': numberOfMeet}
 
             return render(request, 'calendar.html', {
+                'formError': formError,
                 'confirmForm': forms.ConfirmForm,
                 'group_list': grouplist,
                 'username': request.user,
@@ -168,7 +182,7 @@ def confirm(request):
                         Slot.objects.create(
                             ownerid=userid,
                             starttime=session_start,
-                            endtime=period_end,
+                            endtime=period_end + datetime.timedelta(minutes=-1),
                             groupid=Group.objects.get(name=group).pk
                         )
 
