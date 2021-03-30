@@ -16,9 +16,11 @@ class ConfirmForm(forms.Form):
     confirm_duration = forms.IntegerField(label='confirm_duration')
     confirm_no_of_meeting = forms.IntegerField(label='confirm_no_of_meeting')
 
+
 class ChangeMinRequired(forms.Form):
     groupname = forms.CharField(label='groupname')
     minrequiredslot = forms.IntegerField(label='minrequiredslot')
+
 
 class RemoveGroupSelectForm(forms.Form):
     groupselect = forms.CharField(label='groupselect')
