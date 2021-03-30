@@ -19,3 +19,11 @@ class ConfirmForm(forms.Form):
 class ChangeMinRequired(forms.Form):
     groupname = forms.CharField(label='groupname')
     minrequiredslot = forms.IntegerField(label='minrequiredslot')
+
+class RemoveGroupSelectForm(forms.Form):
+    groupselect = forms.CharField(label='groupselect')
+
+
+class RemoveSlotSelectForm(forms.Form):
+    selectionlist = forms.CharField(label='selectionlist')
+    group = forms.CharField(label='group')

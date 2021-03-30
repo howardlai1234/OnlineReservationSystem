@@ -3,5 +3,67 @@
 {% block title %}<title>Slot removal</title>{% endblock %}
 
 {% block content %}
+<form action="" method="post">{% csrf_token %} {{form.as_p }} 
+    <label for="groupselect">Select Group</label>
+    <select id="groupselect" name="groupselect">
+        {% for gp in grouplist %} 
+        <option value="{{ gp }}">{{ gp }}</option>
+        {% endfor %}
+    </select>
+    <button class="btn btn-common" name="group_select" id="group_select" type="submit" value="ok">Choose</button>
+</form>
+
+
+{% for gp in availableTimes %}
+    Group: {{gp.group}} <br>
+    <table style="width:100%">
+        <tr>
+            <th>ID</th>
+            <th>Start</th>
+            <th>End</th>
+        </tr>
+        {% for s in gp.slots %}
+        <tr>
+            <th>{{s.id}}</th>
+            <th>{{s.start}}</th>
+            <th>{{s.end}}</th>
+        </tr>
+        {% endfor %}
+    </table>
+{% endfor %}
+
+<br>
+<div>
+   
+</div>
+<br>
+
+<p style="background-color:Tomato;">{{ formError }}</p>
+<p style="background-color:MediumSeaGreen;">{{ formSuccess }}</p>
+<input type="button"onclick="location.href='/calendar/';" value="Return">
+<br>
+
+{% if currentGroup != 'All' %}
+<form action="" method="post">{% csrf_token %} {{form.as_p }}
+
+    <h2>Remove Slot</h2> 
+    <a href="detail"> learn more</a><br><br>
+    {% if failedSubmission.flag %}
+    <p style="background-color:Tomato;">Your Rejected list:<br>{{ failedSubmission.list }}</p>
+    {% endif %}
+    For group: {{currentGroup}}
+    <textarea name="selectionlist" style="width:100%" rows="10" maxlength="4000"></textarea><br>
+    <input type="hidden" id="group" name="group" value="{{ currentGroup }}">
+    <br>
+    {% if previousSelection.flag %}
+        <button class="btn btn-common" name="slot_select" id="slot_select" type="submit" value="ok">update</button>
+    {% else %}
+        <button class="btn btn-common" name="slot_select" id="slot_select" type="submit" value="ok">save</button>
+    {% endif %}
+</form>
+{% else %}
+    You have not select any group<br>
+    Please choose one group on the top.
+{% endif %}
 
 {% endblock %}

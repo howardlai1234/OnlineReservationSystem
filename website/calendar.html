@@ -39,7 +39,10 @@
     </table>
     {% endfor %}
     {% endautoescape %}
-    
+    <br>
+    <input type="button"onclick="location.href='remove';" value="Delete enterd slot">
+    <input type="button"onclick="location.href='minimumslot';" value="Set minimum required slot">
+    <br>
 <div>
   <form action="" method="post">{% csrf_token %} {{form.as_p }} 
         <h3>Add new availavle times</h3>

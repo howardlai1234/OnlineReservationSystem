@@ -188,14 +188,124 @@ def remove(request):
     if request.user.is_authenticated:
         userid = User.objects.get(username=request.user).pk
         group = User.objects.get(username=request.user).groups
-        grouplist = []
-        user_allowed_to_access = False
-        # For Debug Function
-        if DEBUG == True:
-            phase = 1
+        
+        # variable for generating slot list
+        RegisteredSlotsReturn = []
+        grouplist = ['All']
+        cur_group = 'All'
+
+        formError = ''
+        formSuccess = ''
+
+        user_already_selected = {'flag': False}
+        failedSubmission = {'flag': False}
+
+        if 'cur_group' in request.session:
+            cur_group = request.session['cur_group']
+
         access_check = check_user_allowed_to_access_phase1(request.user)
         if access_check['flag'] == True:
-            grouplist = access_check['grouplist']
+            grouplist = grouplist + access_check['grouplist']
+            if request.method == "POST":
+                print("POST:", request.POST)
+                if 'group_select' in request.POST:
+                    form = forms.RemoveGroupSelectForm(request.POST)
+                    if form.is_valid():
+                        print("GP select valid")
+                        cur_group = form.cleaned_data['groupselect']
+                        request.session['cur_group'] = form.cleaned_data['groupselect']
+
+
+                if 'slot_select' in request.POST:
+                    form = forms.RemoveSlotSelectForm(request.POST)
+                    if form.is_valid():
+                        valid = True
+
+                        # split the form into list
+                        SelectList_reurn = form.cleaned_data['selectionlist']
+                        slotSelectList = list(SelectList_reurn.split(","))
+
+                        # check is all inputed value is integer
+                        for t in slotSelectList:
+                            if valid:
+                                try:
+                                    int(t)
+                                except BaseException:
+                                    formError = "Error: One of the selected item cannot be recognised"
+                                    valid = False
+
+                        # check if ther is duplicated slot
+                        if valid:
+                            for i in range(0, len(slotSelectList)):
+                                for x in range(i + 1, len(slotSelectList)):
+                                    if int(slotSelectList[i]) == int(
+                                            slotSelectList[x]):
+                                        valid = False
+                                        formError = "Error: One item is repeated"
+
+                        # check if all slot are allowed for this group
+                        if valid:
+                            allowed_slotID_for_this_group = Slot.objects.filter(
+                                groupid=Group.objects.get(name=form.cleaned_data['group']).pk).all()
+                            for i in slotSelectList:
+                                slotID_exist_in_this_group = False
+                                for s in allowed_slotID_for_this_group:
+                                    if int(i) == s.slotid:
+                                        slotID_exist_in_this_group = True
+                                if slotID_exist_in_this_group == False:
+                                    valid = False
+                                    formError = "ERROR: At lease one of the slotID is invalid"
+
+                        # store it in DB if all check passed
+                        if valid:
+                            groupid = Group.objects.get(
+                                name=form.cleaned_data['group']).pk
+                            for i in range(0, len(slotSelectList)):
+                                Slot.objects.filter(groupid=groupid, slotid=slotSelectList[i]).all().delete()
+                            formSuccess = "SUCCESS: your available slots is updated"
+                        else:
+                            failedSubmission['flag'] = True
+                            failedSubmission['list'] = SelectList_reurn
+
+                        if DEBUG == True:
+                            print("Selection Form Valid")
+                            print('slotSelectList: ', slotSelectList)
+
+
+            # generate the timetable list
+            if cur_group == 'All':
+                for gp in request.user.groups.all():
+                    if Slot.objects.filter(groupid=Group.objects.get(
+                            name=gp.name).pk).count() > 0:
+                        Registered_slot_of_group = []
+                        for s in Slot.objects.filter(
+                                groupid=Group.objects.get(name=gp.name).pk).all():
+                            Registered_slot_of_group.append(
+                                {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
+                        RegisteredSlotsReturn.append(
+                            {'group': gp.name, 'slots': Registered_slot_of_group})
+                if DEBUG == True:
+                    print("RegisteredSlotsReturn: ", RegisteredSlotsReturn)
+            else:
+                Registered_slot_of_group = []
+                groupid = Group.objects.get(name=cur_group).pk
+                for s in Slot.objects.filter(groupid=groupid).all():
+                    Registered_slot_of_group.append(
+                        {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
+                # Read previous record of user submitted choice of that group
+                RegisteredSlotsReturn.append(
+                    {'group': cur_group, 'slots': Registered_slot_of_group})
+
+            return render(request, 'calendar/remove.html', {
+                'formError': formError,
+                'formSuccess': formSuccess,
+                'currentGroup': cur_group,
+                'grouplist': grouplist,
+                'availableTimes': RegisteredSlotsReturn,
+                'previousSelection': user_already_selected,
+                'failedSubmission': failedSubmission
+            })
+
         
     else:
         return HttpResponse(
