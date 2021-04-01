@@ -15,7 +15,9 @@ django check:
     - virtualenv venv
     - source venv/bin/activate
     - pip3 install -r requirements.txt
-    - pip3 install flake8
+    - pip3 install pylint pylint-gitlab pylint-exit
     - python3 manage.py check
-    - flake8 --exit-zero --exclude .git,venv,__pycache__,build,dist --select F,W
-    
+    - pylint --disable=C0114,C0115,C0116 --output-format=pylint_gitlab.GitlabCodeClimateReporter ORS calendarManager config dashboard login meeting message slotSelect > code-quality.json || pylint-exit $?
+  artifacts:
+    reports:
+      codequality: code-quality.json
