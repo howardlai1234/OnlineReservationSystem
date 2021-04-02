@@ -18,12 +18,17 @@
 
 {% block content %}
     <h1>Time slots of: {{username}}</h1>
-    The entered slots: <br>
     
     {% autoescape off %}
     {% for gp in availableTimes %}
     Group: {{gp.group}}<br>
+    {% if gp.slot_enough %}
+        <p style="background-color:MediumSeaGreen;">
+    {% else %}
+        <p style="background-color:orange;">
+    {% endif %}
     Recommanded number of slot: {{gp.suggested}}, Current number of slot: {{gp.current}}
+    </p>
 
     <table style="width:100%">
         <tr>
@@ -92,9 +97,11 @@
       {% endif %}
   </form>
 </div>
-
+<br>
 <div>
+    
     {% if computed_details.not_empty %}
+        Please check the details and click "Confirm" to submit it, or re-fill the form above to change it <br>
         slots detail: For: {{computed_details.group}} Start:{{computed_details.startTime}}, End: {{computed_details.endTime}}, 
         {{computed_details.no_of_meeting}} Meeting(s), each {{computed_details.duration}} minutes long
         <br>
