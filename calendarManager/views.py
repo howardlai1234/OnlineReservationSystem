@@ -36,7 +36,7 @@ def home(request):
 
     if request.user.is_authenticated:
         userid = User.objects.get(username=request.user).pk
-        group = User.objects.get(username=request.user).groups
+        #group = User.objects.get(username=request.user).groups
 
         access_check = check_user_allowed_to_access_phase1(request.user)
         if access_check['flag'] == True:
@@ -53,13 +53,21 @@ def home(request):
                 #groupid = Group.objects.get(name=gp.name).pk
                 if Slot.objects.filter(groupid=Group.objects.get(
                         name=gp.name).pk).count() > 0:
+                    number_Of_Group_Member = getGroupMemberCount(gp.name)
+                    slot_counter = 0
+                    if DEBUG:
+                        print("Number of Group Member :", number_Of_Group_Member)
                     Registered_slot_of_group = []
                     for s in Slot.objects.filter(
                             groupid=Group.objects.get(name=gp.name).pk).all():
+                        slot_counter += 1
                         Registered_slot_of_group.append(
                             {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
+                    suggested_number = int(number_Of_Group_Member * 1.25)
+                    if suggested_number < 25:
+                        suggested_number = 25
                     RegisteredSlotsReturn.append(
-                        {'group': gp.name, 'slots': Registered_slot_of_group})
+                        {'group': gp.name, 'member_count': number_Of_Group_Member, 'slots': Registered_slot_of_group, 'suggested':suggested_number, 'current':slot_counter} )
 
             # form handling
             if request.method == 'POST':
@@ -399,3 +407,13 @@ def check_user_allowed_to_access_phase1(user):
         return {'flag': True, 'grouplist': grouplist}
     else:
         return {'flag': False, 'grouplist': grouplist}
+
+def getGroupMemberCount(groupname):
+    counter = 0
+    all_users=User.objects.all()
+    for u in all_users:
+        usergroup = u.groups.all()
+        for gp in usergroup:
+            if gp.name == groupname:
+                counter+=1
+    return counter
