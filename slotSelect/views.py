@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User, Group
 from ORS.settings import DEBUG
 from config.models import Currentphase, Timetable
-from dashboard.models import Slot
+from dashboard.models import Slot, Groupdetail
 from slotSelect.forms import GroupSelectForm, SlotSelectForm
 from slotSelect.models import Selection
 # Create your views here.
@@ -54,6 +54,7 @@ def home(request):
 
                 if 'slot_select' in request.POST:
                     form = SlotSelectForm(request.POST)
+                    groupID = Group.objects.get(name=form.cleaned_data['group']).pk
                     if form.is_valid():
                         valid = True
 
@@ -94,16 +95,21 @@ def home(request):
                                 if slotID_exist_in_this_group == False:
                                     valid = False
                                     formError = "ERROR: At lease one of the slotID is invalid"
+                        
+                        # check if the length of the list fits the minumium required length defined by group owner
+
+                        if valid:
+                            min_required_length = Groupdetail.objects.filter(groupid=groupID).all()
+                            if min_required_length.min_required_slot < len(slotSelectList):
+                                formError = "ERROR: Your list is too short, you must at least choose " +  str(min_required_length.min_required_slot) + " slots"
 
                         # store it in DB if all check passed
                         if valid:
-                            groupid = Group.objects.get(
-                                name=form.cleaned_data['group']).pk
                             Selection.objects.filter(
                                 groupid=groupid, userid=userid).delete()
                             for i in range(0, len(slotSelectList)):
                                 Selection.objects.create(
-                                    groupid=groupid,
+                                    groupid=groupID,
                                     userid=userid,
                                     slotid=slotSelectList[i],
                                     userorder=i + 1,
