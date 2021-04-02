@@ -66,8 +66,22 @@ def home(request):
                     suggested_number = int(number_Of_Group_Member * 1.25)
                     if suggested_number < 25:
                         suggested_number = 25
-                    RegisteredSlotsReturn.append(
-                        {'group': gp.name, 'member_count': number_Of_Group_Member, 'slots': Registered_slot_of_group, 'suggested':suggested_number, 'current':slot_counter} )
+                    if slot_counter < suggested_number:
+                        RegisteredSlotsReturn.append({
+                            'group': gp.name, 
+                            'member_count': number_Of_Group_Member, 
+                            'slots': Registered_slot_of_group, 
+                            'suggested':suggested_number, 
+                            'current':slot_counter, 
+                            'slot_enough': False} )
+                    else:
+                        RegisteredSlotsReturn.append({
+                            'group': gp.name, 
+                            'member_count': number_Of_Group_Member, 
+                            'slots': Registered_slot_of_group, 
+                            'suggested':suggested_number, 
+                            'current':slot_counter, 
+                            'slot_enough': True} )                        
 
             # form handling
             if request.method == 'POST':
