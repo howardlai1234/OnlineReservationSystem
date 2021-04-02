@@ -17,12 +17,14 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    <h1>The calender of: {{username}}</h1>
-    The available hours: <br>
+    <h1>Time slots of: {{username}}</h1>
+    The entered slots: <br>
     
     {% autoescape off %}
     {% for gp in availableTimes %}
-    Group: {{gp.group}} <br>
+    Group: {{gp.group}}<br>
+    Recommanded number of slot: {{gp.suggested}}, Current number of slot: {{gp.current}}
+
     <table style="width:100%">
         <tr>
             <th>ID</th>
@@ -37,6 +39,7 @@
         </tr>
         {% endfor %}
     </table>
+    <br>
     {% endfor %}
     {% endautoescape %}
     <br>
