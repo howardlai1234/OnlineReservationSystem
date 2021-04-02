@@ -26,6 +26,9 @@ def home(request):
         # for checking previous submit selection of user
         user_already_selected = {'flag': False}
 
+        #mininum required length of a slot list
+        min_required_length = 0
+
         # SelectionForm return message
         formError = ''
         formSuccess = ''
@@ -54,10 +57,10 @@ def home(request):
 
                 if 'slot_select' in request.POST:
                     form = SlotSelectForm(request.POST)
-                    groupID = Group.objects.get(name=form.cleaned_data['group']).pk
+
                     if form.is_valid():
                         valid = True
-
+                        groupID = Group.objects.get(name=form.cleaned_data['group']).pk
                         # split the form into list
                         SelectList_reurn = form.cleaned_data['selectionlist']
                         # SelectList_reurn = ''.join(SelectList_reurn.split())
@@ -93,20 +96,22 @@ def home(request):
                                     if int(i) == s.slotid:
                                         slotID_exist_in_this_group = True
                                 if slotID_exist_in_this_group == False:
-                                    valid = False
+                                    
                                     formError = "ERROR: At lease one of the slotID is invalid"
                         
                         # check if the length of the list fits the minumium required length defined by group owner
 
                         if valid:
-                            min_required_length = Groupdetail.objects.filter(groupid=groupID).all()
-                            if min_required_length.min_required_slot < len(slotSelectList):
-                                formError = "ERROR: Your list is too short, you must at least choose " +  str(min_required_length.min_required_slot) + " slots"
+                            group_detail = Groupdetail.objects.filter(groupid=groupID).get()
+                            min_required_length = group_detail.min_required_slot
+                            if min_required_length > len(slotSelectList):
+                                valid = False
+                                formError = "ERROR: Your list is too short, you must at least choose " +  str(min_required_length) + " slots"
 
                         # store it in DB if all check passed
                         if valid:
                             Selection.objects.filter(
-                                groupid=groupid, userid=userid).delete()
+                                groupid=groupID, userid=userid).delete()
                             for i in range(0, len(slotSelectList)):
                                 Selection.objects.create(
                                     groupid=groupID,
@@ -139,11 +144,16 @@ def home(request):
                 if DEBUG == True:
                     print("RegisteredSlotsReturn: ", RegisteredSlotsReturn)
             else:
+
                 Registered_slot_of_group = []
                 groupid = Group.objects.get(name=cur_group).pk
                 for s in Slot.objects.filter(groupid=groupid).all():
                     Registered_slot_of_group.append(
                         {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
+                # Read the mininum required length of the group:
+                group_detail = group_detail = Groupdetail.objects.filter(groupid=groupid).get()
+                min_required_length = group_detail.min_required_slot
+
                 # Read previous record of user submitted choice of that group
                 RegisteredSlotsReturn.append(
                     {'group': cur_group, 'slots': Registered_slot_of_group})
@@ -163,6 +173,7 @@ def home(request):
                 'grouplist': grouplist,
                 'availableTimes': RegisteredSlotsReturn,
                 'previousSelection': user_already_selected,
+                'min_required_length': min_required_length,
                 'failedSubmission': failedSubmission
             })
 
