@@ -100,6 +100,7 @@ class Slot(models.Model):
     # Field name made lowercase.
     endtime = models.DateTimeField(db_column='endTime')
     groupid = models.IntegerField(db_column='groupID')
+    active = models.BooleanField()
 
     class Meta:
         #managed = False

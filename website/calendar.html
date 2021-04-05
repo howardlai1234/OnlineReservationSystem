@@ -81,14 +81,14 @@
         
         </select>
         :
-      <input type="number" id="startMinute" name="startMinute" min="0", max="59" required data-error="Start Minute cannot be empty">
+      <input type="number" id="startMinute" name="startMinute" min="0" max="59" required data-error="Start Minute cannot be empty">
       <br>
       <lable for="meetingLength">Please enter the duration of each meeting (in minutes):</lable>
       <!-- The following line are expected to have the min and max field (meeting length) to be set by config on database) -->
-      <input type="number" id="meetingLength" name="meetingLength" min="1", max="180" required data-error="incorrect meeting length">
+      <input type="number" id="meetingLength" name="meetingLength" min="1" max="180" required data-error="incorrect meeting length">
       <br>
       <lable for="numberOfMeeting">Please enter number of meeting of this session</lable>
-      <input type="number" id="numberOfMeeting" name="numberOfMeeting" min="1", required data-error="incorrect number"> 
+      <input type="number" id="numberOfMeeting" name="numberOfMeeting" min="1" required data-error="incorrect number"> 
       <br>
       {% if computed_details.not_empty %}
         <button class="btn btn-common" id="submit" type="submit" value="ok">Change</button>
