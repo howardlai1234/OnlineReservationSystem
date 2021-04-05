@@ -99,9 +99,18 @@ def view(request):
         userid = User.objects.get(username=request.user).pk
         if Message.objects.filter(receiverid=userid, messageid=messageID).count(
         ) == 1 or Message.objects.filter(senderid=userid, messageid=messageID).count() == 1:
-            message = Message.objects.filter(messageid=messageID).get()
-            sender = User.objects.get(pk=message.senderid).username
-            receiver = User.objects.get(pk=message.receiverid).username
+            try:
+                message = Message.objects.filter(messageid=messageID).get()
+            except Poll.DoesNotExist:
+                raise Http404("Message not exist")
+            try:
+                sender = User.objects.get(pk=message.senderid).username
+            except Poll.DoesNotExist:
+                raise Http404("Message not exist")
+            try:
+                receiver = User.objects.get(pk=message.receiverid).username
+            except Poll.DoesNotExist:
+                raise Http404("Message not exist")
             message_return = {}
             return render(request, "message/view.html", {
                 'message': message,

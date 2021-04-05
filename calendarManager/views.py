@@ -56,7 +56,9 @@ def home(request):
                     number_Of_Group_Member = getGroupMemberCount(gp.name)
                     slot_counter = 0
                     if DEBUG:
-                        print("Number of Group Member :", number_Of_Group_Member)
+                        print(
+                            "Number of Group Member :",
+                            number_Of_Group_Member)
                     Registered_slot_of_group = []
                     for s in Slot.objects.filter(
                             groupid=Group.objects.get(name=gp.name).pk).all():
@@ -68,20 +70,20 @@ def home(request):
                         suggested_number = 25
                     if slot_counter < suggested_number:
                         RegisteredSlotsReturn.append({
-                            'group': gp.name, 
-                            'member_count': number_Of_Group_Member, 
-                            'slots': Registered_slot_of_group, 
-                            'suggested':suggested_number, 
-                            'current':slot_counter, 
-                            'slot_enough': False} )
+                            'group': gp.name,
+                            'member_count': number_Of_Group_Member,
+                            'slots': Registered_slot_of_group,
+                            'suggested': suggested_number,
+                            'current': slot_counter,
+                            'slot_enough': False})
                     else:
                         RegisteredSlotsReturn.append({
-                            'group': gp.name, 
-                            'member_count': number_Of_Group_Member, 
-                            'slots': Registered_slot_of_group, 
-                            'suggested':suggested_number, 
-                            'current':slot_counter, 
-                            'slot_enough': True} )                        
+                            'group': gp.name,
+                            'member_count': number_Of_Group_Member,
+                            'slots': Registered_slot_of_group,
+                            'suggested': suggested_number,
+                            'current': slot_counter,
+                            'slot_enough': True})
 
             # form handling
             if request.method == 'POST':
@@ -129,7 +131,8 @@ def home(request):
                                 (pytz.UTC.localize(session_start) >= s.starttime and pytz.UTC.localize(session_start) <= s.endtime) or
                                 (pytz.UTC.localize(period_end) >= s.starttime and pytz.UTC.localize(period_end) <= s.endtime) or
                                 (pytz.UTC.localize(session_start) >= s.starttime and pytz.UTC.localize(period_end) <= s.endtime) or
-                                (pytz.UTC.localize(session_start) <= s.starttime and pytz.UTC.localize(period_end) >= s.endtime)
+                                (pytz.UTC.localize(session_start) <= s.starttime and pytz.UTC.localize(
+                                    period_end) >= s.endtime)
                             ):
                                 timecollision = True
                                 formError = "ERROR: At least one of the timeslot collided, please double check or remove existing slot(s)"
@@ -422,12 +425,13 @@ def check_user_allowed_to_access_phase1(user):
     else:
         return {'flag': False, 'grouplist': grouplist}
 
+
 def getGroupMemberCount(groupname):
     counter = 0
-    all_users=User.objects.all()
+    all_users = User.objects.all()
     for u in all_users:
         usergroup = u.groups.all()
         for gp in usergroup:
             if gp.name == groupname:
-                counter+=1
+                counter += 1
     return counter
