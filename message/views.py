@@ -103,7 +103,7 @@ def view(request):
                 message = Message.objects.filter(messageid=messageID).get()
             except Poll.DoesNotExist:
                 raise Http404("Message not exist")
-            try:   
+            try:
                 sender = User.objects.get(pk=message.senderid).username
             except Poll.DoesNotExist:
                 raise Http404("Message not exist")
