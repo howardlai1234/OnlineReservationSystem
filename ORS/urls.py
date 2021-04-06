@@ -34,5 +34,6 @@ urlpatterns = [
     path("message/", include("message.urls")),
     path("meeting/", include("meeting.urls")),
     path("calendar/", include("calendarManager.urls")),
-    path("selection/", include("slotSelect.urls"))
+    path("selection/", include("slotSelect.urls")),
+    path("assign/", include("assign.urls"))
 ]

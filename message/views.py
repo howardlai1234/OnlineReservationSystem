@@ -102,18 +102,18 @@ def view(request):
             try:
                 message = Message.objects.filter(messageid=messageID).get()
             except Poll.DoesNotExist:
-                raise Http404("Message not exist")
+                raise HttpResponseNotFound('<h1>404 ERROR: message not found</h1>')
             if message.senderid == 0:
                 sender = "SYSTEM"
             else:
                 try:
                     sender = User.objects.get(pk=message.senderid).username
                 except Poll.DoesNotExist:
-                    raise Http404("Message not exist")
+                    raise HttpResponseNotFound('<h1>404 ERROR: message not found</h1>')
             try:
                 receiver = User.objects.get(pk=message.receiverid).username
             except Poll.DoesNotExist:
-                raise Http404("Message not exist")
+                raise HttpResponseNotFound('<h1>404 ERROR: message not found</h1>')
             message_return = {}
             return render(request, "message/view.html", {
                 'message': message,
@@ -129,7 +129,7 @@ def view(request):
     #     else:
     # return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Incorrect or messing
     # messageID <br> <br><a href="/message">Back</a>')
-        return HttpResponseNotFound('<h1>404 ERROR: message not found</h1>')
+        return 
     else:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
