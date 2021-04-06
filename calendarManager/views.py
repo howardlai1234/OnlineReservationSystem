@@ -1,16 +1,12 @@
 import datetime
 import pytz
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
-from django.db import connections
-from django.db.utils import OperationalError
-from ORS.settings import DEBUG
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User, Group
+from ORS.settings import DEBUG
 from config.models import Currentphase, Timetable
 from calendarManager import forms
 from dashboard.models import Slot, Groupdetail
-#from django.contrib.auth.models import Group
 
 # Create your views here.
 
@@ -18,8 +14,8 @@ from dashboard.models import Slot, Groupdetail
 def home(request):
     print("celander:", Group.objects.all())
     phase = Currentphase.objects.get().phase
-    allowed_group = Timetable.objects.get().phase1_group_name
-    user_allowed_to_access = 0
+    #allowed_group = Timetable.objects.get().phase1_group_name
+    #user_allowed_to_access = 0
     grouplist = []
     computed_detail = {'not_empty': False}
 
@@ -39,10 +35,10 @@ def home(request):
         #group = User.objects.get(username=request.user).groups
 
         access_check = check_user_allowed_to_access_phase1(request.user)
-        if access_check['flag'] == True:
+        if access_check['flag']:
             grouplist = access_check['grouplist']
             context = {}
-            if DEBUG == True:
+            if DEBUG:
                 print("user allowed to access")
                 print("user Group in return list:", grouplist)
 
@@ -91,7 +87,7 @@ def home(request):
                 context['form'] = forms
                 if form.is_valid():
                     # debug information
-                    if DEBUG == True:
+                    if DEBUG:
                         print("Form valid: ", form)
                         print(
                             "StartHour: ", int(
@@ -122,7 +118,7 @@ def home(request):
                     already_registered_slots = Slot.objects.filter(
                         groupid=Group.objects.get(name=form.cleaned_data['group']).pk)
                     period_end = period_start
-                    for i in range(0, numberOfMeet):
+                    for _i in range(0, numberOfMeet):
                         session_start = period_end
                         period_end = period_end + \
                             datetime.timedelta(minutes=meetingLen)
@@ -139,7 +135,7 @@ def home(request):
                         meetingSession.append(
                             {'startTime': session_start, 'endTime': (period_end + datetime.timedelta(minutes=-1))})
 
-                    if DEBUG == True:
+                    if DEBUG:
                         print(period_start)
                         print(period_end)
                         for x in meetingSession:
@@ -147,7 +143,7 @@ def home(request):
                                 " start:", x['startTime'], "end:", x['endTime'])
 
                     # prepare the checking
-                    if timecollision == False:
+                    if not timecollision:
                         computed_detail = {
                             'not_empty': True,
                             'group': form.cleaned_data['group'],
@@ -184,7 +180,7 @@ def confirm(request):
             user_allowed_to_access = False
             user_in_target_group = False
 
-            if DEBUG == True:
+            if DEBUG:
                 print(form)
 
             if form.is_valid():
@@ -197,7 +193,7 @@ def confirm(request):
                     if gp.name == form.cleaned_data['confirm_group']:
                         user_in_target_group = True
 
-                if user_allowed_to_access == True and user_in_target_group == True:
+                if user_allowed_to_access and user_in_target_group :
                     startTime = datetime.datetime.strptime(
                         form.cleaned_data['confirm_startTime'], '%Y/%m/%d %H:%M:%S')
                     group = form.cleaned_data['confirm_group']
@@ -220,16 +216,12 @@ def confirm(request):
                         )
 
                     return HttpResponseRedirect('/calendar/')
-                else:
-                    return HttpResponse(
-                        '<h1>Unauthorised Access</h1>', status=403)
-            else:
-                return HttpResponse('<h1>Invalid Form</h1>', status=404)
-        else:
-            return HttpResponse('<h1>ACCEESS DENIED</h1>', status=404)
-    else:
-        return HttpResponse(
-            '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
+                return HttpResponse(
+                    '<h1>Unauthorised Access</h1>', status=403)
+            return HttpResponse('<h1>Invalid Form</h1>', status=404)
+        return HttpResponse('<h1>ACCEESS DENIED</h1>', status=404)
+    return HttpResponse(
+        '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
 
 
 def remove(request):
@@ -252,7 +244,7 @@ def remove(request):
             cur_group = request.session['cur_group']
 
         access_check = check_user_allowed_to_access_phase1(request.user)
-        if access_check['flag'] == True:
+        if access_check['flag']:
             grouplist = grouplist + access_check['grouplist']
             if request.method == "POST":
                 print("POST:", request.POST)
@@ -299,7 +291,7 @@ def remove(request):
                                 for s in allowed_slotID_for_this_group:
                                     if int(i) == s.slotid:
                                         slotID_exist_in_this_group = True
-                                if slotID_exist_in_this_group == False:
+                                if not slotID_exist_in_this_group:
                                     valid = False
                                     formError = "ERROR: At lease one of the slotID is invalid"
 
@@ -315,7 +307,7 @@ def remove(request):
                             failedSubmission['flag'] = True
                             failedSubmission['list'] = SelectList_reurn
 
-                        if DEBUG == True:
+                        if DEBUG:
                             print("Selection Form Valid")
                             print('slotSelectList: ', slotSelectList)
 
@@ -331,7 +323,7 @@ def remove(request):
                                 {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
                         RegisteredSlotsReturn.append(
                             {'group': gp.name, 'slots': Registered_slot_of_group})
-                if DEBUG == True:
+                if DEBUG:
                     print("RegisteredSlotsReturn: ", RegisteredSlotsReturn)
             else:
                 Registered_slot_of_group = []
@@ -352,10 +344,9 @@ def remove(request):
                 'previousSelection': user_already_selected,
                 'failedSubmission': failedSubmission
             })
-
-    else:
-        return HttpResponse(
-            '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
+        return HttpResponse('<h1>ACCEESS DENIED</h1>', status=404)
+    return HttpResponse(
+        '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
 
 
 def setMinSlot(request):
@@ -368,7 +359,7 @@ def setMinSlot(request):
         formSuccess = ''
 
         access_check = check_user_allowed_to_access_phase1(request.user)
-        if access_check['flag'] == True:
+        if access_check['flag']:
             grouplist = access_check['grouplist']
             if request.method == 'POST':
                 form = forms.ChangeMinRequired(request.POST)
@@ -402,10 +393,9 @@ def setMinSlot(request):
                 'formSuccess': formSuccess,
                 'miniumSlotReturn': miniumSlotReturn
             })
-
-    else:
-        return HttpResponse(
-            '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
+        return HttpResponse('<h1>ACCEESS DENIED</h1>', status=404)
+    return HttpResponse(
+        '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
 
 
 def check_user_allowed_to_access_phase1(user):
@@ -413,7 +403,7 @@ def check_user_allowed_to_access_phase1(user):
     allowed_group = Timetable.objects.get().phase1_group_name
     phase = -1
     grouplist = []
-    if DEBUG == True:
+    if DEBUG:
         phase = 1
 
     for gp in user.groups.all():
@@ -421,11 +411,9 @@ def check_user_allowed_to_access_phase1(user):
         if gp.name == allowed_group:
             user_allowed_to_access = True
 
-    if phase == 1 and user_allowed_to_access == True:
+    if phase == 1 and user_allowed_to_access:
         return {'flag': True, 'grouplist': grouplist}
-    else:
-        return {'flag': False, 'grouplist': grouplist}
-
+    return {'flag': False, 'grouplist': grouplist}
 
 def getGroupMemberCount(groupname):
     counter = 0
