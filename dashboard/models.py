@@ -79,6 +79,7 @@ class Message(models.Model):
     referenceid = models.IntegerField(
         db_column='referenceID', blank=True, null=True)
     # Field name made lowercase.
+    meetingid = models.IntegerField()
     sendtime = models.DateTimeField(
         db_column='sendTime', blank=True, null=True)
     viewed = models.IntegerField(blank=True, null=True)
