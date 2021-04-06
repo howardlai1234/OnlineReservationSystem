@@ -158,18 +158,21 @@ def create_new(request):
                         message_is_valid = 0
                         formError = formError + "ERROR: You cannot sent message to yourself"
                     else:
-                        Message.objects.create(
-                            senderid=userid,
-                            receiverid=receiverID,
-                            sendtime=datetime.now(),
-                            viewed=0,
-                            title=form.cleaned_data['title'],
-                            body=form.cleaned_data['body']
-                        )
-                        message_is_valid = 1
+                        #####################################
+                        ## Moved to a independent function ##
+                        #####################################
+                        # Message.objects.create(
+                        #     senderid=userid,
+                        #     receiverid=receiverID,
+                        #     sendtime=datetime.now(),
+                        #     viewed=0,
+                        #     title=form.cleaned_data['title'],
+                        #     body=form.cleaned_data['body']
+                        # )
+                        message_is_valid = sent_new_message(userid, receiverID, 0, 0, form.cleaned_data['title'], form.cleaned_data['body'])
                         formSuccess = "Message sent Successfully"
                 else:
-                    message_is_valid = 1
+                    message_is_valid = 0
                     formError = "ERROR: Receiver Not found"
 
             else:
@@ -185,3 +188,15 @@ def create_new(request):
     else:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
+
+def sent_new_message(senderID, receiverID, referenceID, meetingID, title, body):
+    Message.objects.create(
+        senderid = senderID,
+        receiverid = receiverID,
+        referenceid = 0,
+        meetingid = 0,
+        sendtime=datetime.now(),
+        viewed = 0,
+        title = title,
+        body = body
+    )

@@ -215,7 +215,8 @@ def confirm(request):
                             starttime=session_start,
                             endtime=period_end +
                             datetime.timedelta(minutes=-1),
-                            groupid=Group.objects.get(name=group).pk
+                            groupid=Group.objects.get(name=group).pk,
+                            active = True
                         )
 
                     return HttpResponseRedirect('/calendar/')
