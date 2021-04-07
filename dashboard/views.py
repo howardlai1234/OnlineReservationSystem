@@ -1,4 +1,3 @@
-from datetime import dtetime,date,time
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.db import connections
