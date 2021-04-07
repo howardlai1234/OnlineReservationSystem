@@ -58,6 +58,8 @@ class Meeting(models.Model):
     # Field name made lowercase.
     participantid = models.IntegerField(db_column='participantID')
     date = models.DateField(blank=True, null=True)
+    starttime = models.TimeField(blank=True, null=True)
+    endtime = models.TimeField(blank=True, null=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     remark = models.CharField(max_length=255, blank=True, null=True)
     # Field name made lowercase.

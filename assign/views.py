@@ -60,21 +60,24 @@ def home(request):
          #print("empty matrix")
             #matrix_empty = True
          #if not matrix_empty:
+         confirm_list = []
          if DEBUG:
             print("Matrix of Group:", gp.name)
             print_matrix(matrix)
             print("")
             total = 0
             print('index:', indexes)
-            for row, column in indexes:
-               value = matrix[row][column]
-               total += value
+         for row, column in indexes:
+            value = matrix[row][column]
+            total += value
+            confirm_list.append({'group':groupID, 'userid': userid_lookup[row], 'slot': available_slot_lookup[column]})
+            if DEBUG:
                print(f'(user:{userid_lookup[row]}, slot:{available_slot_lookup[column]}) -> {value}')
+         if DEBUG: 
             print(f'total cost: {total}')
             print("userlist: ", userid_lookup)
             print("slotlist: ", available_slot_lookup)
-
-
+         batch_add_meeting(confirm_list)      
 
    # for usr in User.objects.all():
    #    print ("username:", usr.username, "id:", User.objects.get(username=usr.username).pk)
@@ -112,4 +115,18 @@ def matrix_row_constructor(available_slot_list, user_selection_dict):
    #print("return_list:", return_list)
    return {'flag': valid_input, 'list': return_list}
 
-   # def munkres_algorithm
+
+def batch_add_meeting(meeting_detail):
+   for meeting in meeting_detail:
+      slot_detail = Slot.objects.filter(slotid=meeting['slot']).get()
+      Meeting.objects.create(
+         hostid=slot_detail.ownerid,
+         participantid = meeting['userid'],
+         date = slot_detail.starttime.date(),
+         starttime = slot_detail.starttime.time(),
+         endtime = slot_detail.endtime.time(),
+         name = str(Group.objects.get(id=meeting['group']).name) + " Meeting",
+         remark = "N/A",
+         statusid = 1
+      )
+      print("Slots detail:", slot_detail.ownerid, slot_detail.starttime, slot_detail.endtime, )
