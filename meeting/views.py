@@ -24,9 +24,21 @@ def home(request):
     pass_meeting_count = Meeting.objects.filter(hostid=userid, date__lt=date.today()).count()
     pass_meeting_count += Meeting.objects.filter(participantid=userid, date__lt=date.today()).count()
 
-    
+    if today_meeting_count > 0:
+        today_meeting = (userid, 'date')
+    if future_meeting_count > 0:
+        today_meeting = (userid, 'date__gt')
+    if pass_meeting_count > 0:
+        today_meeting = (userid, 'date__lt')
 
-    return HttpResponse("ORS-Meeting <br> Work in Progress")
+    return render(request, "meeting.html", {
+        'today_meeting': today_meeting,
+        'today_meeting_count': today_meeting_count,
+        'future_meeting': future_meeting,
+        'future_meeting_count': future_meeting_count,
+        'pass_meeting': pass_meeting,
+        'pass_meeting_count': pass_meeting_count,
+    })
 
 def view(request):
     if not request.user.is_authenticated:
@@ -75,7 +87,7 @@ def check_user_can_manage(userID, meetingID):
         return True
     return False
 
-def meeting_list(UserID, user_prem, date_prem):
+def meeting_list(UserID, date_prem):
     return_list = []
     meeting = Message.objects.filter((Q(hostid=userid) | Q(participantid=userid)) & Q(date_prem=date.today())).all()
     for m in meeting:
