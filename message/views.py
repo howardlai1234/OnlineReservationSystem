@@ -29,13 +29,18 @@ def home(request):
             #     print()
             print("Title:", received_message[0].title)
             for message in received_message:
-                print("message title:", message.title)
-                print("sender:", User.objects.get(pk=int(message.senderid)))
-                print(message.body)
+                if int(message.senderid) == 0:
+                    sender = 'SYSTEM'
+                else:
+                    sender = User.objects.get(pk=int(message.senderid))
+                if DEBUG:
+                    print("message title:", message.title)
+                    print("sender:", sender)
+                    print(message.body)
                 received_message_return.append({
                     'messageid': message.messageid,
                     'title': message.title,
-                    'sender': User.objects.get(pk=int(message.senderid)),
+                    'sender': sender,
                     'body': message.body
                 })
                 if message.viewed == 0:
@@ -46,9 +51,10 @@ def home(request):
         if sent_message_count > 0:
             sent_message = Message.objects.filter(senderid=userid).all()
             for message in sent_message:
-                print("message title:", message.title)
-                print("sender:", User.objects.get(pk=int(message.senderid)))
-                print(message.body)
+                if DEBUG:
+                    print("message title:", message.title)
+                    print("sender:", User.objects.get(pk=int(message.senderid)))
+                    print(message.body)
                 if message.viewed == 0:
                     sent_message_return.append({
                         'messageid': message.messageid,
@@ -196,8 +202,8 @@ def sent_new_message(senderID, receiverID, referenceID, meetingID, title, body):
     Message.objects.create(
         senderid = senderID,
         receiverid = receiverID,
-        referenceid = 0,
-        meetingid = 0,
+        referenceid = referenceID,
+        meetingid = meetingID,
         sendtime=datetime.now(),
         viewed = 0,
         title = title,
