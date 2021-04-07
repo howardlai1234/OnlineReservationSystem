@@ -53,7 +53,10 @@ def home(request):
             for message in sent_message:
                 if DEBUG:
                     print("message title:", message.title)
-                    print("sender:", User.objects.get(pk=int(message.senderid)))
+                    print(
+                        "sender:", User.objects.get(
+                            pk=int(
+                                message.senderid)))
                     print(message.body)
                 if message.viewed == 0:
                     sent_message_return.append({
@@ -108,18 +111,21 @@ def view(request):
             try:
                 message = Message.objects.filter(messageid=messageID).get()
             except Message.DoesNotExist:
-                raise HttpResponseNotFound('<h1>404 ERROR: message not found</h1>')
+                raise HttpResponseNotFound(
+                    '<h1>404 ERROR: message not found</h1>')
             if message.senderid == 0:
                 sender = "SYSTEM"
             else:
                 try:
                     sender = User.objects.get(pk=message.senderid).username
                 except Message.DoesNotExist:
-                    raise HttpResponseNotFound('<h1>404 ERROR: message not found</h1>')
+                    raise HttpResponseNotFound(
+                        '<h1>404 ERROR: message not found</h1>')
             try:
                 receiver = User.objects.get(pk=message.receiverid).username
             except Message.DoesNotExist:
-                raise HttpResponseNotFound('<h1>404 ERROR: message not found</h1>')
+                raise HttpResponseNotFound(
+                    '<h1>404 ERROR: message not found</h1>')
             message_return = {}
             return render(request, "message/view.html", {
                 'message': message,
@@ -135,7 +141,7 @@ def view(request):
     #     else:
     # return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Incorrect or messing
     # messageID <br> <br><a href="/message">Back</a>')
-        return 
+        return
     else:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
@@ -178,7 +184,8 @@ def create_new(request):
                         #     title=form.cleaned_data['title'],
                         #     body=form.cleaned_data['body']
                         # )
-                        message_is_valid = sent_new_message(userid, receiverID, 0, 0, form.cleaned_data['title'], form.cleaned_data['body'])
+                        message_is_valid = sent_new_message(
+                            userid, receiverID, 0, 0, form.cleaned_data['title'], form.cleaned_data['body'])
                         formSuccess = "Message sent Successfully"
                 else:
                     message_is_valid = 0
@@ -198,14 +205,16 @@ def create_new(request):
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
 
-def sent_new_message(senderID, receiverID, referenceID, meetingID, title, body):
+
+def sent_new_message(senderID, receiverID, referenceID,
+                     meetingID, title, body):
     Message.objects.create(
-        senderid = senderID,
-        receiverid = receiverID,
-        referenceid = referenceID,
-        meetingid = meetingID,
+        senderid=senderID,
+        receiverid=receiverID,
+        referenceid=referenceID,
+        meetingid=meetingID,
         sendtime=datetime.now(),
-        viewed = 0,
-        title = title,
-        body = body
+        viewed=0,
+        title=title,
+        body=body
     )

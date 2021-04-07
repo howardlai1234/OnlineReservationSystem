@@ -193,7 +193,7 @@ def confirm(request):
                     if gp.name == form.cleaned_data['confirm_group']:
                         user_in_target_group = True
 
-                if user_allowed_to_access and user_in_target_group :
+                if user_allowed_to_access and user_in_target_group:
                     startTime = datetime.datetime.strptime(
                         form.cleaned_data['confirm_startTime'], '%Y/%m/%d %H:%M:%S')
                     group = form.cleaned_data['confirm_group']
@@ -212,7 +212,7 @@ def confirm(request):
                             endtime=period_end +
                             datetime.timedelta(minutes=-1),
                             groupid=Group.objects.get(name=group).pk,
-                            active = True
+                            active=True
                         )
 
                     return HttpResponseRedirect('/calendar/')
@@ -414,6 +414,7 @@ def check_user_allowed_to_access_phase1(user):
     if phase == 1 and user_allowed_to_access:
         return {'flag': True, 'grouplist': grouplist}
     return {'flag': False, 'grouplist': grouplist}
+
 
 def getGroupMemberCount(groupname):
     counter = 0

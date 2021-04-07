@@ -6,4 +6,6 @@ add-super-user:
 
 create-migration:
 	docker-compose run --rm ors python3 manage.py makemigrations
-	
+
+format-check:
+	autopep8 -riva .
