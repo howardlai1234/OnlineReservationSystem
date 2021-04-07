@@ -103,7 +103,6 @@ def home(request):
 
 def view(request):
     if request.user.is_authenticated:
-        print("Nothing to see here, move along")
         messageID = request.GET.get('id', '')
         userid = User.objects.get(username=request.user).pk
         if Message.objects.filter(receiverid=userid, messageid=messageID).count(
