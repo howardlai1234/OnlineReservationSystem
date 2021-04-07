@@ -110,6 +110,7 @@ def view(request):
         ) == 1 or Message.objects.filter(senderid=userid, messageid=messageID).count() == 1:
             try:
                 message = Message.objects.filter(messageid=messageID).get()
+                receiver = User.objects.get(pk=message.receiverid).username
             except Message.DoesNotExist:
                 raise HttpResponseNotFound(
                     '<h1>404 ERROR: message not found</h1>')
@@ -117,15 +118,10 @@ def view(request):
                 sender = "SYSTEM"
             else:
                 try:
-                    sender = User.objects.get(pk=message.senderid).username
+                    sender = User.objects.get(pk=message.senderid).username 
                 except Message.DoesNotExist:
                     raise HttpResponseNotFound(
                         '<h1>404 ERROR: message not found</h1>')
-            try:
-                receiver = User.objects.get(pk=message.receiverid).username
-            except Message.DoesNotExist:
-                raise HttpResponseNotFound(
-                    '<h1>404 ERROR: message not found</h1>')
             message_return = {}
             return render(request, "message/view.html", {
                 'message': message,
@@ -141,10 +137,9 @@ def view(request):
     #     else:
     # return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Incorrect or messing
     # messageID <br> <br><a href="/message">Back</a>')
-        return
-    else:
-        return HttpResponse(
-            '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
+        return HttpResponseNotFound('<h1>404 ERROR: message not found</h1>', status=404)
+    return HttpResponse(
+        '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
 
 
 def create_new(request):

@@ -154,17 +154,15 @@ def home(request):
                 try:
                     available_slot_of_group = Slot.objects.filter(
                         groupid=groupid).all()
+                    for s in available_slot_of_group:
+                        Registered_slot_of_group.append(
+                            {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
+                    # Read the mininum required length of the group:
+                    group_detail = Groupdetail.objects.filter(
+                        groupid=groupid).get()
                 except Slot.DoesNotExist:
                     return HttpResponse(
                         '<h1>No Slot Available for this group <br> <br><a href="/dashboard">Return</a>', status=401)
-
-                for s in available_slot_of_group:
-                    Registered_slot_of_group.append(
-                        {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
-                # Read the mininum required length of the group:
-                try:
-                    group_detail = Groupdetail.objects.filter(
-                        groupid=groupid).get()
                 except Groupdetail.DoesNotExist:
                     Groupdetail.objects.create(
                         groupid=groupid, min_required_slot=5)
