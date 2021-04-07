@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+
+{% block title %}<title>{{meeting.name}}</title>{% endblock %}
+
+{% block content %}
+
+MeetingID: {{meeting.messageid}}<br>
+Meeting Name: {{meeting.name}}<br>
+Date: {{meeting.date}}<br>
+Time: {{meeting.starttime}} - {{meeting.endtime}}<br>
+participant: {{host}}, {{participant}}<br>
+Remark: {{meeting.remark}}<br>
+
+<div>
+    <input type="button" onclick="location.href='/meeting/';" value="Return">
+</div>
+
+
+{% endblock %}

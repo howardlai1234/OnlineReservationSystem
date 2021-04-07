@@ -16,7 +16,7 @@
         {{ t.starttime }} - {{t.endtime}}<br>
         participant: {{t.hostname}}, {{t.participantname}}
         </div>
-        <input type="button" onclick="location.href='/meeting/view?id={{i.messageid}}';" value="Detail">
+        <input type="button" onclick="location.href='/meeting/view?id={{t.meetingid}}';" value="Detail">
         <br>
         {% endfor %}
     {% endif %}  
@@ -34,7 +34,7 @@
         {{ t.starttime }} - {{ f.endtime}}<br>
         participant: {{f.hostname}}, {{f.participantname}}
         </div>
-        <input type="button" onclick="location.href='/meeting/view?id={{i.messageid}}';" value="Detail">
+        <input type="button" onclick="location.href='/meeting/view?id={{f.meetingid}}';" value="Detail">
         <br>
         {% endfor %}
     {% endif %}
@@ -45,14 +45,14 @@
         No previous meeting record<br>
         </div> 
     {% else %}
-        {% for p inpass_meeting %} 
+        {% for p in pass_meeting %} 
         <div class="row"> 
         Name: {{ p.name }} <br>
         Date: {{ p.date }} <br>
         {{ p.starttime }} - {{ p.endtime}}<br>
         participant: {{p.hostname}}, {{p.participantname}}
         </div>
-        <input type="button" onclick="location.href='/meeting/view?id={{i.messageid}}';" value="Detail">
+        <input type="button" onclick="location.href='/meeting/view?id={{p.meetingid}}';" value="Detail">
         <br>
         {% endfor %}
     {% endif %}

@@ -2,6 +2,7 @@ from datetime import date
 from django.shortcuts import render
 from django.db.models import Q
 from django.http import HttpResponse
+from django.contrib.auth.models import User
 from dashboard.models import Meeting
 
 # Create your views here.
@@ -27,9 +28,10 @@ def home(request):
     if today_meeting_count > 0:
         today_meeting = (userid, 'date')
     if future_meeting_count > 0:
-        today_meeting = (userid, 'date__gt')
+        future_meeting = (userid, 'date__gt')
     if pass_meeting_count > 0:
-        today_meeting = (userid, 'date__lt')
+        pass_meeting = (userid, 'date__lt')
+
 
     return render(request, "meeting.html", {
         'today_meeting': today_meeting,
@@ -47,7 +49,7 @@ def view(request):
 
     userID = User.objects.get(username=request.user).pk
     meetingID = request.GET.get('id', '')  
-    if not check_user_can_view(UserID, meetingID):
+    if not check_user_can_view(userID, meetingID):
         return HttpResponseNotFound(
             '<h1>404 ERROR: message not found</h1>', status=404)
     try:
@@ -57,6 +59,11 @@ def view(request):
     except Meeting.DoesNotExist:
         raise HttpResponseNotFound(
             '<h1>404 ERROR: message not found</h1>', status=404)
+    return render(request, "meeting/view.html",{
+        'meeting': meeting,
+        'host': host,
+        'participant': participant
+    })
     
 
         
@@ -77,13 +84,13 @@ def manage(request):
 
 
 def check_user_can_view(userID, meetingID):
-    if Meeting.objects.filter(hostid=userid, meetingid=meetingID).count(
-        ) == 1 or Meeting.objects.filter(participantid=userid, meetingid=meetingID).count() == 1:
+    if Meeting.objects.filter(hostid=userID, meetingid=meetingID).count(
+        ) == 1 or Meeting.objects.filter(participantid=userID, meetingid=meetingID).count() == 1:
         return True
     return False
 
 def check_user_can_manage(userID, meetingID):
-    if Meeting.objects.filter(hostid=userid, meetingid=meetingID).count() == 1:
+    if Meeting.objects.filter(hostid=userID, meetingid=meetingID).count() == 1:
         return True
     return False
 
@@ -93,8 +100,8 @@ def meeting_list(UserID, date_prem):
     for m in meeting:
         return_list.append({
             'meetingid': m.meetingid,
-            'hostid': User.objects.get(pk=m.hostid).username,
-            'participantid': User.objects.get(pk=m.participantid).username,
+            'hostname': User.objects.get(pk=m.hostid).username,
+            'participantname': User.objects.get(pk=m.participantid).username,
             'date': m.date,
             'starttime': m.starttime,
             'endtime': m.endtime,
