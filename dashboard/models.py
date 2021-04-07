@@ -58,6 +58,8 @@ class Meeting(models.Model):
     # Field name made lowercase.
     participantid = models.IntegerField(db_column='participantID')
     date = models.DateField(blank=True, null=True)
+    starttime = models.TimeField(blank=True, null=True)
+    endtime = models.TimeField(blank=True, null=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     remark = models.CharField(max_length=255, blank=True, null=True)
     # Field name made lowercase.
@@ -79,6 +81,7 @@ class Message(models.Model):
     referenceid = models.IntegerField(
         db_column='referenceID', blank=True, null=True)
     # Field name made lowercase.
+    meetingid = models.IntegerField()
     sendtime = models.DateTimeField(
         db_column='sendTime', blank=True, null=True)
     viewed = models.IntegerField(blank=True, null=True)
@@ -100,6 +103,7 @@ class Slot(models.Model):
     # Field name made lowercase.
     endtime = models.DateTimeField(db_column='endTime')
     groupid = models.IntegerField(db_column='groupID')
+    active = models.BooleanField()
 
     class Meta:
         #managed = False

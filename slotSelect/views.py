@@ -97,7 +97,7 @@ def home(request):
                                     if int(i) == s.slotid:
                                         slotID_exist_in_this_group = True
                                 if slotID_exist_in_this_group == False:
-
+                                    valid = False
                                     formError = "ERROR: At lease one of the slotID is invalid"
 
                         # check if the length of the list fits the minumium
@@ -151,12 +151,23 @@ def home(request):
 
                 Registered_slot_of_group = []
                 groupid = Group.objects.get(name=cur_group).pk
-                for s in Slot.objects.filter(groupid=groupid).all():
-                    Registered_slot_of_group.append(
-                        {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
-                # Read the mininum required length of the group:
-                group_detail = group_detail = Groupdetail.objects.filter(
-                    groupid=groupid).get()
+                try:
+                    available_slot_of_group = Slot.objects.filter(
+                        groupid=groupid).all()
+                    for s in available_slot_of_group:
+                        Registered_slot_of_group.append(
+                            {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
+                    # Read the mininum required length of the group:
+                    group_detail = Groupdetail.objects.filter(
+                        groupid=groupid).get()
+                except Slot.DoesNotExist:
+                    return HttpResponse(
+                        '<h1>No Slot Available for this group <br> <br><a href="/dashboard">Return</a>', status=401)
+                except Groupdetail.DoesNotExist:
+                    Groupdetail.objects.create(
+                        groupid=groupid, min_required_slot=5)
+                    group_detail = Groupdetail.objects.filter(
+                        groupid=groupid).get()
                 min_required_length = group_detail.min_required_slot
 
                 # Read previous record of user submitted choice of that group

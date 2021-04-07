@@ -29,13 +29,18 @@ def home(request):
             #     print()
             print("Title:", received_message[0].title)
             for message in received_message:
-                print("message title:", message.title)
-                print("sender:", User.objects.get(pk=int(message.senderid)))
-                print(message.body)
+                if int(message.senderid) == 0:
+                    sender = 'SYSTEM'
+                else:
+                    sender = User.objects.get(pk=int(message.senderid))
+                if DEBUG:
+                    print("message title:", message.title)
+                    print("sender:", sender)
+                    print(message.body)
                 received_message_return.append({
                     'messageid': message.messageid,
                     'title': message.title,
-                    'sender': User.objects.get(pk=int(message.senderid)),
+                    'sender': sender,
                     'body': message.body
                 })
                 if message.viewed == 0:
@@ -46,9 +51,13 @@ def home(request):
         if sent_message_count > 0:
             sent_message = Message.objects.filter(senderid=userid).all()
             for message in sent_message:
-                print("message title:", message.title)
-                print("sender:", User.objects.get(pk=int(message.senderid)))
-                print(message.body)
+                if DEBUG:
+                    print("message title:", message.title)
+                    print(
+                        "sender:", User.objects.get(
+                            pk=int(
+                                message.senderid)))
+                    print(message.body)
                 if message.viewed == 0:
                     sent_message_return.append({
                         'messageid': message.messageid,
@@ -101,16 +110,18 @@ def view(request):
         ) == 1 or Message.objects.filter(senderid=userid, messageid=messageID).count() == 1:
             try:
                 message = Message.objects.filter(messageid=messageID).get()
-            except Poll.DoesNotExist:
-                raise Http404("Message not exist")
-            try:
-                sender = User.objects.get(pk=message.senderid).username
-            except Poll.DoesNotExist:
-                raise Http404("Message not exist")
-            try:
                 receiver = User.objects.get(pk=message.receiverid).username
-            except Poll.DoesNotExist:
-                raise Http404("Message not exist")
+            except Message.DoesNotExist:
+                raise HttpResponseNotFound(
+                    '<h1>404 ERROR: message not found</h1>')
+            if message.senderid == 0:
+                sender = "SYSTEM"
+            else:
+                try:
+                    sender = User.objects.get(pk=message.senderid).username 
+                except Message.DoesNotExist:
+                    raise HttpResponseNotFound(
+                        '<h1>404 ERROR: message not found</h1>')
             message_return = {}
             return render(request, "message/view.html", {
                 'message': message,
@@ -126,10 +137,9 @@ def view(request):
     #     else:
     # return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Incorrect or messing
     # messageID <br> <br><a href="/message">Back</a>')
-        return HttpResponseNotFound('<h1>404 ERROR: message not found</h1>')
-    else:
-        return HttpResponse(
-            '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
+        return HttpResponseNotFound('<h1>404 ERROR: message not found</h1>', status=404)
+    return HttpResponse(
+        '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
 
 
 def create_new(request):
@@ -158,18 +168,22 @@ def create_new(request):
                         message_is_valid = 0
                         formError = formError + "ERROR: You cannot sent message to yourself"
                     else:
-                        Message.objects.create(
-                            senderid=userid,
-                            receiverid=receiverID,
-                            sendtime=datetime.now(),
-                            viewed=0,
-                            title=form.cleaned_data['title'],
-                            body=form.cleaned_data['body']
-                        )
-                        message_is_valid = 1
+                        #####################################
+                        ## Moved to a independent function ##
+                        #####################################
+                        # Message.objects.create(
+                        #     senderid=userid,
+                        #     receiverid=receiverID,
+                        #     sendtime=datetime.now(),
+                        #     viewed=0,
+                        #     title=form.cleaned_data['title'],
+                        #     body=form.cleaned_data['body']
+                        # )
+                        message_is_valid = sent_new_message(
+                            userid, receiverID, 0, 0, form.cleaned_data['title'], form.cleaned_data['body'])
                         formSuccess = "Message sent Successfully"
                 else:
-                    message_is_valid = 1
+                    message_is_valid = 0
                     formError = "ERROR: Receiver Not found"
 
             else:
@@ -185,3 +199,17 @@ def create_new(request):
     else:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
+
+
+def sent_new_message(senderID, receiverID, referenceID,
+                     meetingID, title, body):
+    Message.objects.create(
+        senderid=senderID,
+        receiverid=receiverID,
+        referenceid=referenceID,
+        meetingid=meetingID,
+        sendtime=datetime.now(),
+        viewed=0,
+        title=title,
+        body=body
+    )
