@@ -40,8 +40,6 @@ def home(request):
                 selection_dict[s.slotid] = s.userorder
             else:
                 if last_userid != 0:
-                    # if DEBUG:
-                    #    print("selection dict", selection_dict)
                     row_constr_return = matrix_row_constructor(
                         available_slot_lookup, selection_dict)
                     if row_constr_return['flag']:
@@ -51,20 +49,16 @@ def home(request):
                 userid_lookup.append(s.userid)
                 print("userID:", s.userid)
                 selection_dict[s.slotid] = s.userorder
-        #print("selection dict", selection_dict)
         row_constr_return = matrix_row_constructor(
             available_slot_lookup, selection_dict)
         if row_constr_return['flag']:
             matrix.append(row_constr_return['list'])
         m = Munkres()
         matrix_empty = False
-        # try:
+
         if len(matrix) > 0:
             indexes = m.compute(matrix)
-            # except UnsolvableMatrix:
-            #print("empty matrix")
-            #matrix_empty = True
-            # if not matrix_empty:
+
             confirm_list = []
             if DEBUG:
                 print("Matrix of Group:", gp.name)
@@ -87,7 +81,7 @@ def home(request):
                 print("slotlist: ", available_slot_lookup)
             batch_add_meeting(confirm_list)
 
-    return HttpResponse("Hello")
+    return HttpResponse('<h1>Success</h1> <br>  <br> <br><a href="dashboard/">return</a>')
 
 
 def matrix_row_constructor(available_slot_list, user_selection_dict):
