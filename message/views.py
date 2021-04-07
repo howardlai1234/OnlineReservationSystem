@@ -101,18 +101,18 @@ def view(request):
         ) == 1 or Message.objects.filter(senderid=userid, messageid=messageID).count() == 1:
             try:
                 message = Message.objects.filter(messageid=messageID).get()
-            except Poll.DoesNotExist:
+            except Message.DoesNotExist:
                 raise HttpResponseNotFound('<h1>404 ERROR: message not found</h1>')
             if message.senderid == 0:
                 sender = "SYSTEM"
             else:
                 try:
                     sender = User.objects.get(pk=message.senderid).username
-                except Poll.DoesNotExist:
+                except Message.DoesNotExist:
                     raise HttpResponseNotFound('<h1>404 ERROR: message not found</h1>')
             try:
                 receiver = User.objects.get(pk=message.receiverid).username
-            except Poll.DoesNotExist:
+            except Message.DoesNotExist:
                 raise HttpResponseNotFound('<h1>404 ERROR: message not found</h1>')
             message_return = {}
             return render(request, "message/view.html", {
