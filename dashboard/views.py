@@ -1,10 +1,11 @@
+from datetime import dtetime,date,time
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.db import connections
 from django.db.utils import OperationalError
 from django.contrib.auth.models import User
 from ORS.settings import DEBUG
-from dashboard.models import Message
+from dashboard.models import Message, Meeting
 # Create your views here.
 
 
@@ -18,9 +19,13 @@ def home(request):
         username = ""
         userid = User.objects.get(username=request.user).pk
 
-        message_counter = received_message_count = Message.objects.filter(
+        message_counter = Message.objects.filter(
             receiverid=userid, viewed=0).count()
-        # the following code is for older version which uses RAW SQL
+        # meeting_counter = Meeting.objects.filter(hostid=userid, date__gt=date.today()).count()
+        # meeting_counter += Meeting.objects.filter(participantid=userid, date__gt=date.today()).count()
+        # meeting_counter += Meeting.objects.filter(hostid=userid, date=date.today(), starttime__gt=time.datetime.now().time()).count()
+        # meeting_counter += Meeting.objects.filter(participantid=userid, date=date.today(), starttime__gt=datetime.now().time()).count()
+        # # the following code is for older version which uses RAW SQL
 
         #username = request.session['username']
         #userid = request.session['userid']
