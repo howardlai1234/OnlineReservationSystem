@@ -37,8 +37,8 @@ def home(request):
             selection_dict[s.slotid] = s.userorder
          else:
             if last_userid != 0:
-               if DEBUG:
-                  print("selection dict", selection_dict)
+               # if DEBUG:
+               #    print("selection dict", selection_dict)
                row_constr_return = matrix_row_constructor(available_slot_lookup, selection_dict)
                if row_constr_return['flag']:
                   matrix.append(row_constr_return['list'])
@@ -47,7 +47,7 @@ def home(request):
             userid_lookup.append(s.userid)
             print("userID:", s.userid)
             selection_dict[s.slotid] = s.userorder
-      print("selection dict", selection_dict)
+      #print("selection dict", selection_dict)
       row_constr_return = matrix_row_constructor(available_slot_lookup, selection_dict)
       if row_constr_return['flag']:
          matrix.append(row_constr_return['list'])
@@ -57,24 +57,24 @@ def home(request):
       if len(matrix) > 0:
          indexes = m.compute(matrix)
          #except UnsolvableMatrix:
-         print("empty matrix")
+         #print("empty matrix")
             #matrix_empty = True
          #if not matrix_empty:
-         total = 0
-         print('index:', indexes)
-         for row, column in indexes:
-            value = matrix[row][column]
-            total += value
-            print(f'({row}, {column}) -> {value}')
-         print(f'total cost: {total}')
+         if DEBUG:
+            print("Matrix of Group:", gp.name)
+            print_matrix(matrix)
+            print("")
+            total = 0
+            print('index:', indexes)
+            for row, column in indexes:
+               value = matrix[row][column]
+               total += value
+               print(f'(user:{userid_lookup[row]}, slot:{available_slot_lookup[column]}) -> {value}')
+            print(f'total cost: {total}')
+            print("userlist: ", userid_lookup)
+            print("slotlist: ", available_slot_lookup)
 
 
-      if DEBUG:
-         #print("matrix:", matrix)
-           #print("id ",s.slotid, ", order", s.userorder)
-         print("Matrix of Group:", gp.name)
-         print_matrix(matrix)
-         print("")
 
    # for usr in User.objects.all():
    #    print ("username:", usr.username, "id:", User.objects.get(username=usr.username).pk)
@@ -100,7 +100,7 @@ def home(request):
    return HttpResponse("Hello")
 
 def matrix_row_constructor(available_slot_list, user_selection_dict):
-   print("available:",available_slot_list,"user:",user_selection_dict)
+   #print("available:",available_slot_list,"user:",user_selection_dict)
    return_list = []
    valid_input = False
    for i in available_slot_list:

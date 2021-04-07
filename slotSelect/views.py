@@ -97,7 +97,7 @@ def home(request):
                                     if int(i) == s.slotid:
                                         slotID_exist_in_this_group = True
                                 if slotID_exist_in_this_group == False:
-
+                                    valid = False
                                     formError = "ERROR: At lease one of the slotID is invalid"
 
                         # check if the length of the list fits the minumium

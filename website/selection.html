@@ -39,7 +39,7 @@
 <p style="background-color:MediumSeaGreen;">{{ formSuccess }}</p>
 <br>
 {% if currentGroup != 'All' %}
-<p>You are required to at least enter {{min_required_length}} slots</p>
+<p>You are required to select at least {{min_required_length}} slots</p>
 <form action="" method="post">{% csrf_token %} {{form.as_p }}
     {% if previousSelection.flag %}
         <h3>Your Previous Selection</h3>
