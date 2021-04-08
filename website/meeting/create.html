@@ -1,0 +1,26 @@
+{% extends "base_generic.html" %}
+
+{% block title %}<title>{{message.title}}</title>{% endblock %}
+
+{% block content %}
+<p style="background-color:Tomato;">{{ formError }}</p>
+<p style="background-color:MediumSeaGreen;">{{ formSuccess }}</p>
+<form action="" method="post">{% csrf_token %} {{form.as_p }} 
+    TO: <input type="text" id="receiver" name="receiver" required data-error="Please enter the receiver of this messages"><br>
+    Title: <input type="text" id="title" name="title" maxlength="200" style="width:100%" required data-error="Title cannott be empty"><br>
+    title max: 200 character
+    ------------------------------<br>
+    <textarea name="body" style="width:100%" rows="10" maxlength="4000"></textarea><br>
+    max: 4000 character<br>
+    <br>
+    <br>
+    <button class="btn btn-common" id="submit" type="submit" vlaue="ok">Sent</button>
+</form>
+<br>
+<br> 
+<div>
+    <input type="button" onclick="location.href='/message/';" value="Return">
+</div>
+
+
+{% endblock %}

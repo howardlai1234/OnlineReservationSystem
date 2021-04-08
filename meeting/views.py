@@ -9,7 +9,7 @@ from ORS.settings import DEBUG
 
 # Create your views here.
 
-
+# HTML views
 def home(request):
     if not request.user.is_authenticated:
         return HttpResponse(
@@ -117,6 +117,12 @@ def manage(request):
         'formError': formError
     })
 
+def create(request):
+    return render(request, "meeting/create.html",{
+
+    })
+
+#Internal Functions
 def check_user_can_view(userID, meetingID):
     if Meeting.objects.filter(hostid=userID, meetingid=meetingID).count(
         ) == 1 or Meeting.objects.filter(participantid=userID, meetingid=meetingID).count() == 1:
