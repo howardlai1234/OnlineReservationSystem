@@ -199,7 +199,6 @@ def create_new(request):
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
 
-
 def sent_new_message(senderID, receiverID, referenceID,
                      meetingID, title, body):
     Message.objects.create(

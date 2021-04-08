@@ -1,0 +1,20 @@
+{% extends "base_generic.html" %}
+
+{% block title %}<title>{{meeting.name}}</title>{% endblock %}
+
+{% block content %}
+<form action="" method="post">{% csrf_token %} {{form.as_p }} 
+    MeetingID: {{meeting.meetingid}}<br>
+    Meeting Name: <input type="text" id="name" name="name" value="{{meeting.name}}" required data-error="please enter the name of this meeting"><br>
+    Date: {{meeting.date}}<br>
+    Time: {{meeting.starttime}} - {{meeting.endtime}}<br>
+    participant: {{host}}, {{participant}}<br>
+    Remark: <input type="text" id="remark" name="remark" value="{{meeting.remark}}" required data-error="please enter the name of this meeting"><br>
+    <input type="hidden" id="meetingid" name="meetingid" value="{{meeting.meetingid}}">
+    <button class="btn btn-common" id="submit" type="submit" vlaue="ok">Change</button>
+</form>
+<div>
+    <input type="button" onclick="location.href='/meeting/';" value="Return">
+</div>
+
+{% endblock %}

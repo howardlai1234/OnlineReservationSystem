@@ -74,8 +74,20 @@ def manage(request):
 
     userID = User.objects.get(username=request.user).pk
     meetingID = request.GET.get('id', '')  
-    if not check_user_can_manage(user, meetingID):
+    if not check_user_can_manage(userID, meetingID):
         return HttpRsponseNotFound('<h1>403 ERROR: ACCESS DENIED</h1>', status=403)
+    try:
+        meeting = Meeting.objects.filter(meetingid=meetingID).get()
+        host = User.objects.get(pk=meeting.hostid).username
+        participant = User.objects.get(pk=meeting.participantid).username
+    except Meeting.DoesNotExist:
+        raise HttpResponseNotFound(
+            '<h1>404 ERROR: message not found</h1>', status=404)
+    return render(request, "meeting/manage.html",{
+        'meeting': meeting,
+        'host': host,
+        'participant': participant
+    })
 
 def check_user_can_view(userID, meetingID):
     if Meeting.objects.filter(hostid=userID, meetingid=meetingID).count(
