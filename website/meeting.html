@@ -10,14 +10,18 @@
         </div> 
     {% else %}
         {% for t in today_meeting %} 
-        <div class="row"> 
-        Name: {{ t.name }} <br>
-        Date: {{ t.date }} <br>
-        {{ t.starttime }} - {{t.endtime}}<br>
-        participant: {{t.hostname}}, {{t.participantname}}
-        </div>
-        <input type="button" onclick="location.href='/meeting/view?id={{t.meetingid}}';" value="Detail">
-        <br>
+            <div class="row"> 
+            Name: {{ t.name }} <br>
+            Date: {{ t.date }} <br>
+            {{ t.starttime }} - {{t.endtime}}<br>
+            participant: {{t.hostname}}, {{t.participantname}}
+            </div>
+            <input type="button" onclick="location.href='/meeting/view?id={{t.meetingid}}';" value="Detail">
+            <br>
+            {% if t.ishost %}
+                <input type="button" onclick="location.href='/meeting/manage?id={{t.meetingid}}';" value="Manage">
+                <br>
+            {% endif %}
         {% endfor %}
     {% endif %}  
 
@@ -28,14 +32,18 @@
         </div> 
     {% else %}
         {% for f in future_meeting %} 
-        <div class="row"> 
-        Name: {{ f.name }} <br>
-        Date: {{ f.date }} <br>
-        {{ t.starttime }} - {{ f.endtime}}<br>
-        participant: {{f.hostname}}, {{f.participantname}}
-        </div>
-        <input type="button" onclick="location.href='/meeting/view?id={{f.meetingid}}';" value="Detail">
-        <br>
+            <div class="row"> 
+            Name: {{ f.name }} <br>
+            Date: {{ f.date }} <br>
+            {{ t.starttime }} - {{ f.endtime}}<br>
+            participant: {{f.hostname}}, {{f.participantname}}
+            </div>
+            <input type="button" onclick="location.href='/meeting/view?id={{f.meetingid}}';" value="Detail">
+            <br>
+            {% if f.ishost %}
+                <input type="button" onclick="location.href='/meeting/manage?id={{f.meetingid}}';" value="Manage">
+                <br>
+            {% endif %}
         {% endfor %}
     {% endif %}
     
@@ -46,14 +54,18 @@
         </div> 
     {% else %}
         {% for p in pass_meeting %} 
-        <div class="row"> 
-        Name: {{ p.name }} <br>
-        Date: {{ p.date }} <br>
-        {{ p.starttime }} - {{ p.endtime}}<br>
-        participant: {{p.hostname}}, {{p.participantname}}
-        </div>
-        <input type="button" onclick="location.href='/meeting/view?id={{p.meetingid}}';" value="Detail">
-        <br>
+            <div class="row"> 
+            Name: {{ p.name }} <br>
+            Date: {{ p.date }} <br>
+            {{ p.starttime }} - {{ p.endtime}}<br>
+            participant: {{p.hostname}}, {{p.participantname}}
+            </div>
+            <input type="button" onclick="location.href='/meeting/view?id={{p.meetingid}}';" value="Detail">
+            <br>
+            {% if p.ishost %}
+                <input type="button" onclick="location.href='/meeting/manage?id={{p.meetingid}}';" value="Manage">
+                <br>
+            {% endif %}
         {% endfor %}
     {% endif %}
     <br>

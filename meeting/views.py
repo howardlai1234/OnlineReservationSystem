@@ -102,6 +102,9 @@ def meeting_list(userID, date_prem):
         date_prem_valid = True
     if date_prem_valid:
         for m in meeting:
+            is_host = False
+            if userID == m.hostid:
+                is_host=True
             return_list.append({
                 'meetingid': m.meetingid,
                 'hostname': User.objects.get(pk=m.hostid).username,
@@ -109,7 +112,7 @@ def meeting_list(userID, date_prem):
                 'date': m.date,
                 'starttime': m.starttime,
                 'endtime': m.endtime,
-                'name': m.name
+                'name': m.name,
+                'ishost': is_host
             })
-            print("return_list--", return_list)
-    return return_list
+    return return_list 
