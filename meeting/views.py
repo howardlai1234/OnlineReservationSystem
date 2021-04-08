@@ -4,6 +4,8 @@ from django.db.models import Q
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseNotAllowed
 from django.contrib.auth.models import User
 from dashboard.models import Meeting
+from meeting import forms
+from ORS.settings import DEBUG
 
 # Create your views here.
 
@@ -59,6 +61,7 @@ def view(request):
     except Meeting.DoesNotExist:
         raise HttpResponseNotFound(
             '<h1>404 ERROR: message not found</h1>', status=404)
+
     return render(request, "meeting/view.html",{
         'meeting': meeting,
         'host': host,
@@ -83,10 +86,35 @@ def manage(request):
     except Meeting.DoesNotExist:
         raise HttpResponseNotFound(
             '<h1>404 ERROR: message not found</h1>', status=404)
+    formError = ""
+    formSuccess = ""
+    if request.method == 'POST':
+        form=forms.ManageForm(request.POST)
+        if form.is_valid():
+            if DEBUG:
+                print("form_valid")
+            # starttime = form.cleaned_data['starttime']
+            # endtime = form.cleaned_data['endtime']
+            if form.cleaned_data['starttime'] >= form.cleaned_data['endtime']:
+                formError = "ERROR: endtime cannot be equal or eariler then start time"
+            else:
+                Meeting.objects.filter(pk=int(form.cleaned_data['meetingid'])).update(
+                    date=form.cleaned_data['date'],
+                    starttime=form.cleaned_data['starttime'],
+                    endtime=form.cleaned_data['endtime'],
+                    name=form.cleaned_data['name'],
+                    remark=form.cleaned_data['remark']
+                )
+                formSuccess = "SUCCESS: The meeting details has been updated"
     return render(request, "meeting/manage.html",{
+        'date_str': meeting.date.strftime("%Y-%m-%d"),
+        'starttime_str': meeting.starttime.strftime("%H:%M"),
+        'endtime_str': meeting.endtime.strftime("%H:%M"),
         'meeting': meeting,
         'host': host,
-        'participant': participant
+        'participant': participant,
+        'formSuccess': formSuccess,
+        'formError': formError
     })
 
 def check_user_can_view(userID, meetingID):
