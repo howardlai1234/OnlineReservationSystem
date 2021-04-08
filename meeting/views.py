@@ -1,7 +1,7 @@
 from datetime import date
 from django.shortcuts import render
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseNotAllowed
 from django.contrib.auth.models import User
 from dashboard.models import Meeting
 
@@ -26,11 +26,11 @@ def home(request):
     pass_meeting_count += Meeting.objects.filter(participantid=userid, date__lt=date.today()).count()
 
     if today_meeting_count > 0:
-        today_meeting = (userid, 'date')
+        today_meeting = meeting_list(userid, 0)
     if future_meeting_count > 0:
-        future_meeting = (userid, 'date__gt')
+        future_meeting = meeting_list(userid, 1)
     if pass_meeting_count > 0:
-        pass_meeting = (userid, 'date__lt')
+        pass_meeting = meeting_list(userid, -1)
 
 
     return render(request, "meeting.html", {
@@ -64,10 +64,7 @@ def view(request):
         'host': host,
         'participant': participant
     })
-    
 
-        
-    
     return HttpResponse("ORS-Meeting <br> Work in Progress")
 
 def manage(request):
@@ -78,10 +75,7 @@ def manage(request):
     userID = User.objects.get(username=request.user).pk
     meetingID = request.GET.get('id', '')  
     if not check_user_can_manage(user, meetingID):
-        return HttpResponseNotFound('<h1>403 ERROR: ACCESS DENIED</h1>', status=403)
-    
-
-
+        return HttpRsponseNotFound('<h1>403 ERROR: ACCESS DENIED</h1>', status=403)
 
 def check_user_can_view(userID, meetingID):
     if Meeting.objects.filter(hostid=userID, meetingid=meetingID).count(
@@ -94,17 +88,28 @@ def check_user_can_manage(userID, meetingID):
         return True
     return False
 
-def meeting_list(UserID, date_prem):
+def meeting_list(userID, date_prem):
     return_list = []
-    meeting = Message.objects.filter((Q(hostid=userid) | Q(participantid=userid)) & Q(date_prem=date.today())).all()
-    for m in meeting:
-        return_list.append({
-            'meetingid': m.meetingid,
-            'hostname': User.objects.get(pk=m.hostid).username,
-            'participantname': User.objects.get(pk=m.participantid).username,
-            'date': m.date,
-            'starttime': m.starttime,
-            'endtime': m.endtime,
-            'name': m.name
-        })
+    date_prem_valid = False
+    if date_prem == 0:
+        meeting = Meeting.objects.filter((Q(hostid=userID) | Q(participantid=userID)) & Q(date=date.today())).all()
+        date_prem_valid = True
+    if date_prem == 1:
+        meeting = Meeting.objects.filter((Q(hostid=userID) | Q(participantid=userID)) & Q(date__gt=date.today())).all()
+        date_prem_valid = True
+    if date_prem == -1:
+        meeting = Meeting.objects.filter((Q(hostid=userID) | Q(participantid=userID)) & Q(date__lt=date.today())).all()
+        date_prem_valid = True
+    if date_prem_valid:
+        for m in meeting:
+            return_list.append({
+                'meetingid': m.meetingid,
+                'hostname': User.objects.get(pk=m.hostid).username,
+                'participantname': User.objects.get(pk=m.participantid).username,
+                'date': m.date,
+                'starttime': m.starttime,
+                'endtime': m.endtime,
+                'name': m.name
+            })
+            print("return_list--", return_list)
     return return_list
