@@ -3,6 +3,7 @@ import pytz
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User, Group
+from ORS.function import base_data
 from ORS.settings import DEBUG
 from config.models import Currentphase, Timetable
 from calendarManager import forms
@@ -13,7 +14,7 @@ from dashboard.models import Slot, Groupdetail
 
 def home(request):
     print("celander:", Group.objects.all())
-    phase = Currentphase.objects.get().phase
+    phase = 0
     #allowed_group = Timetable.objects.get().phase1_group_name
     #user_allowed_to_access = 0
     grouplist = []
@@ -30,146 +31,155 @@ def home(request):
     timecollision = False
     formError = ''
 
-    if request.user.is_authenticated:
-        userid = User.objects.get(username=request.user).pk
-        #group = User.objects.get(username=request.user).groups
-
-        access_check = check_user_allowed_to_access_phase1(request.user)
-        if access_check['flag']:
-            grouplist = access_check['grouplist']
-            context = {}
-            if DEBUG:
-                print("user allowed to access")
-                print("user Group in return list:", grouplist)
-
-            # read registered slot
-
-            for gp in request.user.groups.all():
-
-                #groupid = Group.objects.get(name=gp.name).pk
-                if Slot.objects.filter(groupid=Group.objects.get(
-                        name=gp.name).pk).count() > 0:
-                    number_Of_Group_Member = getGroupMemberCount(gp.name)
-                    slot_counter = 0
-                    if DEBUG:
-                        print(
-                            "Number of Group Member :",
-                            number_Of_Group_Member)
-                    Registered_slot_of_group = []
-                    for s in Slot.objects.filter(
-                            groupid=Group.objects.get(name=gp.name).pk).all():
-                        slot_counter += 1
-                        Registered_slot_of_group.append(
-                            {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
-                    suggested_number = int(number_Of_Group_Member * 1.25)
-                    if suggested_number < 25:
-                        suggested_number = 25
-                    if slot_counter < suggested_number:
-                        RegisteredSlotsReturn.append({
-                            'group': gp.name,
-                            'member_count': number_Of_Group_Member,
-                            'slots': Registered_slot_of_group,
-                            'suggested': suggested_number,
-                            'current': slot_counter,
-                            'slot_enough': False})
-                    else:
-                        RegisteredSlotsReturn.append({
-                            'group': gp.name,
-                            'member_count': number_Of_Group_Member,
-                            'slots': Registered_slot_of_group,
-                            'suggested': suggested_number,
-                            'current': slot_counter,
-                            'slot_enough': True})
-
-            # form handling
-            if request.method == 'POST':
-                form = forms.NameForm(request.POST)
-                context['form'] = forms
-                if form.is_valid():
-                    # debug information
-                    if DEBUG:
-                        print("Form valid: ", form)
-                        print(
-                            "StartHour: ", int(
-                                form.cleaned_data['startHour']))
-                        print(
-                            "StartMinute: ",
-                            form.cleaned_data['startMinute'])
-                        print(
-                            "Meeting Length: ",
-                            form.cleaned_data['meetingLength'])
-                        print(
-                            "Number of Meeting: ",
-                            form.cleaned_data['numberOfMeeting'])
-
-                    # convert data from form into correct and esaily to
-                    # understand variables
-                    date = form.cleaned_data['date']
-                    startHr = int(form.cleaned_data['startHour'])
-                    startMin = int(form.cleaned_data['startMinute'])
-                    meetingLen = int(form.cleaned_data['meetingLength'])
-                    numberOfMeet = int(form.cleaned_data["numberOfMeeting"])
-                    period_start = datetime.datetime(
-                        date.year, date.month, date.day, startHr, startMin, 0)
-                    meetingSession = []
-                    period_start_str = period_start.strftime(
-                        "%Y/%m/%d %H:%M:%S")
-
-                    already_registered_slots = Slot.objects.filter(
-                        groupid=Group.objects.get(name=form.cleaned_data['group']).pk)
-                    period_end = period_start
-                    for _i in range(0, numberOfMeet):
-                        session_start = period_end
-                        period_end = period_end + \
-                            datetime.timedelta(minutes=meetingLen)
-                        for s in already_registered_slots:
-                            if (
-                                (pytz.UTC.localize(session_start) >= s.starttime and pytz.UTC.localize(session_start) <= s.endtime) or
-                                (pytz.UTC.localize(period_end) >= s.starttime and pytz.UTC.localize(period_end) <= s.endtime) or
-                                (pytz.UTC.localize(session_start) >= s.starttime and pytz.UTC.localize(period_end) <= s.endtime) or
-                                (pytz.UTC.localize(session_start) <= s.starttime and pytz.UTC.localize(
-                                    period_end) >= s.endtime)
-                            ):
-                                timecollision = True
-                                formError = "ERROR: At least one of the timeslot collided, please double check or remove existing slot(s)"
-                        meetingSession.append(
-                            {'startTime': session_start, 'endTime': (period_end + datetime.timedelta(minutes=-1))})
-
-                    if DEBUG:
-                        print(period_start)
-                        print(period_end)
-                        for x in meetingSession:
-                            print(
-                                " start:", x['startTime'], "end:", x['endTime'])
-
-                    # prepare the checking
-                    if not timecollision:
-                        computed_detail = {
-                            'not_empty': True,
-                            'group': form.cleaned_data['group'],
-                            'startTime_str': period_start_str,
-                            'startTime': period_start,
-                            'endTime': period_end,
-                            'duration': meetingLen,
-                            'no_of_meeting': numberOfMeet}
-                else:
-                    computed_detail = {'not_empty': False}
-
-            return render(request, 'calendar.html', {
-                'formError': formError,
-                'confirmForm': forms.ConfirmForm,
-                'group_list': grouplist,
-                'username': request.user,
-                'availableTimes': RegisteredSlotsReturn,
-                'computed_details': computed_detail
-            })
-        else:
-            return HttpResponse(
-                '<h1>ACCEESS DENIED</h1> <br> You are not allowed to be here, please contact an administrator if you think you should <br> <br><a href="/dashboard">return</a>', status=403)
-    else:
+    if not request.user.is_authenticated:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
+            
+    userid = User.objects.get(username=request.user).pk
+    base_return = base_data(request.user)
+    phase = base_return['phase']
+    #group = User.objects.get(username=request.user).groups
+    if DEBUG:
+        phase = 1
 
+
+    access_check = check_user_allowed_to_access_phase1(request.user)
+    if not access_check['flag']:
+         return HttpResponse(
+            '<h1>ACCEESS DENIED</h1> <br> You are not allowed to be here, please contact an administrator if you think you should <br> <br><a href="/dashboard">return</a>', status=403)
+
+    if not phase == 1:
+        return HttpResponse(
+            '<h1>ACCEESS DENIED</h1> <br> This feature is not available now, please check the scheudule<br><a href="/dashboard">return</a>', status=403)   
+             
+    grouplist = access_check['grouplist']
+    context = {}
+    if DEBUG:
+        print("user allowed to access")
+        print("user Group in return list:", grouplist)
+
+    # read registered slot
+
+    for gp in request.user.groups.all():
+
+        #groupid = Group.objects.get(name=gp.name).pk
+        if Slot.objects.filter(groupid=Group.objects.get(
+                name=gp.name).pk).count() > 0:
+            number_Of_Group_Member = getGroupMemberCount(gp.name)
+            slot_counter = 0
+            if DEBUG:
+                print(
+                    "Number of Group Member :",
+                    number_Of_Group_Member)
+            Registered_slot_of_group = []
+            for s in Slot.objects.filter(
+                    groupid=Group.objects.get(name=gp.name).pk).all():
+                slot_counter += 1
+                Registered_slot_of_group.append(
+                    {'id': s.slotid, 'start': s.starttime, 'end': s.endtime})
+            suggested_number = int(number_Of_Group_Member * 1.25)
+            if suggested_number < 25:
+                suggested_number = 25
+            if slot_counter < suggested_number:
+                RegisteredSlotsReturn.append({
+                    'group': gp.name,
+                    'member_count': number_Of_Group_Member,
+                    'slots': Registered_slot_of_group,
+                    'suggested': suggested_number,
+                    'current': slot_counter,
+                    'slot_enough': False})
+            else:
+                RegisteredSlotsReturn.append({
+                    'group': gp.name,
+                    'member_count': number_Of_Group_Member,
+                    'slots': Registered_slot_of_group,
+                    'suggested': suggested_number,
+                    'current': slot_counter,
+                    'slot_enough': True})
+
+    # form handling
+    if request.method == 'POST':
+        form = forms.NameForm(request.POST)
+        context['form'] = forms
+        if form.is_valid():
+            # debug information
+            if DEBUG:
+                print("Form valid: ", form)
+                print(
+                    "StartHour: ", int(
+                        form.cleaned_data['startHour']))
+                print(
+                    "StartMinute: ",
+                    form.cleaned_data['startMinute'])
+                print(
+                    "Meeting Length: ",
+                    form.cleaned_data['meetingLength'])
+                print(
+                    "Number of Meeting: ",
+                    form.cleaned_data['numberOfMeeting'])
+
+            # convert data from form into correct and esaily to
+            # understand variables
+            date = form.cleaned_data['date']
+            startHr = int(form.cleaned_data['startHour'])
+            startMin = int(form.cleaned_data['startMinute'])
+            meetingLen = int(form.cleaned_data['meetingLength'])
+            numberOfMeet = int(form.cleaned_data["numberOfMeeting"])
+            period_start = datetime.datetime(
+                date.year, date.month, date.day, startHr, startMin, 0)
+            meetingSession = []
+            period_start_str = period_start.strftime(
+                "%Y/%m/%d %H:%M:%S")
+
+            already_registered_slots = Slot.objects.filter(
+                groupid=Group.objects.get(name=form.cleaned_data['group']).pk)
+            period_end = period_start
+            for _i in range(0, numberOfMeet):
+                session_start = period_end
+                period_end = period_end + \
+                    datetime.timedelta(minutes=meetingLen)
+                for s in already_registered_slots:
+                    if (
+                        (pytz.UTC.localize(session_start) >= s.starttime and pytz.UTC.localize(session_start) <= s.endtime) or
+                        (pytz.UTC.localize(period_end) >= s.starttime and pytz.UTC.localize(period_end) <= s.endtime) or
+                        (pytz.UTC.localize(session_start) >= s.starttime and pytz.UTC.localize(period_end) <= s.endtime) or
+                        (pytz.UTC.localize(session_start) <= s.starttime and pytz.UTC.localize(
+                            period_end) >= s.endtime)
+                    ):
+                        timecollision = True
+                        formError = "ERROR: At least one of the timeslot collided, please double check or remove existing slot(s)"
+                meetingSession.append(
+                    {'startTime': session_start, 'endTime': (period_end + datetime.timedelta(minutes=-1))})
+
+            if DEBUG:
+                print(period_start)
+                print(period_end)
+                for x in meetingSession:
+                    print(
+                        " start:", x['startTime'], "end:", x['endTime'])
+
+            # prepare the checking
+            if not timecollision:
+                computed_detail = {
+                    'not_empty': True,
+                    'group': form.cleaned_data['group'],
+                    'startTime_str': period_start_str,
+                    'startTime': period_start,
+                    'endTime': period_end,
+                    'duration': meetingLen,
+                    'no_of_meeting': numberOfMeet}
+        else:
+            computed_detail = {'not_empty': False}
+
+    return render(request, 'calendar.html', {
+        'base_return': base_return,
+        'formError': formError,
+        'confirmForm': forms.ConfirmForm,
+        'group_list': grouplist,
+        'username': request.user,
+        'availableTimes': RegisteredSlotsReturn,
+        'computed_details': computed_detail
+    })
 
 def confirm(request):
     if request.user.is_authenticated:
