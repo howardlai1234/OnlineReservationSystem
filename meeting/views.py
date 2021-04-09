@@ -5,7 +5,8 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseNotAllow
 from django.contrib.auth.models import User
 from dashboard.models import Meeting
 from meeting import forms
-from message.views import sent_new_message 
+from message.views import sent_new_message
+from ORS.function import base_data 
 from ORS.settings import DEBUG
 # Create your views here.
 
@@ -14,11 +15,8 @@ def home(request):
     if not request.user.is_authenticated:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
-    if request.user.is_staff:
-        is_staff = True
-    else:
-        is_staff = False
-        
+
+    base_return = base_data(request.user)  
     userid = User.objects.get(username=request.user).pk
 
     today_meeting = []
@@ -40,7 +38,7 @@ def home(request):
 
 
     return render(request, "meeting.html", {
-        'is_staff': is_staff,
+        'base_return': base_return,
         'today_meeting': today_meeting,
         'today_meeting_count': today_meeting_count,
         'future_meeting': future_meeting,
@@ -54,6 +52,7 @@ def view(request):
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
     
+    base_return = base_data(request.user)
     userID = User.objects.get(username=request.user).pk
     meetingID = request.GET.get('id', '')  
     if not check_user_can_view(userID, meetingID):
@@ -68,6 +67,7 @@ def view(request):
             '<h1>404 ERROR: message not found</h1>', status=404)
 
     return render(request, "meeting/view.html",{
+        'base_return': base_return,
         'meeting': meeting,
         'host': host,
         'participant': participant
@@ -80,6 +80,7 @@ def manage(request):
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
 
+    base_return = base_data(request.user)
     userID = User.objects.get(username=request.user).pk
     meetingID = request.GET.get('id', '')  
     if not check_user_can_manage(userID, meetingID):
@@ -112,6 +113,7 @@ def manage(request):
                 )
                 formSuccess = "SUCCESS: The meeting details has been updated"
     return render(request, "meeting/manage.html",{
+        'base_return': base_return,
         'date_str': meeting.date.strftime("%Y-%m-%d"),
         'starttime_str': meeting.starttime.strftime("%H:%M"),
         'endtime_str': meeting.endtime.strftime("%H:%M"),
@@ -129,6 +131,7 @@ def create(request):
     
     if not request.user.is_staff:
         return HttpResponse('<h1>ACCEESS DENIED</h1>', status=403)
+    base_return = base_data(request.user)
     name = ''
     participant  = ''
     remark = 'N/A'
@@ -232,6 +235,7 @@ def create(request):
 
 
     return render(request, "meeting/create.html",{
+        'base_return': base_return,
         'from_return': from_return,
         'error': error,
         'formSuccess': formSuccess,

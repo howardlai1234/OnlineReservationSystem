@@ -3,7 +3,7 @@
 {% block title %}<title>ORS-Meeting</title>{% endblock %}
 
 {% block content %}
-    {% if is_staff %}<input type="button" onclick="location.href='/meeting/create';" value="Create Meeting"><br> {% endif %}
+    {% if base_return.is_staff %}<input type="button" onclick="location.href='/meeting/create';" value="Create Meeting"><br> {% endif %}
     <h1>Today's Meeting</h1>
     {% if today_meeting_count == 0 %}
         <div class="row">   
