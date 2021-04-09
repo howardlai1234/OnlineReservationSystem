@@ -64,7 +64,7 @@ def home(request):
                     sent_message_return.append({
                         'messageid': message.messageid,
                         'title': message.title,
-                        'sender': User.objects.get(pk=int(message.receiverid)),
+                        'recipient': User.objects.get(pk=int(message.receiverid)),
                         'body': message.body,
                         'viewed': "No"
                     })
@@ -72,7 +72,7 @@ def home(request):
                     sent_message_return.append({
                         'messageid': message.messageid,
                         'title': message.title,
-                        'sender': User.objects.get(pk=int(message.receiverid)),
+                        'recipient': User.objects.get(pk=int(message.receiverid)),
                         'body': message.body,
                         'viewed': "Yes"
                     })
