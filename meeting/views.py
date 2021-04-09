@@ -14,7 +14,11 @@ def home(request):
     if not request.user.is_authenticated:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
-
+    if request.user.is_staff:
+        is_staff = True
+    else:
+        is_staff = False
+        
     userid = User.objects.get(username=request.user).pk
 
     today_meeting = []
@@ -36,6 +40,7 @@ def home(request):
 
 
     return render(request, "meeting.html", {
+        'is_staff': is_staff,
         'today_meeting': today_meeting,
         'today_meeting_count': today_meeting_count,
         'future_meeting': future_meeting,
@@ -48,7 +53,7 @@ def view(request):
     if not request.user.is_authenticated:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
-
+    
     userID = User.objects.get(username=request.user).pk
     meetingID = request.GET.get('id', '')  
     if not check_user_can_view(userID, meetingID):
