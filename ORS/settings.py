@@ -95,6 +95,10 @@ TEMPLATES = [
         },
     },
 ]
+STATICFILES_DIRS = [
+    BASE_DIR / "website/static",
+    '/var/www/static/',
+]
 WSGI_APPLICATION = 'ORS.wsgi.application'
 
 
