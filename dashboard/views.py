@@ -4,6 +4,7 @@ from django.db import connections
 from django.db.utils import OperationalError
 from django.contrib.auth.models import User
 from ORS.settings import DEBUG
+from ORS.function import base_data
 from dashboard.models import Message, Meeting
 # Create your views here.
 
@@ -20,10 +21,7 @@ def home(request):
 
         message_counter = Message.objects.filter(
             receiverid=userid, viewed=0).count()
-        if request.user.is_staff:
-            is_staff = True
-        else:
-            is_staff = False
+        base_return = base_data(request.user)
         # meeting_counter = Meeting.objects.filter(hostid=userid, date__gt=date.today()).count()
         # meeting_counter += Meeting.objects.filter(participantid=userid, date__gt=date.today()).count()
         # meeting_counter += Meeting.objects.filter(hostid=userid, date=date.today(), starttime__gt=time.datetime.now().time()).count()
@@ -52,8 +50,7 @@ def home(request):
         #meeting_counter = row[0]
 
         return render(request, 'dashboard.html', {
-            'is_staff': is_staff,
-            'username': request.user,
+            'base_return': base_return,
             'meeting_counter': meeting_counter,
             'message_counter': message_counter
         })

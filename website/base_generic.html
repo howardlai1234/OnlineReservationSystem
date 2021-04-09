@@ -52,10 +52,10 @@
       
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a class="nav-link" href="/dashboard/">Dashboard <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="/dashboard/">Dashboard </a>
         </li>
 
-        {% if is_staff %}
+        {% if base_return.is_staff %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Meeting
@@ -95,7 +95,7 @@
             <a class="dropdown-item disabled" href="/assign/">Assign</a>
           </div>
         </li>
-        {% if is_staff %}
+        {% if base_return.is_staff %}
         <li class="nav-item">
           <a class="nav-link" href="/admin/">Admin Page</a>
         </li>
@@ -104,7 +104,7 @@
         <!-- <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"> -->
         <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> -->
         <!-- <li class="navbar-text"><p></p></li> -->
-        <span class="navbar-text mr-2">User: {{username}}</span>
+        <span class="navbar-text mr-2">User: {{base_return.username}}</span>
         <input class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="location.href='/login/logout';" value="Logout" />
       </div>
     </div>
