@@ -31,10 +31,9 @@
 </div>
     <br>
 <div>
-    {{meeting_counter}} meeting(s) in the furture
-        <br>
+    Meetings:<br>
     <input type="button"onclick="location.href='/meeting';" value="Details">
-    <input type="button"onclick="location.href='/meeting/create_new';" value="New Message">
+    {% if is_staff %}<input type="button"onclick="location.href='/meeting/create';" value="Create Meeting"> {% endif %}
 </div>
 <div>
     My Calendar

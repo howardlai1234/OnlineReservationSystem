@@ -1,0 +1,34 @@
+{% extends "base_generic.html" %}
+
+{% block title %}<title>{{message.title}}</title>{% endblock %}
+
+{% block content %}
+<p style="background-color:Tomato;">{{ formError }}</p>
+<p style="background-color:MediumSeaGreen;">{{ formSuccess }}</p>
+<form action="" method="post">{% csrf_token %} {{form.as_p }} 
+    <h3></h3>
+    <label for="name">Meeting Name:</label> 
+    <input type="text" id="name" name="name" value="{{from_return.name}}" required data-error="please enter the name of this meeting"><br>
+    <label for="date">Date:</label>
+    <input type="date" id="date" name="date" value="{{from_return.date_str}}"><br>
+    Time:
+    <input type="time" id="starttime" name="starttime" value="{{from_return.starttime_str}}" required> 
+    -  
+    <input type="time" id="endtime" name="endtime"  value="{{from_return.endtime_str}}" required>
+    <br>
+    <label for="host">host:</label> 
+    <input type='text' id="host" name="host" value="{{from_return.host}}"required><br>
+    <label for="participant">participant:</label> 
+    <input type='text' id="participant" name="participant" value="{{from_return.participant}}"required><br>
+    <label for='remark'>Remark:</label>
+    <input type="text" id="remark" name="remark" value="{{from_return.remark}}" required data-error="please enter the name of this meeting"><br>
+    <button class="btn btn-common" id="submit" type="submit" vlaue="ok">ok</button>
+</form>
+<br>
+<br> 
+<div>
+    <input type="button" onclick="location.href='/meeting/';" value="Return">
+</div>
+
+
+{% endblock %}

@@ -103,7 +103,6 @@ def home(request):
 
 def view(request):
     if request.user.is_authenticated:
-        print("Nothing to see here, move along")
         messageID = request.GET.get('id', '')
         userid = User.objects.get(username=request.user).pk
         if Message.objects.filter(receiverid=userid, messageid=messageID).count(
@@ -199,7 +198,6 @@ def create_new(request):
     else:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
-
 
 def sent_new_message(senderID, receiverID, referenceID,
                      meetingID, title, body):
