@@ -3,7 +3,7 @@
 {% block title %}<title>Slot Selection</title>{% endblock %}
 
 {% block content %}
-
+<br>
 <form action="" method="post">{% csrf_token %} {{form.as_p }} 
     <label for="groupselect">Select Group</label>
     <select id="groupselect" name="groupselect">
@@ -11,24 +11,27 @@
         <option value="{{ gp }}">{{ gp }}</option>
         {% endfor %}
     </select>
-    <button class="btn btn-common" name="group_select" id="group_select" type="submit" value="ok">Choose</button>
+    <button class="btn btn-secondary" name="group_select" id="group_select" type="submit" value="ok">Choose</button>
 </form>
 
 
 
 {% for gp in availableTimes %}
-    Group: {{gp.group}} <br>
-    <table style="width:100%">
-        <tr>
-            <th>ID</th>
-            <th>Start</th>
-            <th>End</th>
+    <br>
+    <div class="alert alert-primary" role="alert">
+        Group: {{gp.group}}
+    </div>
+    <table class="table table-sm">
+        <tr class="table-active">
+            <th width="10%" scope="col">ID</th>
+            <th width="35%">Start</th>
+            <th width="35%">End</th>
         </tr>
         {% for s in gp.slots %}
         <tr>
-            <th>{{s.id}}</th>
-            <th>{{s.start}}</th>
-            <th>{{s.end}}</th>
+            <td>{{s.id}}</td>
+            <td>{{s.start}}</td>
+            <td>{{s.end}}</td>
         </tr>
         {% endfor %}
     </table>
@@ -39,7 +42,10 @@
 <p style="background-color:MediumSeaGreen;">{{ formSuccess }}</p>
 <br>
 {% if currentGroup != 'All' %}
-<p>You are required to select at least {{min_required_length}} slots</p>
+<div class="alert alert-success" role="alert">
+    You are required to select at least {{min_required_length}} slots
+</div>
+
 <form action="" method="post">{% csrf_token %} {{form.as_p }}
     {% if previousSelection.flag %}
         <h3>Your Previous Selection</h3>
@@ -48,17 +54,20 @@
         {% endfor %}
         END
         <br>
-        WARNING: entering a new list will override the saved group list
-        <br><br>
+        <div class="alert alert-warning" role="alert">
+            WARNING: entering a new list will override the saved group list
+          </div>
     {% endif %}
-    <h2>Select Slots</h2> 
-    <a href="detail"> learn more</a><br><br>
-    {% if failedSubmission.flag %}
-    <p style="background-color:Tomato;">Your Rejected list:<br>{{ failedSubmission.list }}</p>
-    {% endif %}
-    For group: {{currentGroup}}
-    <textarea name="selectionlist" style="width:100%" rows="10" maxlength="4000"></textarea><br>
-    <input type="hidden" id="group" name="group" value="{{ currentGroup }}">
+    <div class="alert alert-secondary" role="alert">
+        <h2>Select Slots</h2> 
+        <a href="detail"> learn more</a><br><br>
+        {% if failedSubmission.flag %}
+        <p style="background-color:Tomato;">Your Rejected list:<br>{{ failedSubmission.list }}</p>
+        {% endif %}
+        For group: {{currentGroup}}
+        <textarea name="selectionlist" style="width:100%" rows="10" maxlength="4000"></textarea><br>
+        <input type="hidden" id="group" name="group" value="{{ currentGroup }}">
+    
     <!-- {% for gp in availableTimes %}
         
         Class A:<br>
@@ -171,14 +180,18 @@
     {% endfor %} -->
     <br>
     {% if previousSelection.flag %}
-        <button class="btn btn-common" name="slot_select" id="slot_select" type="submit" value="ok">update</button>
+        <button class="btn btn-primary" name="slot_select" id="slot_select" type="submit" value="ok">update</button>
     {% else %}
-        <button class="btn btn-common" name="slot_select" id="slot_select" type="submit" value="ok">save</button>
+        <button class="btn btn-primary" name="slot_select" id="slot_select" type="submit" value="ok">save</button>
     {% endif %}
+</div>
 </form>
+
 {% else %}
-    You have not select any group<br>
-    Please choose one group on the top.
+    <div class="alert alert-warning" role="alert">
+        You have not select any group<br>
+        Please choose one group on the top.
+    </div>
 {% endif %}
 
 
