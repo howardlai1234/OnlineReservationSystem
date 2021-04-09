@@ -3,68 +3,100 @@
 {% block title %}<title>ORS-Meeting</title>{% endblock %}
 
 {% block content %}
-    {% if base_return.is_staff %}<input type="button" onclick="location.href='/meeting/create';" value="Create Meeting"><br> {% endif %}
+    <br>
+    {% if base_return.is_staff %}<input type="button" class="btn btn-primary" onclick="location.href='/meeting/create';" value="Create Meeting"><br> {% endif %}
     <h1>Today's Meeting</h1>
     {% if today_meeting_count == 0 %}
-        <div class="row">   
+        <div class="alert alert-info" role="alert">   
         No meeting on today<br>
         </div> 
     {% else %}
         {% for t in today_meeting %} 
-            <div class="row"> 
-            Name: {{ t.name }} <br>
-            Date: {{ t.date }} <br>
-            {{ t.starttime }} - {{t.endtime}}<br>
-            participant: {{t.hostname}}, {{t.participantname}}
+            <div class="alert alert-secondary" role="alert">
+                <table class="table">
+                    <tr>
+                        <th scope="col"> Meeting Name:</th>
+                        <th scope="col"> {{ t.name }}</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">  Date:</th>
+                        <th scope="col"> {{ t.date }}</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">  Time:</th>
+                        <th scope="col"> {{ t.starttime }} - {{t.endtime}}</th>
+                    </tr>
+                </table>
             </div>
-            <input type="button" onclick="location.href='/meeting/view?id={{t.meetingid}}';" value="Detail">
-            <br>
+            <input type="button" class="btn btn-info" onclick="location.href='/meeting/view?id={{t.meetingid}}';" value="Detail">
             {% if t.ishost %}
-                <input type="button" onclick="location.href='/meeting/manage?id={{t.meetingid}}';" value="Manage">
+                <input type="button" class="btn btn-secondary" onclick="location.href='/meeting/manage?id={{t.meetingid}}';" value="Edit">
                 <br>
             {% endif %}
+            <div class="alert alert-light" role="alert"></div>
         {% endfor %}
     {% endif %}  
-
+    <br>
     <h1>Future Meeting</h1>
     {% if future_meeting_count == 0 %}
-        <div class="row">   
+        <div class="alert alert-info" role="alert">   
         No meeting in the future<br>
         </div> 
     {% else %}
         {% for f in future_meeting %} 
-            <div class="row"> 
-            Name: {{ f.name }} <br>
-            Date: {{ f.date }} <br>
-            {{ f.starttime }} - {{ f.endtime}}<br>
-            participant: {{f.hostname}}, {{f.participantname}}
+            <div class="alert alert-secondary" role="alert"> 
+                <table class="table">
+                    <tr>
+                        <th scope="col"> Meeting Name:</th>
+                        <th scope="col"> {{ f.name }}</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">  Date:</th>
+                        <th scope="col"> {{ f.date }}</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">  Time:</th>
+                        <th scope="col"> {{ f.starttime }} - {{f.endtime}}</th>
+                    </tr>
+                </table>
             </div>
-            <input type="button" onclick="location.href='/meeting/view?id={{f.meetingid}}';" value="Detail">
+            <input type="button" class="btn btn-info" onclick="location.href='/meeting/view?id={{f.meetingid}}';" value="Detail">
             <br>
             {% if f.ishost %}
-                <input type="button" onclick="location.href='/meeting/manage?id={{f.meetingid}}';" value="Manage">
+                <input type="button" class="btn btn-secondary" onclick="location.href='/meeting/manage?id={{f.meetingid}}';" value="Edit">
                 <br>
             {% endif %}
+            <div class="alert alert-light" role="alert"></div>
         {% endfor %}
     {% endif %}
-    
+    <br>
     <h1>Pervious Meeting</h1>
     {% if pass_meeting_count == 0 %}
-        <div class="row">   
+        <div class="alert alert-info" role="alert">   
         No previous meeting record<br>
         </div> 
     {% else %}
         {% for p in pass_meeting %} 
-            <div class="row"> 
-            Name: {{ p.name }} <br>
-            Date: {{ p.date }} <br>
-            {{ p.starttime }} - {{ p.endtime}}<br>
-            participant: {{p.hostname}}, {{p.participantname}}
+            <div class="alert alert-secondary" role="alert"> 
+                <table class="table">
+                    <tr>
+                        <th scope="col"> Meeting Name:</th>
+                        <th scope="col"> {{ p.name }}</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">  Date:</th>
+                        <th scope="col"> {{ p.date }}</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">  Time:</th>
+                        <th scope="col"> {{ p.starttime }} - {{p.endtime}}</th>
+                    </tr>
+                </table>
             </div>
-            <input type="button" onclick="location.href='/meeting/view?id={{p.meetingid}}';" value="Detail">
-            <br>
+            <input type="button" class="btn btn-info" onclick="location.href='/meeting/view?id={{p.meetingid}}';" value="Detail">
+            <div class="alert alert-light" role="alert"></div>
         {% endfor %}
     {% endif %}
     <br>
-    <input type="button" onclick="location.href='/dashboard';" value="back"> 
+    <input type="button" class="btn btn-dark" onclick="location.href='/dashboard';" value="back"> 
 {% endblock %}
