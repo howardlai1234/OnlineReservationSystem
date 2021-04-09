@@ -3,17 +3,34 @@
 {% block title %}<title>{{message.title}}</title>{% endblock %}
 
 {% block content %}
+<table class="table table-sm">
+    <tr class="table-active">
+        <th width="10%" scope="col">MessageID:</th>
+        <td width="90%">{{message.messageid}}</td>
+    </tr>
+    <tr>
+        <th scope="col">Title:</th>
+        <td>{{message.title}}</td>
+    </tr>
+    <tr class="table-active">
+        <th scope="col">By:</th>
+        <td>{{sender}}</td>
+    </tr>
+    <tr>
+        <th scope="col">To:</th>
+        <td>{{receiver}</td>
+    </tr>
+    <tr class="table-active">
+        <th scope="col">Sent Time:</th>
+        <td>{{message.sendtime}} (UTC)</td>
+    </tr>
 
-MessageID: {{message.messageid}}<br>
-Title: {{message.title}}<br>
-By: {{sender}}<br>
-To: {{receiver}}<br>
-Sent Time: {{message.sendtime}} (UTC)<br>
-------------------------------------<br>
-{{message.body}}
-
+</table>
+<div class="alert alert-secondary" role="alert">
+    {{message.body}}
+</div>
 <div>
-    <input type="button" onclick="location.href='/message/';" value="Return">
+    <input type="button" class="btn btn-dark" onclick="location.href='/message/';" value="Return">
 </div>
 
 

@@ -5,28 +5,28 @@
 {% block content %}
 <table class="table table-sm">
     <tr class="table-active">
-        <th scope="col">MeetingID:</th>
-        <th scope="col">{{meeting.meetingid}}</th>
+        <th width="10%" scope="col">MeetingID:</th>
+        <td width="90%">{{meeting.meetingid}}</td>
     </tr>
     <tr>
         <th scope="col">Meeting Name:</th>
-        <th scope="col">{{meeting.name}}</th>
+        <td>{{meeting.name}}</td>
     </tr>
     <tr class="table-active">
         <th scope="col">Date:</th>
-        <th scope="col">{{meeting.date}}</th>
+        <td>{{meeting.date}}</td>
     </tr>
     <tr>
         <th scope="col">Time:</th>
-        <th scope="col">{{meeting.starttime}} - {{meeting.endtime}}</th>
+        <td>{{meeting.starttime}} - {{meeting.endtime}}</td>
     </tr>
     <tr class="table-active">
         <th scope="col">Participants:</th>
-        <th scope="col">{{host}}, {{participant}}</th>
+        <td>{{host}}, {{participant}}</td>
     </tr>
     <tr>
         <th scope="col">Remark:</th>
-        <th scope="col">{{meeting.remark}}</th>
+        <td>{{meeting.remark}}</td>
     </tr>
 </table>
 <div>
