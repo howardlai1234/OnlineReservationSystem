@@ -26,23 +26,23 @@
 <div>
     {{message_counter}} unread message(s)
         <br>
-    <input type="button" onclick="location.href='/message';" value="Details">
-    <input type="button" onclick="location.href='/message/create';" value="Creat New Message">
+    <input type="button" class="btn btn-primary" onclick="location.href='/message';" value="Details">
+    <input type="button" class="btn btn-secondary" onclick="location.href='/message/create';" value="Creat New Message">
 </div>
     <br>
 <div>
     Meetings:<br>
-    <input type="button"onclick="location.href='/meeting';" value="Details">
-    {% if is_staff %}<input type="button"onclick="location.href='/meeting/create';" value="Create Meeting"> {% endif %}
+    <input type="button" class="btn btn-primary" onclick="location.href='/meeting';" value="Details">
+    {% if is_staff %}<input type="button" class="btn btn-secondary" onclick="location.href='/meeting/create';" value="Create Meeting"> {% endif %}
 </div>
 <div>
     My Calendar
     <br>
-    <input type="button"onclick="location.href='/calendar/';" value="My Calendar">
-    <input type="button"onclick="location.href='/selection/';" value="Slot Selection">
+    <input type="button" class="btn btn-primary" onclick="location.href='/calendar/';" value="My Calendar">
+    <input type="button" class="btn btn-secondary" onclick="location.href='/selection/';" value="Slot Selection">
 </div>
     <br>
-    <input type="button" onclick="location.href='/login/logout';" value="Logout">
+    <input type="button" class="btn btn-success my-2 my-sm-0" onclick="location.href='/login/logout';" value="Logout">
 {% endblock %}
 <!--
 </body>
