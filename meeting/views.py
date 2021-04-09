@@ -118,8 +118,18 @@ def manage(request):
     })
 
 def create(request):
-    return render(request, "meeting/create.html",{
+    if not request.user.is_authenticated:
+        return HttpResponse(
+            '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
+    
+    if not request.user.is_staff:
+        return HttpResponse('<h1>ACCEESS DENIED</h1>', status=403)
+    
+    remark = 'N/A'
+    #if request.method == 'POST':
 
+    return render(request, "meeting/create.html",{
+        'remark': remark
     })
 
 #Internal Functions
