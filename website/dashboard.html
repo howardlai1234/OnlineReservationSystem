@@ -33,6 +33,7 @@
 <div>
     Meetings:<br>
     <input type="button"onclick="location.href='/meeting';" value="Details">
+    {% if is_staff %}<input type="button"onclick="location.href='/meeting/create';" value="Create Meeting"> {% endif %}
 </div>
 <div>
     My Calendar
