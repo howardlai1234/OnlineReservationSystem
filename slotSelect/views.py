@@ -49,7 +49,7 @@ def home(request):
                     user_allowed_to_access = True
         else:
             return HttpResponse(
-                '<h1>ACCEESS DENIED</h1> <br> This feature is not available now, please check the scheudule<br><a href="/dashboard">return</a>', status=403) 
+                '<h1>ACCEESS DENIED</h1> <br> This feature is not available now, please check the scheudule<br><a href="/dashboard">return</a>', status=403)
         if user_allowed_to_access == True:
             # request all available slots
 

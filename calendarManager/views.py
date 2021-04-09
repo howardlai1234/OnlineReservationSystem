@@ -34,7 +34,7 @@ def home(request):
     if not request.user.is_authenticated:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
-            
+
     userid = User.objects.get(username=request.user).pk
     base_return = base_data(request.user)
     phase = base_return['phase']
@@ -42,16 +42,15 @@ def home(request):
     if DEBUG:
         phase = 1
 
-
     access_check = check_user_allowed_to_access_phase1(request.user)
     if not access_check['flag']:
-         return HttpResponse(
+        return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> You are not allowed to be here, please contact an administrator if you think you should <br> <br><a href="/dashboard">return</a>', status=403)
 
     if not phase == 1:
         return HttpResponse(
-            '<h1>ACCEESS DENIED</h1> <br> This feature is not available now, please check the scheudule<br><a href="/dashboard">return</a>', status=403)   
-             
+            '<h1>ACCEESS DENIED</h1> <br> This feature is not available now, please check the scheudule<br><a href="/dashboard">return</a>', status=403)
+
     grouplist = access_check['grouplist']
     context = {}
     if DEBUG:
@@ -179,6 +178,7 @@ def home(request):
         'availableTimes': RegisteredSlotsReturn,
         'computed_details': computed_detail
     })
+
 
 def confirm(request):
     if request.user.is_authenticated:

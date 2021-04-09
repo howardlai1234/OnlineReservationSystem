@@ -15,7 +15,7 @@ from message import forms
 def home(request):
 
     if request.user.is_authenticated:
-        base_return = base_data(request.user)  
+        base_return = base_data(request.user)
         userid = User.objects.get(username=request.user).pk
 
         received_message_return = []
@@ -106,7 +106,7 @@ def home(request):
 
 def view(request):
     if request.user.is_authenticated:
-        base_return = base_data(request.user)  
+        base_return = base_data(request.user)
         messageID = request.GET.get('id', '')
         userid = User.objects.get(username=request.user).pk
         if Message.objects.filter(receiverid=userid, messageid=messageID).count(
@@ -121,7 +121,7 @@ def view(request):
                 sender = "SYSTEM"
             else:
                 try:
-                    sender = User.objects.get(pk=message.senderid).username 
+                    sender = User.objects.get(pk=message.senderid).username
                 except Message.DoesNotExist:
                     raise HttpResponseNotFound(
                         '<h1>404 ERROR: message not found</h1>')
@@ -141,13 +141,14 @@ def view(request):
     #     else:
     # return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Incorrect or messing
     # messageID <br> <br><a href="/message">Back</a>')
-        return HttpResponseNotFound('<h1>404 ERROR: message not found</h1>', status=404)
+        return HttpResponseNotFound(
+            '<h1>404 ERROR: message not found</h1>', status=404)
     return HttpResponse(
         '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
 
 
 def create_new(request):
-    base_return = base_data(request.user)  
+    base_return = base_data(request.user)
     formError = ""
     formSuccess = ""
     message_is_valid = -1
@@ -204,6 +205,7 @@ def create_new(request):
     else:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
+
 
 def sent_new_message(senderID, receiverID, referenceID,
                      meetingID, title, body):

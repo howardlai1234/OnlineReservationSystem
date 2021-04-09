@@ -9,6 +9,7 @@ class ManageForm(forms.Form):
     endtime = forms.TimeField()
     remark = forms.CharField()
 
+
 class CreateForm(forms.Form):
     name = forms.CharField()
     date = forms.DateField()

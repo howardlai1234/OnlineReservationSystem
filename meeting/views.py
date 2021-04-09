@@ -6,28 +6,36 @@ from django.contrib.auth.models import User
 from dashboard.models import Meeting
 from meeting import forms
 from message.views import sent_new_message
-from ORS.function import base_data 
+from ORS.function import base_data
 from ORS.settings import DEBUG
 # Create your views here.
 
 # HTML views
+
+
 def home(request):
     if not request.user.is_authenticated:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
 
-    base_return = base_data(request.user)  
+    base_return = base_data(request.user)
     userid = User.objects.get(username=request.user).pk
 
     today_meeting = []
-    today_meeting_count = Meeting.objects.filter(hostid=userid, date=date.today()).count()
-    today_meeting_count += Meeting.objects.filter(participantid=userid, date=date.today()).count()
+    today_meeting_count = Meeting.objects.filter(
+        hostid=userid, date=date.today()).count()
+    today_meeting_count += Meeting.objects.filter(
+        participantid=userid, date=date.today()).count()
     future_meeting = []
-    future_meeting_count = Meeting.objects.filter(hostid=userid, date__gt=date.today()).count()
-    future_meeting_count += Meeting.objects.filter(participantid=userid, date__gt=date.today()).count()
+    future_meeting_count = Meeting.objects.filter(
+        hostid=userid, date__gt=date.today()).count()
+    future_meeting_count += Meeting.objects.filter(
+        participantid=userid, date__gt=date.today()).count()
     pass_meeting = []
-    pass_meeting_count = Meeting.objects.filter(hostid=userid, date__lt=date.today()).count()
-    pass_meeting_count += Meeting.objects.filter(participantid=userid, date__lt=date.today()).count()
+    pass_meeting_count = Meeting.objects.filter(
+        hostid=userid, date__lt=date.today()).count()
+    pass_meeting_count += Meeting.objects.filter(
+        participantid=userid, date__lt=date.today()).count()
 
     if today_meeting_count > 0:
         today_meeting = meeting_list(userid, 0)
@@ -35,7 +43,6 @@ def home(request):
         future_meeting = meeting_list(userid, 1)
     if pass_meeting_count > 0:
         pass_meeting = meeting_list(userid, -1)
-
 
     return render(request, "meeting.html", {
         'base_return': base_return,
@@ -47,14 +54,15 @@ def home(request):
         'pass_meeting_count': pass_meeting_count,
     })
 
+
 def view(request):
     if not request.user.is_authenticated:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
-    
+
     base_return = base_data(request.user)
     userID = User.objects.get(username=request.user).pk
-    meetingID = request.GET.get('id', '')  
+    meetingID = request.GET.get('id', '')
     if not check_user_can_view(userID, meetingID):
         return HttpResponseNotFound(
             '<h1>404 ERROR: message not found</h1>', status=404)
@@ -66,7 +74,7 @@ def view(request):
         raise HttpResponseNotFound(
             '<h1>404 ERROR: message not found</h1>', status=404)
 
-    return render(request, "meeting/view.html",{
+    return render(request, "meeting/view.html", {
         'base_return': base_return,
         'meeting': meeting,
         'host': host,
@@ -75,6 +83,7 @@ def view(request):
 
     return HttpResponse("ORS-Meeting <br> Work in Progress")
 
+
 def manage(request):
     if not request.user.is_authenticated:
         return HttpResponse(
@@ -82,9 +91,10 @@ def manage(request):
 
     base_return = base_data(request.user)
     userID = User.objects.get(username=request.user).pk
-    meetingID = request.GET.get('id', '')  
+    meetingID = request.GET.get('id', '')
     if not check_user_can_manage(userID, meetingID):
-        return HttpRsponseNotFound('<h1>403 ERROR: ACCESS DENIED</h1>', status=403)
+        return HttpRsponseNotFound(
+            '<h1>403 ERROR: ACCESS DENIED</h1>', status=403)
     try:
         meeting = Meeting.objects.filter(meetingid=meetingID).get()
         host = User.objects.get(pk=meeting.hostid).username
@@ -95,7 +105,7 @@ def manage(request):
     formError = ""
     formSuccess = ""
     if request.method == 'POST':
-        form=forms.ManageForm(request.POST)
+        form = forms.ManageForm(request.POST)
         if form.is_valid():
             if DEBUG:
                 print("form_valid")
@@ -112,7 +122,7 @@ def manage(request):
                     remark=form.cleaned_data['remark']
                 )
                 formSuccess = "SUCCESS: The meeting details has been updated"
-    return render(request, "meeting/manage.html",{
+    return render(request, "meeting/manage.html", {
         'base_return': base_return,
         'date_str': meeting.date.strftime("%Y-%m-%d"),
         'starttime_str': meeting.starttime.strftime("%H:%M"),
@@ -124,16 +134,17 @@ def manage(request):
         'formError': formError
     })
 
+
 def create(request):
     if not request.user.is_authenticated:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
-    
+
     if not request.user.is_staff:
         return HttpResponse('<h1>ACCEESS DENIED</h1>', status=403)
     base_return = base_data(request.user)
     name = ''
-    participant  = ''
+    participant = ''
     remark = 'N/A'
     date_str = ''
     starttime_str = ''
@@ -168,14 +179,14 @@ def create(request):
             from_return['starttime_str'] = starttime_str
             from_return['endtime_str'] = endtime_str
             from_return['host'] = host
-            from_return['participant'] =participant
+            from_return['participant'] = participant
             from_return['remark'] = remark
 
             if valid and date <= date.today():
                 valid = False
                 error = True
                 formError = "ERROR: You can not a meeting that scheduled on today or before"
-            
+
             if valid and starttime >= endtime:
                 valid = False
                 error = True
@@ -186,7 +197,8 @@ def create(request):
                 error = True
                 formError = "Error: Host Username not found"
 
-            if valid and User.objects.filter(username=participant).count() != 1:
+            if valid and User.objects.filter(
+                    username=participant).count() != 1:
                 valid = False
                 error = True
                 formError = "Error: Participant Username not found"
@@ -220,7 +232,9 @@ def create(request):
                     0,
                     meeting_id,
                     "A new meeting is generated",
-                    "A new meeting is generated by "+ str(request.user) +", between " + host + " and " + participant + ". please check it in meeting page for details"
+                    "A new meeting is generated by " +
+                    str(request.user) + ", between " + host + " and " +
+                    participant + ". please check it in meeting page for details"
                 )
                 sent_new_message(
                     0,
@@ -228,13 +242,13 @@ def create(request):
                     0,
                     meeting_id,
                     "A new meeting is generated",
-                    "A new meeting is generated by "+ str(request.user) +", between " + host + " and " + participant + ". please check it in meeting page for details"
-                )                
+                    "A new meeting is generated by " +
+                    str(request.user) + ", between " + host + " and " +
+                    participant + ". please check it in meeting page for details"
+                )
                 formSuccess = "SUCCESS: A new meeting is created, An automatic message is sent to host and participant"
 
-
-
-    return render(request, "meeting/create.html",{
+    return render(request, "meeting/create.html", {
         'base_return': base_return,
         'from_return': from_return,
         'error': error,
@@ -242,35 +256,42 @@ def create(request):
         'formError': formError
     })
 
-#Internal Functions
+# Internal Functions
+
+
 def check_user_can_view(userID, meetingID):
     if Meeting.objects.filter(hostid=userID, meetingid=meetingID).count(
-        ) == 1 or Meeting.objects.filter(participantid=userID, meetingid=meetingID).count() == 1:
+    ) == 1 or Meeting.objects.filter(participantid=userID, meetingid=meetingID).count() == 1:
         return True
     return False
+
 
 def check_user_can_manage(userID, meetingID):
     if Meeting.objects.filter(hostid=userID, meetingid=meetingID).count() == 1:
         return True
     return False
 
+
 def meeting_list(userID, date_prem):
     return_list = []
     date_prem_valid = False
     if date_prem == 0:
-        meeting = Meeting.objects.filter((Q(hostid=userID) | Q(participantid=userID)) & Q(date=date.today())).all()
+        meeting = Meeting.objects.filter((Q(hostid=userID) | Q(
+            participantid=userID)) & Q(date=date.today())).all()
         date_prem_valid = True
     if date_prem == 1:
-        meeting = Meeting.objects.filter((Q(hostid=userID) | Q(participantid=userID)) & Q(date__gt=date.today())).all()
+        meeting = Meeting.objects.filter((Q(hostid=userID) | Q(
+            participantid=userID)) & Q(date__gt=date.today())).all()
         date_prem_valid = True
     if date_prem == -1:
-        meeting = Meeting.objects.filter((Q(hostid=userID) | Q(participantid=userID)) & Q(date__lt=date.today())).all()
+        meeting = Meeting.objects.filter((Q(hostid=userID) | Q(
+            participantid=userID)) & Q(date__lt=date.today())).all()
         date_prem_valid = True
     if date_prem_valid:
         for m in meeting:
             is_host = False
             if userID == m.hostid:
-                is_host=True
+                is_host = True
             return_list.append({
                 'meetingid': m.meetingid,
                 'hostname': User.objects.get(pk=m.hostid).username,
@@ -281,4 +302,4 @@ def meeting_list(userID, date_prem):
                 'name': m.name,
                 'ishost': is_host
             })
-    return return_list 
+    return return_list
