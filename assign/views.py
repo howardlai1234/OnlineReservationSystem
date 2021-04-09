@@ -16,7 +16,7 @@ def home(request):
     if not request.user.is_authenticated:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
-    if not request.user.is_superuser:
+    if not request.user.is_staff:
         return HttpResponse('<h1>ACCEESS DENIED</h1>', status=404)
 
     for gp in Group.objects.all():
@@ -82,7 +82,7 @@ def home(request):
             batch_add_meeting(confirm_list)
 
     return HttpResponse(
-        '<h1>Success</h1> <br>  <br> <br><a href="dashboard/">return</a>')
+        '<h1>Success</h1> <br>  <br> <br><a href="/dashboard/">return</a>')
 
 
 def matrix_row_constructor(available_slot_list, user_selection_dict):
