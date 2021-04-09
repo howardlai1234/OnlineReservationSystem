@@ -3,16 +3,34 @@
 {% block title %}<title>{{meeting.name}}</title>{% endblock %}
 
 {% block content %}
-
-MeetingID: {{meeting.meetingid}}<br>
-Meeting Name: {{meeting.name}}<br>
-Date: {{meeting.date}}<br>
-Time: {{meeting.starttime}} - {{meeting.endtime}}<br>
-participant: {{host}}, {{participant}}<br>
-Remark: {{meeting.remark}}<br>
-
+<table class="table table-sm">
+    <tr class="table-active">
+        <th scope="col">MeetingID:</th>
+        <th scope="col">{{meeting.meetingid}}</th>
+    </tr>
+    <tr>
+        <th scope="col">Meeting Name:</th>
+        <th scope="col">{{meeting.name}}</th>
+    </tr>
+    <tr class="table-active">
+        <th scope="col">Date:</th>
+        <th scope="col">{{meeting.date}}</th>
+    </tr>
+    <tr>
+        <th scope="col">Time:</th>
+        <th scope="col">{{meeting.starttime}} - {{meeting.endtime}}</th>
+    </tr>
+    <tr class="table-active">
+        <th scope="col">Participants:</th>
+        <th scope="col">{{host}}, {{participant}}</th>
+    </tr>
+    <tr>
+        <th scope="col">Remark:</th>
+        <th scope="col">{{meeting.remark}}</th>
+    </tr>
+</table>
 <div>
-    <input type="button" onclick="location.href='/meeting/';" value="Return">
+    <input type="button" class="btn btn-dark" onclick="location.href='/meeting/';" value="Return">
 </div>
 
 

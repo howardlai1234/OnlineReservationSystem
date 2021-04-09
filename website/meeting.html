@@ -13,7 +13,7 @@
     {% else %}
         {% for t in today_meeting %} 
             <div class="alert alert-secondary" role="alert">
-                <table class="table">
+                <table class="table table-sm">
                     <tr>
                         <th scope="col"> Meeting Name:</th>
                         <th scope="col"> {{ t.name }}</th>
@@ -45,7 +45,7 @@
     {% else %}
         {% for f in future_meeting %} 
             <div class="alert alert-secondary" role="alert"> 
-                <table class="table">
+                <table class="table table-sm">
                     <tr>
                         <th scope="col"> Meeting Name:</th>
                         <th scope="col"> {{ f.name }}</th>
@@ -78,7 +78,7 @@
     {% else %}
         {% for p in pass_meeting %} 
             <div class="alert alert-secondary" role="alert"> 
-                <table class="table">
+                <table class="table table-sm">
                     <tr>
                         <th scope="col"> Meeting Name:</th>
                         <th scope="col"> {{ p.name }}</th>
