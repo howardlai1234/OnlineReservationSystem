@@ -21,8 +21,33 @@
 
 {% block content %}
 
-    <h1>Welcome Back, {{base_return.username}}</h1>
+    <h3>Welcome Back, {{base_return.username}}</h3>
     <br>
+    <div class="alert alert-primary" role="alert">
+        <h5>Time table:</h5>
+        <table class="table table-sm">
+            <tr>
+                <th width="10%" scope="col">Phase </th>
+                <th width="35%">Start</th>
+                <th width="35%">End</th>
+            </tr>
+            <tr>
+                <td scope="col">Phase 1 (Create)</td>
+                <td>{{timetable.phase1_start}}</td>
+                <td>{{timetable.phase1_end}}</td>
+            </tr>
+            <tr>
+                <td scope="col">Phase 2 (Select)</td>
+                <td>{{timetable.phase2_start}}</td>
+                <td>{{timetable.phase2_end}}</td>
+            </tr>
+            <tr>
+                <td scope="col">Phase 3 (Assign)</td>
+                <td>{{timetable.phase3_start}}</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
 <div>
     {{message_counter}} unread message(s)
         <br>

@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from ORS.settings import DEBUG
 from ORS.function import base_data
 from dashboard.models import Message, Meeting
+from config.models import Timetable
 # Create your views here.
 
 
@@ -22,6 +23,7 @@ def home(request):
         message_counter = Message.objects.filter(
             receiverid=userid, viewed=0).count()
         base_return = base_data(request.user)
+        timetable = Timetable.objects.get()
         # meeting_counter = Meeting.objects.filter(hostid=userid, date__gt=date.today()).count()
         # meeting_counter += Meeting.objects.filter(participantid=userid, date__gt=date.today()).count()
         # meeting_counter += Meeting.objects.filter(hostid=userid, date=date.today(), starttime__gt=time.datetime.now().time()).count()
@@ -51,6 +53,7 @@ def home(request):
 
         return render(request, 'dashboard.html', {
             'base_return': base_return,
+            'timetable': timetable,
             'meeting_counter': meeting_counter,
             'message_counter': message_counter
         })
