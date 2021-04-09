@@ -17,11 +17,12 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    <h1>Time slots of: {{username}}</h1>
-    
+    <br>
     {% autoescape off %}
     {% for gp in availableTimes %}
-    Group: {{gp.group}}<br>
+    <div class="alert alert-primary" role="alert">
+        Group: {{gp.group}}
+    </div>
     {% if gp.slot_enough %}
         <p style="background-color:MediumSeaGreen;">
     {% else %}
@@ -30,17 +31,17 @@
     Recommanded number of slot: {{gp.suggested}}, Current number of slot: {{gp.current}}
     </p>
 
-    <table style="width:100%">
-        <tr>
-            <th>ID</th>
-            <th>Start</th>
-            <th>End</th>
+    <table class="table table-striped">
+        <tr class="table-active">
+            <th width="10%" scope="col">ID</th>
+            <th width="35%">Start</th>
+            <th width="35%">End</th>
         </tr>
         {% for s in gp.slots %}
         <tr>
-            <th>{{s.id}}</th>
-            <th>{{s.start}}</th>
-            <th>{{s.end}}</th>
+            <td>{{s.id}}</td>
+            <td>{{s.start}}</td>
+            <td>{{s.end}}</td>
         </tr>
         {% endfor %}
     </table>
@@ -48,8 +49,8 @@
     {% endfor %}
     {% endautoescape %}
     <br>
-    <input type="button"onclick="location.href='remove';" value="Delete enterd slot">
-    <input type="button"onclick="location.href='minimumslot';" value="Set minimum required slot">
+    <input type="button" class="btn btn-info" onclick="location.href='remove';" value="Delete enterd slot">
+    <input type="button" class="btn btn-info" onclick="location.href='minimumslot';" value="Set minimum required slot">
     <br>
     <p style="background-color:Tomato;">{{ formError }}</p>
 <div>
@@ -91,9 +92,9 @@
       <input type="number" id="numberOfMeeting" name="numberOfMeeting" min="1" required data-error="incorrect number"> 
       <br>
       {% if computed_details.not_empty %}
-        <button class="btn btn-common" id="submit" type="submit" value="ok">Change</button>
+        <button class="btn btn-primary" id="submit" type="submit" value="ok">Change</button>
       {% else %}
-        <button class="btn btn-common" id="submit" type="submit" value="ok">Add</button>
+        <button class="btn btn-primary" id="submit" type="submit" value="ok">Add</button>
       {% endif %}
   </form>
 </div>
@@ -101,21 +102,43 @@
 <div>
     
     {% if computed_details.not_empty %}
-        Please check the details and click "Confirm" to submit it, or re-fill the form above to change it <br>
-        slots detail: For: {{computed_details.group}} Start:{{computed_details.startTime}}, End: {{computed_details.endTime}}, 
-        {{computed_details.no_of_meeting}} Meeting(s), each {{computed_details.duration}} minutes long
+        <div class="alert alert-info" role="alert">
+            <h5>Please check the details and click "Confirm" to submit it, or re-fill the form above to change it</h5>
+            <table class="table table-sm">
+                <tr class="table-active">
+                    <th width="20%" scope="col">For:</th>
+                    <td width="80%">{{computed_details.group}}</td>
+                </tr>
+                <tr>
+                    <th scope="col">Start:</th>
+                    <td>{{computed_details.startTime}}</td>
+                </tr>
+                <tr class="table-active">
+                    <th scope="col">End:</th>
+                    <td>{{computed_details.endTime}}</td>
+                </tr>
+                <tr>
+                    <th scope="col">Number of Meeting:</th>
+                    <td>{{computed_details.no_of_meeting}} Meeting(s)</td>
+                </tr>
+                <tr class="table-active">
+                    <th scope="col">Duration of each Meeting:</th>
+                    <td>{{computed_details.duration}} minutes long</td>
+                </tr>
+            </table>
+        </div>
         <br>
         <form action="confirm" method="post">{% csrf_token %} {{form.as_p }} 
             <input type="hidden" id="confirm_group" name="confirm_group" value="{{computed_details.group}}">
             <input type="hidden" id="confirm_startTime" name="confirm_startTime" value="{{ computed_details.startTime_str }}">
             <input type="hidden" id="confirm_no_of_meeting" name="confirm_no_of_meeting" value="{{ computed_details.no_of_meeting }}">
             <input type="hidden" id="confirm_duration" name="confirm_duration" value="{{ computed_details.duration }}">
-            <button class="btn btn-common" id="submit" type="submit" value="ok">Confirm</button>
+            <button class="btn btn-primary" id="submit" type="submit" value="ok">Confirm</button>
         </form>
     {% endif %}
 </div>
     <br>
-    <input type="button" onclick="location.href='/dashboard';" value="back">
+    <input type="button" class="btn btn-dark" onclick="location.href='/dashboard';" value="back">
 {% endblock %}
 <!-- </body>
 </html> -->

@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.models import User, Group
 from ORS.settings import DEBUG
+from ORS.function import base_data
 from config.models import Currentphase, Timetable
 from dashboard.models import Slot, Groupdetail
 from slotSelect.forms import GroupSelectForm, SlotSelectForm
@@ -12,7 +13,8 @@ from slotSelect.models import Selection
 def home(request):
     if request.user.is_authenticated:
         # variable for Access control check
-        phase = Currentphase.objects.get().phase
+        base_return = base_data(request.user)
+        phase = base_return['phase']
         allowed_group = Timetable.objects.get().phase2_group_name
         userid = User.objects.get(username=request.user).pk
         group = User.objects.get(username=request.user).groups
@@ -45,6 +47,9 @@ def home(request):
                 grouplist.append(gp.name)
                 if gp.name == allowed_group:
                     user_allowed_to_access = True
+        else:
+            return HttpResponse(
+                '<h1>ACCEESS DENIED</h1> <br> This feature is not available now, please check the scheudule<br><a href="/dashboard">return</a>', status=403)
         if user_allowed_to_access == True:
             # request all available slots
 
@@ -183,6 +188,7 @@ def home(request):
                         user_already_selected['list'].append(i.slotid)
 
             return render(request, 'selection.html', {
+                'base_return': base_return,
                 'formError': formError,
                 'formSuccess': formSuccess,
                 'currentGroup': cur_group,
@@ -192,7 +198,6 @@ def home(request):
                 'min_required_length': min_required_length,
                 'failedSubmission': failedSubmission
             })
-
         else:
             return HttpResponse(
                 '<h1>ACCEESS DENIED</h1> <br> You are not allowed to be here, please contact an administrator if you think you should <br> <br><a href="/dashboard">return</a>', status=403)

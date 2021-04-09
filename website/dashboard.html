@@ -21,28 +21,55 @@
 
 {% block content %}
 
-    <h1>Welcome Back, {{username}}</h1>
+    <h3>Welcome Back, {{base_return.username}}</h3>
     <br>
+    <div class="alert alert-primary" role="alert">
+        <h5>Time table:</h5>
+        <table class="table table-sm">
+            <tr>
+                <th width="10%" scope="col">Phase </th>
+                <th width="35%">Start</th>
+                <th width="35%">End</th>
+            </tr>
+            <tr>
+                <td scope="col">Phase 1 (Create)</td>
+                <td>{{timetable.phase1_start}}</td>
+                <td>{{timetable.phase1_end}}</td>
+            </tr>
+            <tr>
+                <td scope="col">Phase 2 (Select)</td>
+                <td>{{timetable.phase2_start}}</td>
+                <td>{{timetable.phase2_end}}</td>
+            </tr>
+            <tr>
+                <td scope="col">Phase 3 (Assign)</td>
+                <td>{{timetable.phase3_start}}</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
 <div>
     {{message_counter}} unread message(s)
         <br>
-    <input type="button" onclick="location.href='/message';" value="Details">
-    <input type="button" onclick="location.href='/message/create';" value="Creat New Message">
+    <input type="button" class="btn btn-primary" onclick="location.href='/message';" value="Details">
+    <input type="button" class="btn btn-secondary" onclick="location.href='/message/create';" value="Creat New Message">
 </div>
     <br>
 <div>
     Meetings:<br>
-    <input type="button"onclick="location.href='/meeting';" value="Details">
-    {% if is_staff %}<input type="button"onclick="location.href='/meeting/create';" value="Create Meeting"> {% endif %}
+    <input type="button" class="btn btn-primary" onclick="location.href='/meeting';" value="Details">
+    {% if is_staff %}<input type="button" class="btn btn-secondary" onclick="location.href='/meeting/create';" value="Create Meeting"> {% endif %}
+        
 </div>
+    <br>
 <div>
     My Calendar
     <br>
-    <input type="button"onclick="location.href='/calendar/';" value="My Calendar">
-    <input type="button"onclick="location.href='/selection/';" value="Slot Selection">
+    <input type="button" class="btn btn-primary" onclick="location.href='/calendar/';" value="My Calendar">
+    <input type="button" class="btn btn-secondary" onclick="location.href='/selection/';" value="Slot Selection">
 </div>
     <br>
-    <input type="button" onclick="location.href='/login/logout';" value="Logout">
+    <input type="button" class="btn btn-success my-2 my-sm-0" onclick="location.href='/login/logout';" value="Logout">
 {% endblock %}
 <!--
 </body>

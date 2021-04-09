@@ -5,6 +5,7 @@ from django.db import connections
 from django.db.utils import OperationalError
 from django.contrib.auth.models import User
 from dashboard.models import Message
+from ORS.function import base_data
 from ORS.settings import DEBUG
 from message import forms
 
@@ -14,6 +15,7 @@ from message import forms
 def home(request):
 
     if request.user.is_authenticated:
+        base_return = base_data(request.user)
         userid = User.objects.get(username=request.user).pk
 
         received_message_return = []
@@ -62,7 +64,7 @@ def home(request):
                     sent_message_return.append({
                         'messageid': message.messageid,
                         'title': message.title,
-                        'sender': User.objects.get(pk=int(message.receiverid)),
+                        'recipient': User.objects.get(pk=int(message.receiverid)),
                         'body': message.body,
                         'viewed': "No"
                     })
@@ -70,12 +72,13 @@ def home(request):
                     sent_message_return.append({
                         'messageid': message.messageid,
                         'title': message.title,
-                        'sender': User.objects.get(pk=int(message.receiverid)),
+                        'recipient': User.objects.get(pk=int(message.receiverid)),
                         'body': message.body,
                         'viewed': "Yes"
                     })
 
         return render(request, "message.html", {
+            'base_return': base_return,
             'received_message_count': received_message_count,
             'received_message': received_message_return,
             'sent_message_count': sent_message_count,
@@ -103,6 +106,7 @@ def home(request):
 
 def view(request):
     if request.user.is_authenticated:
+        base_return = base_data(request.user)
         messageID = request.GET.get('id', '')
         userid = User.objects.get(username=request.user).pk
         if Message.objects.filter(receiverid=userid, messageid=messageID).count(
@@ -117,12 +121,13 @@ def view(request):
                 sender = "SYSTEM"
             else:
                 try:
-                    sender = User.objects.get(pk=message.senderid).username 
+                    sender = User.objects.get(pk=message.senderid).username
                 except Message.DoesNotExist:
                     raise HttpResponseNotFound(
                         '<h1>404 ERROR: message not found</h1>')
             message_return = {}
             return render(request, "message/view.html", {
+                'base_return': base_return,
                 'message': message,
                 'sender': sender,
                 'receiver': receiver
@@ -136,13 +141,14 @@ def view(request):
     #     else:
     # return HttpResponse('<h1>ACCEESS DENIED</h1> <br> Incorrect or messing
     # messageID <br> <br><a href="/message">Back</a>')
-        return HttpResponseNotFound('<h1>404 ERROR: message not found</h1>', status=404)
+        return HttpResponseNotFound(
+            '<h1>404 ERROR: message not found</h1>', status=404)
     return HttpResponse(
         '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
 
 
 def create_new(request):
-
+    base_return = base_data(request.user)
     formError = ""
     formSuccess = ""
     message_is_valid = -1
@@ -191,6 +197,7 @@ def create_new(request):
                 formError = "ERROR: Invalid Mesage, please check if the either title or main body exceed character limit and retry later."
                 formError = formError + "<br> if the problem contitue, pls contact an administrator"
         return render(request, "message/create.html", {
+            'base_return': base_return,
             'formSuccess': formSuccess,
             'formError': formError,
 
@@ -198,6 +205,7 @@ def create_new(request):
     else:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> Please Login first <br> <br><a href="/login">Login</a>', status=401)
+
 
 def sent_new_message(senderID, receiverID, referenceID,
                      meetingID, title, body):

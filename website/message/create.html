@@ -8,19 +8,21 @@
 <form action="" method="post">{% csrf_token %} {{form.as_p }} 
     TO: <input type="text" id="receiver" name="receiver" required data-error="Please enter the receiver of this messages"><br>
     Title: <input type="text" id="title" name="title" maxlength="200" style="width:100%" required data-error="Title cannott be empty"><br>
-    title max: 200 character
-    ------------------------------<br>
+    <br>
+    <div class="alert alert-warning" role="alert">
+        Title max: 200 character
+    </div>
     <textarea name="body" style="width:100%" rows="10" maxlength="4000"></textarea><br>
-    max: 4000 character<br>
     <br>
+    <div class="alert alert-warning" role="alert">
+        max: 4000 character
+    </div>
     <br>
-    <button class="btn btn-common" id="submit" type="submit" vlaue="ok">Sent</button>
+    <button class="btn btn-primary" id="submit" type="submit" vlaue="ok">Sent</button>
 </form>
 <br>
 <br> 
 <div>
-    <input type="button" onclick="location.href='/message/';" value="Return">
+    <input type="button" class="btn-dark" onclick="location.href='/message/';" value="Return">
 </div>
-
-
 {% endblock %}

@@ -22,23 +22,32 @@
 
 {% block content %}
   <div>
-    <input type="button" onclick="location.href='/message/create';" value="Sent New Message">
+    <br>
+    <input type="button" class="btn btn-primary" onclick="location.href='/message/create';" value="Sent New Message">
   </div>
   <div>
     <h1>Inbox</h1>
   {% if received_message_count == 0 %}
-    <div class="row">   
+    <div class="alert alert-info" role="alert">   
     No message received<br>
     </div> 
   {% else %}
     {% for i in received_message %} 
-    <div class="row"> 
-      Title: {{ i.title }} <br>
-      Sent By: {{ i.sender }} <br>
+    <div class="alert alert-secondary" role="alert">
+      <table class="table table-sm">
+        <tr>
+          <th width="15%" scope="col">Title:</th>
+          <td width="75%">{{ i.title }}</td>
+        </tr>
+        <tr>
+          <th scope="col">sender:</th>
+          <td>{{ i.sender }}</td>
+        </tr>
+      </table>
       {{ i.body }}
     </div>
-    <input type="button" onclick="location.href='/message/view?id={{i.messageid}}';" value="Detail">
-    <br>
+    <input type="button" class="btn btn-info" onclick="location.href='/message/view?id={{i.messageid}}';" value="Detail">
+    <div class="alert alert-light" role="alert"></div>
     {% endfor %}
   {% endif %}    
   </div>
@@ -47,23 +56,34 @@
   
   <h1>Sent</h1>
   {% if sent_message_count == 0 %}
-    <div class="row">   
+    <div class="alert alert-info" role="alert">   
     No message sent<br>
     </div> 
   {% else %}
     {% for i in sent_message %} 
-    <div class="row"> 
-      Title: {{ i.title }} <br>
-      Recipient: {{ i.sender }} <br>
-      Recipient viewed: {{ i.viewed }} <br>
+    <div class="alert alert-secondary" role="alert">
+      <table class="table table-sm">
+        <tr>
+          <th width="15%" scope="col">Title:</th>
+          <td width="75%">{{ i.title }}</td>
+        </tr>
+        <tr>
+          <th scope="col">Recipient:</th>
+          <td>{{ i.recipient }}</td>
+        </tr>
+        <tr>
+          <th scope="col">Recipient viewed:</th>
+          <td>{{ i.viewed }}</td>
+        </tr>
+      </table>
       {{ i.body }}<br>
     </div>
-    <input type="button" onclick="location.href='/message/view?id={{i.messageid}}';" value="Detail"> 
-
+    <input type="button" class="btn btn-info" onclick="location.href='/message/view?id={{i.messageid}}';" value="Detail"> 
+    <div class="alert alert-light" role="alert"></div>
     {% endfor %}
   {% endif %}  
     <br>
-    <input type="button" onclick="location.href='/dashboard';" value="back">
+    <input type="button" class="btn btn-dark" onclick="location.href='/dashboard';" value="back">
 {% endblock %}
 <!--
 </body>
