@@ -176,7 +176,6 @@ def home(request):
         'formError': formError,
         'confirmForm': forms.ConfirmForm,
         'group_list': grouplist,
-        'username': request.user,
         'availableTimes': RegisteredSlotsReturn,
         'computed_details': computed_detail
     })
