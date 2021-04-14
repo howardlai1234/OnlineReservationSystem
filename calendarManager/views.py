@@ -237,6 +237,7 @@ def remove(request):
     if request.user.is_authenticated:
         userid = User.objects.get(username=request.user).pk
         group = User.objects.get(username=request.user).groups
+        base_return = base_data(request.user)
 
         # variable for generating slot list
         RegisteredSlotsReturn = []
@@ -345,6 +346,7 @@ def remove(request):
                     {'group': cur_group, 'slots': Registered_slot_of_group})
 
             return render(request, 'calendar/remove.html', {
+                'base_return': base_return,
                 'formError': formError,
                 'formSuccess': formSuccess,
                 'currentGroup': cur_group,
@@ -362,6 +364,7 @@ def setMinSlot(request):
     if request.user.is_authenticated:
         userid = User.objects.get(username=request.user).pk
         group = User.objects.get(username=request.user).groups
+        base_return = base_data(request.user)
         grouplist = []
         miniumSlotReturn = []
         formError = ''
@@ -398,6 +401,7 @@ def setMinSlot(request):
                         {'groupname': gp, 'minslot': gpDetail.min_required_slot})
 
             return render(request, 'calendar/setmin.html', {
+                'base_return': base_return,
                 'formError': formError,
                 'formSuccess': formSuccess,
                 'miniumSlotReturn': miniumSlotReturn

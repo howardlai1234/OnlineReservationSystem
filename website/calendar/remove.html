@@ -16,17 +16,17 @@
 
 {% for gp in availableTimes %}
     Group: {{gp.group}} <br>
-    <table style="width:100%">
-        <tr>
-            <th>ID</th>
-            <th>Start</th>
-            <th>End</th>
+    <table class="table table-striped">
+        <tr class="table-active">
+            <th width="10%" scope="col">ID</th>
+            <th width="35%">Start</th>
+            <th width="35%">End</th>
         </tr>
         {% for s in gp.slots %}
         <tr>
-            <th>{{s.id}}</th>
-            <th>{{s.start}}</th>
-            <th>{{s.end}}</th>
+            <td>{{s.id}}</td>
+            <td>{{s.start}}</td>
+            <td>{{s.end}}</td>
         </tr>
         {% endfor %}
     </table>
@@ -40,26 +40,28 @@
 
 <p style="background-color:Tomato;">{{ formError }}</p>
 <p style="background-color:MediumSeaGreen;">{{ formSuccess }}</p>
-<input type="button"onclick="location.href='/calendar/';" value="Return">
+<input class="btn btn-dark" type="button"onclick="location.href='/calendar/';" value="Return">
 <br>
 
 {% if currentGroup != 'All' %}
 <form action="" method="post">{% csrf_token %} {{form.as_p }}
-
-    <h2>Remove Slot</h2> 
-    <a href="detail"> learn more</a><br><br>
-    {% if failedSubmission.flag %}
-    <p style="background-color:Tomato;">Your Rejected list:<br>{{ failedSubmission.list }}</p>
-    {% endif %}
-    For group: {{currentGroup}}
-    <textarea name="selectionlist" style="width:100%" rows="10" maxlength="4000"></textarea><br>
-    <input type="hidden" id="group" name="group" value="{{ currentGroup }}">
-    <br>
-    {% if previousSelection.flag %}
-        <button class="btn btn-common" name="slot_select" id="slot_select" type="submit" value="ok">update</button>
-    {% else %}
-        <button class="btn btn-common" name="slot_select" id="slot_select" type="submit" value="ok">save</button>
-    {% endif %}
+    <div class="alert alert-success" role="alert">
+        <h2>Remove Slot</h2>
+    </div> 
+    <div class="alert alert-secondary" role="alert">
+        {% if failedSubmission.flag %}
+        <p style="background-color:Tomato;">Your Rejected list:<br>{{ failedSubmission.list }}</p>
+        {% endif %}
+        For group: {{currentGroup}}
+        <textarea name="selectionlist" style="width:100%" rows="10" maxlength="4000"></textarea><br>
+        <input type="hidden" id="group" name="group" value="{{ currentGroup }}">
+        <br>
+        {% if previousSelection.flag %}
+            <button class="btn btn-primary" name="slot_select" id="slot_select" type="submit" value="ok">update</button>
+        {% else %}
+            <button class="btn btn-primary" name="slot_select" id="slot_select" type="submit" value="ok">save</button>
+        {% endif %}
+    </div>
 </form>
 {% else %}
     You have not select any group<br>
