@@ -254,6 +254,14 @@ def remove(request):
         if 'cur_group' in request.session:
             cur_group = request.session['cur_group']
 
+        phase = base_return['phase']
+        if DEBUG:
+            phase = 1
+            print("current phase:", base_return['phase'], phase)
+        if not phase == 1:
+            return HttpResponse(
+                '<h1>ACCEESS DENIED</h1> <br> This feature is not available now, please check the scheudule<br><a href="/dashboard">return</a>', status=403)
+
         access_check = check_user_allowed_to_access_phase1(request.user)
         if access_check['flag']:
             grouplist = grouplist + access_check['grouplist']
@@ -370,6 +378,14 @@ def setMinSlot(request):
         miniumSlotReturn = []
         formError = ''
         formSuccess = ''
+        
+        phase = base_return['phase']
+        if DEBUG:
+            phase = 1
+            print("current phase:", base_return['phase'], phase)
+        if not phase == 1:
+            return HttpResponse(
+                '<h1>ACCEESS DENIED</h1> <br> This feature is not available now, please check the scheudule<br><a href="/dashboard">return</a>', status=403)
 
         access_check = check_user_allowed_to_access_phase1(request.user)
         if access_check['flag']:
