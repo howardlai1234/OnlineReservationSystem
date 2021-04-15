@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User, Group
 from ORS.function import base_data
 from ORS.settings import DEBUG
-from config.models import Currentphase, Timetable
+from config.models import Timetable
 from calendarManager import forms
 from dashboard.models import Slot, Groupdetail
 
@@ -37,11 +37,12 @@ def home(request):
 
     userid = User.objects.get(username=request.user).pk
     base_return = base_data(request.user)
-    phase = base_return['phase']
+    phase = int(base_return['phase'])
+
     #group = User.objects.get(username=request.user).groups
     if DEBUG:
         phase = 1
-
+    print("current phase:", base_return['phase'], phase)
     if not phase == 1:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> This feature is not available now, please check the scheudule<br><a href="/dashboard">return</a>', status=403)
@@ -253,6 +254,14 @@ def remove(request):
         if 'cur_group' in request.session:
             cur_group = request.session['cur_group']
 
+        phase = base_return['phase']
+        if DEBUG:
+            phase = 1
+            print("current phase:", base_return['phase'], phase)
+        if not phase == 1:
+            return HttpResponse(
+                '<h1>ACCEESS DENIED</h1> <br> This feature is not available now, please check the scheudule<br><a href="/dashboard">return</a>', status=403)
+
         access_check = check_user_allowed_to_access_phase1(request.user)
         if access_check['flag']:
             grouplist = grouplist + access_check['grouplist']
@@ -369,6 +378,14 @@ def setMinSlot(request):
         miniumSlotReturn = []
         formError = ''
         formSuccess = ''
+        
+        phase = base_return['phase']
+        if DEBUG:
+            phase = 1
+            print("current phase:", base_return['phase'], phase)
+        if not phase == 1:
+            return HttpResponse(
+                '<h1>ACCEESS DENIED</h1> <br> This feature is not available now, please check the scheudule<br><a href="/dashboard">return</a>', status=403)
 
         access_check = check_user_allowed_to_access_phase1(request.user)
         if access_check['flag']:
@@ -414,17 +431,14 @@ def setMinSlot(request):
 def check_user_allowed_to_access_phase1(user):
     user_allowed_to_access = False
     allowed_group = Timetable.objects.get().phase1_group_name
-    phase = -1
     grouplist = []
-    if DEBUG:
-        phase = 1
 
     for gp in user.groups.all():
         grouplist.append(gp.name)
         if gp.name == allowed_group:
             user_allowed_to_access = True
 
-    if phase == 1 and user_allowed_to_access:
+    if user_allowed_to_access:
         return {'flag': True, 'grouplist': grouplist}
     return {'flag': False, 'grouplist': grouplist}
 

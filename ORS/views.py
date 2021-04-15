@@ -5,4 +5,6 @@ from django.http import HttpResponseRedirect
 
 
 def home(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('/dashboard/')
     return HttpResponseRedirect('/accounts/login/')

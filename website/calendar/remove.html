@@ -44,7 +44,8 @@
 {% if currentGroup != 'All' %}
 <form action="" method="post">{% csrf_token %} {{form.as_p }}
     <div class="alert alert-success" role="alert">
-        <h2>Remove Slot</h2>
+        <h3>Remove Slot</h3>
+        Please enter in this format: slotID, slotID, slotID, ... , slotID
     </div> 
     <div class="alert alert-secondary" role="alert">
         {% if failedSubmission.flag %}
