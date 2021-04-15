@@ -77,13 +77,7 @@
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="/message/">View All</a>
             <a class="dropdown-item" href="/message/create">New Message</a>
-            <!-- <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Something else here</a> -->
           </div>
-        </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-        </li> -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Time Slots
@@ -101,29 +95,12 @@
         </li>
         {% endif %}
       </ul>
-        <!-- <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"> -->
-        <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> -->
-        <!-- <li class="navbar-text"><p></p></li> -->
         <span class="navbar-text mr-2">User: {{base_return.username}}</span>
         <input class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="location.href='/login/logout';" value="Logout" />
       </div>
     </div>
   </nav>
   <div class="container-fluid">
-    <!-- <div class="row">
-      <div class="col-sm-2">
-      {% block sidebar %} -->
-      <!-- <ul class="sidebar-nav">
-        <li><a href="/dashboard/">dashboard</a></li>
-        <li><a href="/calendar/">Register</a></li>
-        <li><a href="/selection/">Slot Select</a></li> 
-        <li><a href="/message/">Messages</a></li>
-        <li><a href="/meeting/">Meeting</a></li>
-        <li><a href="/login/logout">logout</a></li>   
-      </ul> -->
-     <!-- {% endblock %}
-      </div>
-      <div class="col-sm-10 "> -->
         <div class="container">{% block content %}{% endblock %}</div>
       </div>
     </div>

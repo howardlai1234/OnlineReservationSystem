@@ -42,14 +42,14 @@ def home(request):
     if DEBUG:
         phase = 1
 
+    if not phase == 1:
+        return HttpResponse(
+            '<h1>ACCEESS DENIED</h1> <br> This feature is not available now, please check the scheudule<br><a href="/dashboard">return</a>', status=403)
+
     access_check = check_user_allowed_to_access_phase1(request.user)
     if not access_check['flag']:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> You are not allowed to be here, please contact an administrator if you think you should <br> <br><a href="/dashboard">return</a>', status=403)
-
-    if not phase == 1:
-        return HttpResponse(
-            '<h1>ACCEESS DENIED</h1> <br> This feature is not available now, please check the scheudule<br><a href="/dashboard">return</a>', status=403)
 
     grouplist = access_check['grouplist']
     context = {}
@@ -237,6 +237,7 @@ def remove(request):
     if request.user.is_authenticated:
         userid = User.objects.get(username=request.user).pk
         group = User.objects.get(username=request.user).groups
+        base_return = base_data(request.user)
 
         # variable for generating slot list
         RegisteredSlotsReturn = []
@@ -345,6 +346,7 @@ def remove(request):
                     {'group': cur_group, 'slots': Registered_slot_of_group})
 
             return render(request, 'calendar/remove.html', {
+                'base_return': base_return,
                 'formError': formError,
                 'formSuccess': formSuccess,
                 'currentGroup': cur_group,
@@ -362,6 +364,7 @@ def setMinSlot(request):
     if request.user.is_authenticated:
         userid = User.objects.get(username=request.user).pk
         group = User.objects.get(username=request.user).groups
+        base_return = base_data(request.user)
         grouplist = []
         miniumSlotReturn = []
         formError = ''
@@ -398,6 +401,7 @@ def setMinSlot(request):
                         {'groupname': gp, 'minslot': gpDetail.min_required_slot})
 
             return render(request, 'calendar/setmin.html', {
+                'base_return': base_return,
                 'formError': formError,
                 'formSuccess': formSuccess,
                 'miniumSlotReturn': miniumSlotReturn

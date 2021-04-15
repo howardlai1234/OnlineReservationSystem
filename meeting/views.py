@@ -149,7 +149,7 @@ def create(request):
     date_str = ''
     starttime_str = ''
     endtime_str = ''
-    from_return = {}
+    form_return = {}
 
     formError = ""
     formSuccess = ""
@@ -174,13 +174,13 @@ def create(request):
             starttime_str = starttime.strftime("%H:%M")
             endtime_str = endtime.strftime("%H:%M")
 
-            from_return['name'] = name
-            from_return['date_str'] = date_str
-            from_return['starttime_str'] = starttime_str
-            from_return['endtime_str'] = endtime_str
-            from_return['host'] = host
-            from_return['participant'] = participant
-            from_return['remark'] = remark
+            form_return['name'] = name
+            form_return['date_str'] = date_str
+            form_return['starttime_str'] = starttime_str
+            form_return['endtime_str'] = endtime_str
+            form_return['host'] = host
+            form_return['participant'] = participant
+            form_return['remark'] = remark
 
             if valid and date <= date.today():
                 valid = False
@@ -250,7 +250,7 @@ def create(request):
 
     return render(request, "meeting/create.html", {
         'base_return': base_return,
-        'from_return': from_return,
+        'form_return': form_return,
         'error': error,
         'formSuccess': formSuccess,
         'formError': formError

@@ -20,11 +20,11 @@
 {% block title %}<title>Dashboard</title>{% endblock %}
 
 {% block content %}
-
+    <br>
     <h3>Welcome Back, {{base_return.username}}</h3>
     <br>
     <div class="alert alert-primary" role="alert">
-        <h5>Time table:</h5>
+        <h5>Time table: (in UTC)</h5>
         <table class="table table-sm">
             <tr>
                 <th width="10%" scope="col">Phase </th>
@@ -58,15 +58,15 @@
 <div>
     Meetings:<br>
     <input type="button" class="btn btn-primary" onclick="location.href='/meeting';" value="Details">
-    {% if is_staff %}<input type="button" class="btn btn-secondary" onclick="location.href='/meeting/create';" value="Create Meeting"> {% endif %}
+    {% if base_return.is_staff %}<input type="button" class="btn btn-secondary" onclick="location.href='/meeting/create';" value="Create Meeting"> {% endif %}
         
 </div>
     <br>
 <div>
-    My Calendar
+    TimeSlots
     <br>
-    <input type="button" class="btn btn-primary" onclick="location.href='/calendar/';" value="My Calendar">
-    <input type="button" class="btn btn-secondary" onclick="location.href='/selection/';" value="Slot Selection">
+    <input type="button" class="btn btn-primary" onclick="location.href='/calendar/';" value="Create">
+    <input type="button" class="btn btn-secondary" onclick="location.href='/selection/';" value="Select">
 </div>
     <br>
     <input type="button" class="btn btn-success my-2 my-sm-0" onclick="location.href='/login/logout';" value="Logout">

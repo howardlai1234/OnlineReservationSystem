@@ -3,26 +3,38 @@
 {% block title %}<title>Set Minumum</title>{% endblock %}
 
 {% block content %}
-    <h3>Current Minumum of each group:</h3><br>
-    {% for gp in miniumSlotReturn %}
-        {{gp.groupname}}: {{gp.minslot}}<br>
-    {% endfor %}
-
+    <div class="alert alert-success" role="alert">
+        <h3>Current mininum perfered slots required for each student/group:</h3><br>
+    </div>
+    <table class="table table-striped">
+        <tr class="table-active">
+            <th width="30%" scope="col">Group Name:</th>
+            <th width="70%">mininum perfered slots required:</th>
+        </tr>
+        {% for gp in miniumSlotReturn %}
+        <tr>
+            <td>{{gp.groupname}}</td>
+            <td>{{gp.minslot}}</td>
+        </tr>
+        {% endfor %}
+    </table>
     <br>
     <p style="background-color:Tomato;">{{ formError }}</p>
     <p style="background-color:MediumSeaGreen;">{{ formSuccess }}</p>
-    <form action="" method="post">{% csrf_token %} {{form.as_p }} 
-        <h3>Change</h3>
-        For Group: <select id="groupname" name="groupname">
-            {% for gp in miniumSlotReturn %} 
-            <option value="{{ gp.groupname }}">{{ gp.groupname }}</option>
-            {% endfor %}
-        </select>
-        <br>
-        <label for="minrequiredslot">Minumum required slot (at lease 3)</label>
-        <input type="number" id="minrequiredslot" name="minrequiredslot" min="3" required data-error="This cannot be empty">
-        <br>
-        <button class="btn btn-common" id="submit" type="submit" value="ok">Change</button>
-
-  </form>
+    <div class="alert alert-secondary" role="alert">
+        <form action="" method="post">{% csrf_token %} {{form.as_p }} 
+            <h3>Change</h3>
+            For Group: <select id="groupname" name="groupname">
+                {% for gp in miniumSlotReturn %} 
+                <option value="{{ gp.groupname }}">{{ gp.groupname }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <label for="minrequiredslot">Minumum required slot (at lease 3)</label>
+            <input type="number" id="minrequiredslot" name="minrequiredslot" min="3" required data-error="This cannot be empty">
+            <br>
+            <button class="btn btn-primary" id="submit" type="submit" value="ok">Change</button>
+        </form>
+    </div>
+    <input class="btn btn-dark" type="button"onclick="location.href='/calendar/';" value="Return">
 {% endblock %}
