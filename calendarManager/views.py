@@ -42,14 +42,14 @@ def home(request):
     if DEBUG:
         phase = 1
 
+    if not phase == 1:
+        return HttpResponse(
+            '<h1>ACCEESS DENIED</h1> <br> This feature is not available now, please check the scheudule<br><a href="/dashboard">return</a>', status=403)
+
     access_check = check_user_allowed_to_access_phase1(request.user)
     if not access_check['flag']:
         return HttpResponse(
             '<h1>ACCEESS DENIED</h1> <br> You are not allowed to be here, please contact an administrator if you think you should <br> <br><a href="/dashboard">return</a>', status=403)
-
-    if not phase == 1:
-        return HttpResponse(
-            '<h1>ACCEESS DENIED</h1> <br> This feature is not available now, please check the scheudule<br><a href="/dashboard">return</a>', status=403)
 
     grouplist = access_check['grouplist']
     context = {}
