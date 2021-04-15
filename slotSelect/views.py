@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User, Group
 from ORS.settings import DEBUG
 from ORS.function import base_data
-from config.models import Currentphase, Timetable
+from config.models import Timetable
 from dashboard.models import Slot, Groupdetail
 from slotSelect.forms import GroupSelectForm, SlotSelectForm
 from slotSelect.models import Selection

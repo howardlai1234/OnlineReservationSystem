@@ -14,37 +14,6 @@
 from django.db import models
 
 
-class Gp(models.Model):
-    # Field name made lowercase.
-    groupid = models.AutoField(db_column='groupID', primary_key=True)
-    # Field name made lowercase.
-    groupname = models.CharField(
-        db_column='groupName',
-        max_length=255,
-        blank=True,
-        null=True)
-    # Field name made lowercase.
-    groupownerid = models.IntegerField(db_column='groupOwnerID')
-
-    class Meta:
-        #managed = False
-        db_table = 'gp'
-
-
-class Groupmember(models.Model):
-    # Field name made lowercase.
-    groupid = models.IntegerField(db_column='groupID')
-    # Field name made lowercase.
-    memberid = models.IntegerField(db_column='memberID')
-    # Field name made lowercase.
-    joindate = models.DateTimeField(
-        db_column='joinDate', blank=True, null=True)
-
-    class Meta:
-        #managed = False
-        db_table = 'groupmember'
-
-
 class Groupdetail(models.Model):
     groupid = models.IntegerField()
     min_required_slot = models.IntegerField()
@@ -108,63 +77,3 @@ class Slot(models.Model):
     class Meta:
         #managed = False
         db_table = 'slot'
-
-
-class Slotsopento(models.Model):
-    # Field name made lowercase.
-    slotsid = models.IntegerField(db_column='slotsID')
-    # Field name made lowercase.
-    isgroup = models.IntegerField(db_column='isGroup', blank=True, null=True)
-    # Field name made lowercase.
-    opentoid = models.IntegerField(db_column='OpenToID')
-
-    class Meta:
-        #managed = False
-        db_table = 'slotsopento'
-
-
-class User(models.Model):
-    # Field name made lowercase.
-    userid = models.AutoField(db_column='userID', primary_key=True)
-    username = models.CharField(max_length=255, blank=True, null=True)
-    # Field name made lowercase.
-    firstname = models.CharField(
-        db_column='firstName', max_length=255, blank=True, null=True)
-    # Field name made lowercase.
-    lastname = models.CharField(
-        db_column='lastName', max_length=255, blank=True, null=True)
-    email = models.CharField(max_length=255, blank=True, null=True)
-    tel = models.CharField(max_length=255, blank=True, null=True)
-    # Field name made lowercase.
-    typeid = models.CharField(
-        db_column='typeID', max_length=255, blank=True, null=True)
-    active = models.IntegerField(blank=True, null=True)
-    # Field name made lowercase.
-    hashpw = models.CharField(
-        db_column='hashPW', max_length=255, blank=True, null=True)
-
-    class Meta:
-        #managed = False
-        db_table = 'user'
-
-
-class Useravailability(models.Model):
-    # Field name made lowercase.
-    userid = models.IntegerField(db_column='userID')
-    date = models.DateField()
-    # Field name made lowercase.
-    slotid = models.IntegerField(db_column='slotID')
-
-    class Meta:
-        #managed = False
-        db_table = 'useravailability'
-
-
-class Config(models.Model):
-    phase1_start = models.DateTimeField()
-    phase1_end = models.DateTimeField()
-    phase1_group_name = models.CharField(max_length=150)
-    phase2_start = models.DateTimeField()
-    phase2_end = models.DateTimeField()
-    phase2_group_name = models.CharField(max_length=150)
-    phase3_start = models.DateTimeField()

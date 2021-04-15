@@ -11,7 +11,3 @@ class Timetable(models.Model):
     phase2_end = models.DateTimeField()
     phase2_group_name = models.CharField(max_length=150)
     phase3_start = models.DateTimeField()
-
-
-class Currentphase(models.Model):
-    phase = models.IntegerField()
